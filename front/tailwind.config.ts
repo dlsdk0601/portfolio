@@ -92,7 +92,7 @@ const config: Config = {
           },
 
           "100%": {
-            "line-height": "100%",
+            "line-height": "120%",
             "opacity": "100%",
           },
         },
