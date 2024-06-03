@@ -81,10 +81,7 @@ export const vBirthday = (value: any): string | undefined => {
 };
 
 export type FileType = "IMAGE" | "PDF" | "VIDEO";
-export const vFileExtension = (
-  value: any,
-  types: FileType[],
-): string | undefined => {
+export const vFileExtension = (value: any, types: FileType[]): string | undefined => {
   if (typeof value !== "string") {
     return "확장자 형식이 잘못되었습니다.";
   }
@@ -96,7 +93,6 @@ export const vFileExtension = (
 
   let isValid = true;
   let error = "";
-  // eslint-disable-next-line no-restricted-syntax
   for (const type of types) {
     switch (type) {
       case "PDF": {

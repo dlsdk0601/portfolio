@@ -189,7 +189,9 @@
     // 자동 완성되는 interface는 빈 interface가 될수 있기에 비활성화
     "no-empty-interface": 0,
     // faker 에서 loop 안에 await 사용을 위해
-    "no-await-in-loop": 0
+    "no-await-in-loop": 0,
+    // javaScript 기능이나 구문을 사용
+    "no-restricted-syntax": 0
   },
   "settings": {
     // import 순서를 위한 import/resolver 초기 셋팅
