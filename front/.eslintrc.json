@@ -160,6 +160,8 @@
     "lines-between-class-members": 0,
     // req {} 사용을 위해
     "no-empty-pattern": 0,
+    // 상황에 따라 다르지만 @ path 를 사용하기 위해 비활성화
+    "import/no-unresolved": 0,
     // arrow function에서 할당 반환 가능하게
     "no-return-assign": 0,
     // mobx model의 직접 할당을 위해
