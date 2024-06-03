@@ -2,8 +2,8 @@ import "./globals.css";
 import React from "react";
 import classNames from "classnames";
 import { Metadata } from "next";
-import { Inter } from "next/dist/compiled/@next/font/dist/google";
-import localFont from "next/dist/compiled/@next/font/dist/local";
+import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import Analytics from "../view/Analytics";
 
 export const metadata: Metadata = {
