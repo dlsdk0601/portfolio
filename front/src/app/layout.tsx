@@ -1,9 +1,9 @@
 import "./globals.css";
-import { Inter } from "@next/font/google";
-import LocalFont from "@next/font/local";
 import React from "react";
 import classNames from "classnames";
 import { Metadata } from "next";
+import { Inter } from "next/dist/compiled/@next/font/dist/google";
+import localFont from "next/dist/compiled/@next/font/dist/local";
 import Analytics from "../view/Analytics";
 
 export const metadata: Metadata = {
@@ -48,7 +48,7 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const calSans = LocalFont({
+const calSans = localFont({
   src: "../../public/fonts/CalSans-SemiBold.ttf",
   variable: "--font-calsans",
 });

@@ -17,7 +17,7 @@ const ParticlesView = (props: {
   const mousePosition = useMousePosition();
   const mouse = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const canvasSize = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
-  const dpr = typeof window !== "undefined" ? window.devicePixelRatio : 1;
+  const devicePixelRatio = typeof window !== "undefined" ? window.devicePixelRatio : 1;
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -77,11 +77,11 @@ const ParticlesView = (props: {
       circles.current.length = 0;
       canvasSize.current.w = canvasContainerRef.current.offsetWidth;
       canvasSize.current.h = canvasContainerRef.current.offsetHeight;
-      canvasRef.current.width = canvasSize.current.w * dpr;
-      canvasRef.current.height = canvasSize.current.h * dpr;
+      canvasRef.current.width = canvasSize.current.w * devicePixelRatio;
+      canvasRef.current.height = canvasSize.current.h * devicePixelRatio;
       canvasRef.current.style.width = `${canvasSize.current.w}px`;
       canvasRef.current.style.height = `${canvasSize.current.h}px`;
-      context.current.scale(dpr, dpr);
+      context.current.scale(devicePixelRatio, devicePixelRatio);
     }
   };
 
@@ -118,7 +118,7 @@ const ParticlesView = (props: {
       context.current.arc(x, y, size, 0, 2 * Math.PI);
       context.current.fillStyle = `rgba(255, 255, 255, ${alpha})`;
       context.current.fill();
-      context.current.setTransform(dpr, 0, 0, dpr, 0, 0);
+      context.current.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
 
       if (!update) {
         circles.current.push(circle);
