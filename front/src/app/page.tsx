@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ParticlesView from "../view/ParticlesView";
+import { Urls } from "../url/url.g";
 
 export default function Home() {
   return (
@@ -7,12 +8,18 @@ export default function Home() {
       <nav className="my-16 animate-fade-in">
         <ul className="flex items-center justify-center gap-4">
           <li>
-            <Link href="/" className="text-sm text-zinc-500 duration-500 hover:text-zinc-300">
+            <Link
+              href={Urls.project.page.url()}
+              className="text-sm text-zinc-500 duration-500 hover:text-zinc-300"
+            >
               Projects
             </Link>
           </li>
           <li>
-            <Link href="/" className="text-sm text-zinc-500 duration-500 hover:text-zinc-300">
+            <Link
+              href={Urls.contact.page.url()}
+              className="text-sm text-zinc-500 duration-500 hover:text-zinc-300"
+            >
               Contact
             </Link>
           </li>
