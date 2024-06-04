@@ -1,5 +1,4 @@
 import { sleep } from "sleepjs";
-import { config } from "../config/config"; // TODO :: icon 은 DB 에서 정의 할 것.
 
 // TODO :: icon 은 DB 에서 정의 할 것.
 export type CONTACT_ICON = "INSTAGRAM" | "GITHUB" | "MAIL";
@@ -12,7 +11,7 @@ export type ContactListResItem = {
 
 export async function contactList() {
   // TODO :: API 통신
-  await sleep(config.apiDelay);
+  await sleep(4000);
   const res: ContactListResItem[] = [
     {
       icon: "INSTAGRAM",
