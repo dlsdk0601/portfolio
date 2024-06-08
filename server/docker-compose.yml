@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16.3
+    ports:
+      - "30322:5432"
+    volumes:
+      - db-var_lib_postgresql_data:/var/lib/postgresql/data
+    environment:
+      - TZ=Asia/Seoul
+      - PGTZ=Asia/Seoul
+      - POSTGRES_HOT_AUTH_METHOD=trust
+      - POSTGRES_DB=portfolio
+
+volumes:
+  db-var_lib_postgresql_data:

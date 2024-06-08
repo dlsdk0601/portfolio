@@ -1,0 +1,16 @@
+# python
+venv/
+*.egg-info
+__pycache__
+
+# pycharm
+.idea/
+
+# mypy
+.dmypy.json
+
+# env
+.env
+
+# tmp
+tmp
