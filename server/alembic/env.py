@@ -49,8 +49,14 @@ def run_migrations_offline() -> None:
     with context.begin_transaction():
         context.run_migrations()
 
-# TODO :: db 설정
 
+import was.config
+from was.model import Model
+
+target_metadata = Model.metadata
+context_configs = dict(compare_type=True, compare_server_default=True)
+config.set_main_option('sqlalchemy.url', was.config.SQLALCHEMY_DATABASE_URI)
+config.set_main_option('sqlalchemy.echo', str(was.config.SQLALCHEMY_ECHO))
 
 
 def run_migrations_online() -> None:
