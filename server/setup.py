@@ -7,6 +7,7 @@ setup(
     install_requires=[
         # was
         'fastapi==0.111.0',
+        'uvicorn==0.30.1',
         'werkzeug==3.0.3',
         'sconfig==0.0.3',
         'pydantic==2.7.3',
