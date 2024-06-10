@@ -16,7 +16,7 @@ DB_COLLLNAME = 'und-x-icu'
 # SQLAlchemy
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_DATABASE_URI = environ.get(
-    'DATA_BASE_URL',
+    'DATABASE_URL',
     f'postgres://postgres@{environ.get("DOCKER_HOST", "localhost")}:30322/portfolio'
 )
 SQLALCHEMY_ECHO = False
