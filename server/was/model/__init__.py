@@ -1,6 +1,10 @@
-from sqlalchemy.orm import DeclarativeBase
+from typing import TYPE_CHECKING
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 
-class Model(DeclarativeBase):
-    __abstract__ = True
+Model = declarative_base()
 
+from .manager import Manager
+
+if TYPE_CHECKING:
+    from .manager import Manager
