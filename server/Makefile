@@ -22,8 +22,8 @@ code-gen:
 	(source venv/bin/activate && $(MAKE) '_code-gen')
 
 _code-gen:
-	python bin/generate_api_dart_schema.py | (type dart > /dev/null && dart format || cat) | python bin/tee.py ../portfolio_app/lib/api.schema.gen.dart
-	python bin/generate_api_dart.py | (type dart > /dev/null && dart format || cat) | python bin/tee.py ../portfolio_app/lib/api/api.gen.dart
+	#python bin/generate_api_dart_schema.py | (type dart > /dev/null && dart format || cat) | python bin/tee.py ../portfolio_app/lib/api.schema.gen.dart
+	#python bin/generate_api_dart.py | (type dart > /dev/null && dart format || cat) | python bin/tee.py ../portfolio_app/lib/api/api.gen.dart
 
 faker-import:
 	time venv/bin/python bin/faker_import.py
