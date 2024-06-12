@@ -25,7 +25,7 @@ PAGE_ROW_ITEM = TypeVar('PAGE_ROW_ITEM', bound=BaseModel)
 TableArgs = Tuple[Index | dict[str, str], ...]
 
 
-class PageRow(GenericModel, Generic[T]):
+class PageRow(GenericModel, Generic[PAGE_ROW_ITEM]):
     no: int
     item: PAGE_ROW_ITEM
 
@@ -79,7 +79,7 @@ def isearch(string: str, *columns):
     conditions = []
 
     for column in columns:
-        and_conditions = [icontains(column, keywords) for keyword in keywords]
+        and_conditions = [icontains(column, keyword) for keyword in keywords]
         conditions.append(and_(True, *and_conditions))
 
     return or_(*conditions)
