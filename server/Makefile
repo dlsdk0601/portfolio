@@ -35,6 +35,8 @@ dev:
 dev-clean:
 	docker compose down -v --rmi local
 
-dev-reinitialize: dev-clean dev
+dev-start: dev-clean dev
+
+dev-reinitialize: dev-start
 	venv/bin/alembic upgrade head
 	venv/bin/python bin/faker_import.py
