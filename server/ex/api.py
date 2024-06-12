@@ -1,5 +1,5 @@
 from stringcase import camelcase
-import pydantic
+import pydantic.generics
 
 
 class BaseModel(pydantic.BaseModel):
