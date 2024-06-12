@@ -14,7 +14,7 @@ setup(
         'stringcase==1.2.0',
         # DB
         'SQLAlchemy==2.0.30',
-        'FastAPI-SQLAlchemy==0.2.1',
+        'FastAPI-SQLAlchemy-improved==0.5.4',
         'alembic==1.13.1',
         'psycopg2-binary==2.9.9',
         'coint-paginatify-sqlalchemy==0.0.4',
