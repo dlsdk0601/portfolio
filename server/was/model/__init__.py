@@ -1,10 +1,14 @@
-from typing import TYPE_CHECKING
-from sqlalchemy.orm import declarative_base, sessionmaker
+from typing import Type, TypeAlias
 
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.engine import make_url
+from fastapi_sqlalchemy import SQLAlchemy
 
-Model = declarative_base()
+from was import config
 
-from .manager import Manager
+db: SQLAlchemy = SQLAlchemy(
+    url=make_url(config.SQLALCHEMY_DATABASE_URI),
+)
 
-if TYPE_CHECKING:
-    from .manager import Manager
+Model = DeclarativeBase
+Model = db.Base  # type: ignore
