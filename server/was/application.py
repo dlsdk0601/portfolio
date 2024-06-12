@@ -2,21 +2,23 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_sqlalchemy import DBSessionMiddleware
 
-from was import config
+from was import config, model
 
 app = FastAPI(
     debug=config.DEBUG
 )
 app.add_middleware(
     DBSessionMiddleware,
-    db_url=config.SQLALCHEMY_DATABASE_URI
+    db=model.db,
+    session_args={
+        "autoflush": False
+    }
 )
-
 
 # 개발 중에만 활성화 한다.
 if app.debug:
     app.add_middleware(
-        middleware_class=CORSMiddleware,
+        CORSMiddleware,
         allow_origins=["*"],
         allow_credentials=True,
         allow_methods=["*"],

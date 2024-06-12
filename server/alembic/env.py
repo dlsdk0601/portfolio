@@ -51,9 +51,10 @@ def run_migrations_offline() -> None:
 
 
 from was.config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_ECHO
-from was.model import Model
+import was.application
 
-target_metadata = Model.metadata
+# noinspection PyRedeclaration
+target_metadata = was.application.model.Model.metadata
 context_configs = dict(compare_type=True, compare_server_default=True)
 config.set_main_option('sqlalchemy.url', SQLALCHEMY_DATABASE_URI)
 config.set_main_option('sqlalchemy.echo', str(SQLALCHEMY_ECHO))
