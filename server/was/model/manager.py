@@ -4,8 +4,9 @@ from datetime import datetime
 
 
 from sqlalchemy import String, DateTime, func, ForeignKey, Boolean
-from sqlalchemy.orm import Mapped, mapped_column
-from was.model import Model
+from sqlalchemy.orm import Mapped, mapped_column, declarative_base
+
+Model = declarative_base()
 
 
 class Manager(Model):
