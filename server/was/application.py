@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_sqlalchemy import DBSessionMiddleware
 
 from was import config, model
+from was.blueprints import router
 
 app = FastAPI(
     debug=config.DEBUG
@@ -24,6 +25,8 @@ if app.debug:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+app.include_router(router=router)
 
 
 @app.get('/')
