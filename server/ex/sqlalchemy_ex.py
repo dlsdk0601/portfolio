@@ -1,10 +1,12 @@
 from itertools import count
 from typing import TypeVar, Tuple, Generic, Callable, Union
+
 from sqlalchemy import Index, and_, or_, func
 from sqlalchemy.orm import Query
-from ex.api import BaseModel, GenericModel
 from sqlalchemy.sql import ColumnElement
 from sqlalchemy.sql.elements import BooleanClauseList
+
+from ex.api import BaseModel, GenericModel
 
 null: None = None
 true: bool = True
@@ -41,7 +43,8 @@ class Pagination(GenericModel, Generic[PAGE_ROW_ITEM]):
     rows: list[PageRow[PAGE_ROW_ITEM]]
 
 
-def api_paginate(query: Query, page: int, map_: Callable[[T], PAGE_ROW_ITEM], per_page: int = 10) -> Pagination[PAGE_ROW_ITEM]:
+def api_paginate(query: Query, page: int, map_: Callable[[T], PAGE_ROW_ITEM], per_page: int = 10) -> Pagination[
+    PAGE_ROW_ITEM]:
     # OPT :: 같은 조건으로 쿼리르 돌리면 같은 값이 나오겠지만, 불필요하게 두번의 쿼리를 돌릴 필요가 있을까 싶다.
     # flask-SQLAlchemy 에서는 paginate 함수를 제공하지만, fastapi 에서는 없다.
     total = query.count()

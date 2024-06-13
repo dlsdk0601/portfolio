@@ -1,4 +1,4 @@
-from typing import TypeVar, Callable
+from typing import Callable, TypeVar
 
 from faker import Faker
 
