@@ -1,12 +1,14 @@
-import os
-import sys
 from datetime import datetime
 
+from sqlalchemy import String, DateTime, func
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
 
-from sqlalchemy import String, DateTime, func, ForeignKey, Boolean
-from sqlalchemy.orm import Mapped, mapped_column, declarative_base
+from ex.py.hash_ex import hash_password
+from was import config
 
-Model = declarative_base()
+Model = DeclarativeBase
+Model = declarative_base()  # type: ignore
 
 
 class Manager(Model):
@@ -20,6 +22,10 @@ class Manager(Model):
 
     create_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     update_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+    @staticmethod
+    def hash_password(password: str) -> str:
+        return hash_password(config.SECRET_PASSWORD_BASE_SALT, password)
 
     __table_args__ = (
         {'comment': 'admin - 관리자'}
