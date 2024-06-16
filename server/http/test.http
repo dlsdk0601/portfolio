@@ -1,0 +1,5 @@
+### TOKEN
+POST http://localhost:8000/sf/sign/access-token
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwayI6MSwiZXhwIjoxNzE4NTU1NjA0fQ.-CST5HIPQ-9Q2r42R-Td_RJNd6hcJ5A5-UepFBD20Yo
+
+{}
