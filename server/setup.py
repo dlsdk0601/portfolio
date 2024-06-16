@@ -23,6 +23,7 @@ setup(
         'pytz==2024.1',
         'types-pytz==2024.1.0.20240417',
         'more-itertools==10.2.0',
+        'PyJWT==2.8.0',
         # 정적 타입 분석
         'mypy==1.10.0',
         'watchdog==4.0.1',
