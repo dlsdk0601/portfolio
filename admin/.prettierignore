@@ -1,0 +1,8 @@
+# 설정
+.eslintrc.json
+.babelrc
+next.config.js
+tsconfig.json
+.prettierrc
+tailwind.config.js
+postcss.config.js
