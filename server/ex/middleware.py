@@ -1,5 +1,5 @@
-from datetime import timedelta, datetime, timezone
-from typing import Union
+from datetime import timedelta, datetime
+from typing import Union, Any
 
 import jwt
 from fastapi import Request
@@ -14,14 +14,17 @@ class Token(BaseModel):
     exp: int
 
 
-def create_jwt_token(data: dict, expires_delta: Union[timedelta, None] = None):
-    to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(hours=3)
+def create_jwt_token(pk: int, expires_delta: Union[timedelta, None] = None):
+    to_encode: dict[str, Any] = {'pk': pk}.copy()
+    expire = datetime.utcnow() + timedelta(hours=3)
     if expires_delta:
-        expire = datetime.now(timezone.utc) + expires_delta
+        expire = datetime.utcnow() + expires_delta
 
-    to_encode.update({'exp': expire})
-    encoded_jwt = jwt.encode(to_encode, config.JWT_SECRET_KEY, config.ALGORITHM)
+    to_encode['exp'] = expire
+
+    to_encode.update({'exp': str(expire)})
+
+    encoded_jwt = jwt.encode(to_encode, config.JWT_SECRET_KEY, algorithm=config.ALGORITHM)
     return encoded_jwt
 
 
@@ -36,7 +39,7 @@ def sf_middleware(request: Request) -> int | ResStatus:
         return ResStatus.LOGIN_REQUIRED
 
     try:
-        token = jwt.decode(access_token, config.JWT_SECRET_KEY, config.ALGORITHM)
+        token = jwt.decode(jwt=access_token, key=config.JWT_SECRET_KEY, algorithms=[config.ALGORITHM])
         return token.get('pk')
     except ExpiredSignatureError:
         return ResStatus.INVALID_ACCESS_TOKEN
