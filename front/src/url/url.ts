@@ -18,7 +18,7 @@ export class PageUrl {
     }
 
     const q = new URLSearchParams(query);
-    return `${this.pathname}?${q}`;
+    return `${this.pathname}?${q.toString()}`;
   }
 
   urlPk(query: { pk: number | "new" }) {
