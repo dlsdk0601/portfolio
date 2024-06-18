@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { isNil } from "lodash";
-import { isDarkState } from "../store/isDark";
+import { darkModeModel } from "../store/darkModeModel";
 
 const useDarkMode = (): {
   isDark: boolean;
   onClickToggleButton: () => void;
 } => {
-  const { isDark, setIsDark } = isDarkState((state) => state);
+  const { isDark, setIsDark } = darkModeModel((state) => state);
 
   useEffect(() => {
     setIsDark(getTheme());

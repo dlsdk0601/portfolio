@@ -6,11 +6,11 @@ import { ReactNode, useState } from "react";
 import { usePathname } from "next/navigation";
 import classNames from "classnames";
 import { Urls } from "../../url/url.g";
-import { layoutState } from "../../store/layout";
+import { layoutModel } from "../../store/layoutModel";
 
 const LeftSidebarView = () => {
   const pathname = usePathname();
-  const { isSidebarOpen, onToggleSideBar } = layoutState((state) => state);
+  const { isSidebarOpen, onToggleSideBar } = layoutModel((state) => state);
 
   return (
     <aside

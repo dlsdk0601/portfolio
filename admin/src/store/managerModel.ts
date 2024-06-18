@@ -2,7 +2,8 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { config } from "../config/config";
 
-interface Manager {
+interface ManagerModel {
+  initialized: boolean;
   id: string;
   email: string;
   phone: string;
@@ -11,11 +12,13 @@ interface Manager {
   isSigned: boolean;
   setToken: (token: string) => void;
   setId: (id: string) => void;
+  init: () => void;
 }
 
-export const mangerModel = create<Manager>()(
+export const managerModel = create<ManagerModel>()(
   persist(
     (set, get) => ({
+      initialized: false,
       id: "",
       email: "",
       phone: "",
@@ -24,6 +27,9 @@ export const mangerModel = create<Manager>()(
       isSigned: false,
       setToken: (token) => set({ token }),
       setId: (id) => set({ id }),
+      init: () => {
+        return set({ initialized: true });
+      },
     }),
     {
       name: config.sessionStorageKey,
