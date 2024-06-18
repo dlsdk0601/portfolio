@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { sleep } from "sleepjs";
-import { isBlock } from "../store/isBlock";
+import { unstable_batchedUpdates } from "react-dom";
+import { blockModel } from "../store/blockModel";
 import { config } from "../config/config";
 
 export const axiosInstance = axios.create({
@@ -31,11 +32,11 @@ export class ApiBase {
   private counter = 0;
 
   with = async <T>(block: () => Promise<T>) => {
-    isBlock.getState().up();
+    unstable_batchedUpdates(() => blockModel.getState().up());
     try {
       return block();
     } finally {
-      isBlock.getState().down();
+      unstable_batchedUpdates(() => blockModel.getState().down());
     }
   };
 
