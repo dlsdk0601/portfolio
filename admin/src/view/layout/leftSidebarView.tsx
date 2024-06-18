@@ -10,26 +10,26 @@ import { layoutState } from "../../store/layout";
 
 const LeftSidebarView = () => {
   const pathname = usePathname();
-  const { isSidebarOpen, toggle } = layoutState((state) => state);
+  const { isSidebarOpen, onToggleSideBar } = layoutState((state) => state);
 
   return (
     <aside
       className={classNames(
-        "z-9999 w-72.5 dark:bg-boxdark absolute left-0 top-0 flex h-screen flex-col overflow-y-hidden bg-black duration-300 ease-linear lg:static lg:translate-x-0",
+        "absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0",
         {
           "translate-x-0": isSidebarOpen,
           "-translate-x-full": !isSidebarOpen,
         },
       )}
     >
-      <div className="py-5.5 lg:py-6.5 flex items-center justify-between gap-2 px-6">
+      <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <Link href={Urls.page.url()}>
           <Image width={176} height={32} src="/images/logo/logo.svg" alt="Logo" priority />
         </Link>
 
         <button
           type="button"
-          onClick={() => toggle()}
+          onClick={() => onToggleSideBar()}
           aria-controls="sidebar"
           aria-expanded={isSidebarOpen}
           className="block lg:hidden"
@@ -55,7 +55,7 @@ const LeftSidebarView = () => {
         <nav className="mt-5 px-4 py-4 lg:mt-9 lg:px-6">
           {/* <!-- Menu Group --> */}
           <div>
-            <h3 className="text-bodydark2 mb-4 ml-4 text-sm font-semibold">MENU</h3>
+            <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">MENU</h3>
 
             <ul className="mb-6 flex flex-col gap-1.5">
               {/* <!-- Menu Item Dashboard --> */}
@@ -66,7 +66,7 @@ const LeftSidebarView = () => {
                       {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                       <Link
                         href="#"
-                        className={`text-bodydark1 hover:bg-graydark dark:hover:bg-meta-4 group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium duration-300 ease-in-out ${
+                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                           (pathname === "/" || pathname.includes("dashboard")) &&
                           "bg-graydark dark:bg-meta-4"
                         }`}
@@ -125,7 +125,7 @@ const LeftSidebarView = () => {
                           <li>
                             <Link
                               href="/public"
-                              className={`text-bodydark2 group relative flex items-center gap-2.5 rounded-md px-4 font-medium duration-300 ease-in-out hover:text-white ${
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${
                                 pathname === "/" && "text-white"
                               }`}
                             >
@@ -145,7 +145,7 @@ const LeftSidebarView = () => {
               <li>
                 <Link
                   href="/calendar"
-                  className={`text-bodydark1 hover:bg-graydark dark:hover:bg-meta-4 group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium duration-300 ease-in-out ${
+                  className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                     pathname.includes("calendar") && "bg-graydark dark:bg-meta-4"
                   }`}
                 >
@@ -171,7 +171,7 @@ const LeftSidebarView = () => {
               <li>
                 <Link
                   href="/profile"
-                  className={`text-bodydark1 hover:bg-graydark dark:hover:bg-meta-4 group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium duration-300 ease-in-out ${
+                  className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                     pathname.includes("profile") && "bg-graydark dark:bg-meta-4"
                   }`}
                 >
@@ -205,7 +205,7 @@ const LeftSidebarView = () => {
                       {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                       <Link
                         href="#"
-                        className={`text-bodydark1 hover:bg-graydark dark:hover:bg-meta-4 group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium duration-300 ease-in-out ${
+                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                           (pathname === "/forms" || pathname.includes("forms")) &&
                           "bg-graydark dark:bg-meta-4"
                         }`}
@@ -268,7 +268,7 @@ const LeftSidebarView = () => {
                           <li>
                             <Link
                               href="/forms/form-elements"
-                              className={`text-bodydark2 group relative flex items-center gap-2.5 rounded-md px-4 font-medium duration-300 ease-in-out hover:text-white ${
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${
                                 pathname === "/forms/form-elements" && "text-white"
                               }`}
                             >
@@ -278,7 +278,7 @@ const LeftSidebarView = () => {
                           <li>
                             <Link
                               href="/forms/form-layout"
-                              className={`text-bodydark2 group relative flex items-center gap-2.5 rounded-md px-4 font-medium duration-300 ease-in-out hover:text-white ${
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${
                                 pathname === "/forms/form-layout" && "text-white"
                               } `}
                             >
@@ -298,7 +298,7 @@ const LeftSidebarView = () => {
               <li>
                 <Link
                   href="/tables"
-                  className={`text-bodydark1 hover:bg-graydark dark:hover:bg-meta-4 group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium duration-300 ease-in-out ${
+                  className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                     pathname.includes("tables") && "bg-graydark dark:bg-meta-4"
                   }`}
                 >
@@ -336,7 +336,7 @@ const LeftSidebarView = () => {
               <li>
                 <Link
                   href="/settings"
-                  className={`text-bodydark1 hover:bg-graydark dark:hover:bg-meta-4 group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium duration-300 ease-in-out ${
+                  className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                     pathname.includes("settings") && "bg-graydark dark:bg-meta-4"
                   }`}
                 >
@@ -378,14 +378,14 @@ const LeftSidebarView = () => {
 
           {/* <!-- Others Group --> */}
           <div>
-            <h3 className="text-bodydark2 mb-4 ml-4 text-sm font-semibold">OTHERS</h3>
+            <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">OTHERS</h3>
 
             <ul className="mb-6 flex flex-col gap-1.5">
               {/* <!-- Menu Item Chart --> */}
               <li>
                 <Link
                   href="/chart"
-                  className={`text-bodydark1 hover:bg-graydark dark:hover:bg-meta-4 group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium duration-300 ease-in-out ${
+                  className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                     pathname.includes("chart") && "bg-graydark dark:bg-meta-4"
                   }`}
                 >
@@ -431,7 +431,7 @@ const LeftSidebarView = () => {
                       {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                       <Link
                         href="#"
-                        className={`text-bodydark1 hover:bg-graydark dark:hover:bg-meta-4 group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium duration-300 ease-in-out ${
+                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                           (pathname === "/ui" || pathname.includes("ui")) &&
                           "bg-graydark dark:bg-meta-4"
                         }`}
@@ -498,7 +498,7 @@ const LeftSidebarView = () => {
                           <li>
                             <Link
                               href="/ui/alerts"
-                              className={`text-bodydark2 group relative flex items-center gap-2.5 rounded-md px-4 font-medium duration-300 ease-in-out hover:text-white ${
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${
                                 pathname === "/ui/alerts" && "text-white"
                               }`}
                             >
@@ -508,7 +508,7 @@ const LeftSidebarView = () => {
                           <li>
                             <Link
                               href="/ui/buttons"
-                              className={`text-bodydark2 group relative flex items-center gap-2.5 rounded-md px-4 font-medium duration-300 ease-in-out hover:text-white ${
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${
                                 pathname === "/ui/buttons" && "text-white"
                               }`}
                             >
@@ -532,7 +532,7 @@ const LeftSidebarView = () => {
                       {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                       <Link
                         href="#"
-                        className={`text-bodydark1 hover:bg-graydark dark:hover:bg-meta-4 group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium duration-300 ease-in-out ${
+                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                           (pathname === "/auth" || pathname.includes("auth")) &&
                           "bg-graydark dark:bg-meta-4"
                         }`}
@@ -595,7 +595,7 @@ const LeftSidebarView = () => {
                           <li>
                             <Link
                               href="/auth/signin"
-                              className={`text-bodydark2 group relative flex items-center gap-2.5 rounded-md px-4 font-medium duration-300 ease-in-out hover:text-white ${
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${
                                 pathname === "/auth/signin" && "text-white"
                               }`}
                             >
@@ -605,7 +605,7 @@ const LeftSidebarView = () => {
                           <li>
                             <Link
                               href="/auth/signup"
-                              className={`text-bodydark2 group relative flex items-center gap-2.5 rounded-md px-4 font-medium duration-300 ease-in-out hover:text-white ${
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${
                                 pathname === "/auth/signup" && "text-white"
                               }`}
                             >

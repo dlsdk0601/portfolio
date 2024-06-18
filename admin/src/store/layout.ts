@@ -2,10 +2,10 @@ import { create } from "zustand";
 
 interface LayoutState {
   isSidebarOpen: boolean;
-  toggle: () => void;
+  onToggleSideBar: () => void;
 }
 
 export const layoutState = create<LayoutState>((set) => ({
   isSidebarOpen: false,
-  toggle: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
+  onToggleSideBar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
 }));
