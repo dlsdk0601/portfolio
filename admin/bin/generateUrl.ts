@@ -1,7 +1,7 @@
 import path from "path";
 import * as fs from "fs";
 import prettier from "prettier";
-import { isNotBlank, removeSuffix } from "../src/ex/utils";
+import { isBlank, removeSuffix } from "../src/ex/utils";
 
 type Page = {
   kind: "page";
@@ -31,30 +31,25 @@ function parseSource(parentDir: string): Array<Page | Dir> {
       entry.name.endsWith(".tsx") &&
       !ignoreFiles.includes(removeSuffix(entry.name, ".tsx"))
     ) {
-      const name = entry.name.startsWith("page") ? "page" : entry.name;
       contents.push({
         kind: "page",
-        name: removeSuffix(name, ".tsx"),
+        name: removeSuffix(entry.name, ".tsx"),
       });
       continue;
     }
 
     if (entry.isDirectory()) {
       const children = parseSource(path.join(parentDir, entry.name));
-      if (isNotBlank(children) && !entry.name.startsWith("(")) {
-        const name = entry.name === "[pk]" ? "pk" : entry.name;
-        contents.push({ kind: "dir", name, children });
+      if (isBlank(children)) {
+        continue;
       }
 
-      if (isNotBlank(children) && entry.name.startsWith("(")) {
-        (children as Dir[]).forEach((child) => {
-          const name = child.name === "[pk]" ? "pk" : child.name;
-          contents.push({
-            kind: "dir",
-            name,
-            children: child.children,
-          });
-        });
+      if (!entry.name.startsWith("(")) {
+        contents.push({ kind: "dir", name: entry.name, children });
+      }
+
+      if (entry.name.startsWith("(")) {
+        contents.push(...children);
       }
     }
   }
