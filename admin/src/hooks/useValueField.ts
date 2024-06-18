@@ -20,7 +20,7 @@ export interface SetValueField<T> {
 const useValueField = <T>(
   init: T,
   name: string,
-  ...validator: Validator<T>[]
+  ...validators: Validator<T>[]
 ): [ValueField<T>, SetValueField<T>] => {
   const [state, setState] = useState<ValueField<T>>({
     value: init,
@@ -47,7 +47,7 @@ const useValueField = <T>(
   const validate = (): boolean => {
     let res = false;
 
-    if (isEmpty(validator) && isBlank(state.value)) {
+    if (isEmpty(validators) && isBlank(state.value)) {
       onDefaultError();
       res = true;
       return res;
@@ -60,8 +60,8 @@ const useValueField = <T>(
       return res;
     }
 
-    for (const val of validator) {
-      const errorMessage = val(state.value);
+    for (const validator of validators) {
+      const errorMessage = validator(state.value);
       if (isNotNil(errorMessage)) {
         setState({ ...state, error: errorMessage });
         res = true;
