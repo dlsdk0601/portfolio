@@ -45,7 +45,8 @@ def _import_manager(db: Session, faker: Faker) -> None:
         manager_id = faker_unique(faker.email, ids)
         manager = Manager(
             id=manager_id, name=faker.name(),
-            password=Manager.hash_password(manager_id)
+            password=Manager.hash_password(manager_id),
+            email=faker.email(), phone=faker.phone_number()
         )
 
         return manager
@@ -55,6 +56,8 @@ def _import_manager(db: Session, faker: Faker) -> None:
     # test 계정
     managers[0].id = 'test'
     managers[0].password = Manager.hash_password('1234')
+    managers[0].email = 'test@test.com'
+    managers[0].phone = '010222333'
 
     db.add_all(managers)
     db.commit()
