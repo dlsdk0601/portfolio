@@ -17,8 +17,10 @@ class Manager(Model):
     pk: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
     id: Mapped[str] = mapped_column(String(128), nullable=False, comment='아이디')
-    name: Mapped[str] = mapped_column(String(64), nullable=False, comment='이름')
     password: Mapped[str] = mapped_column(String(128), nullable=False, comment='hash 패스워드')
+    name: Mapped[str] = mapped_column(String(64), nullable=False, comment='이름')
+    email: Mapped[str] = mapped_column(String(128), nullable=False, comment='이메일')
+    phone: Mapped[str] = mapped_column(String(16), nullable=False, comment='핸드폰 번호')
 
     create_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     update_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
