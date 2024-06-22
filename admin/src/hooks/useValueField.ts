@@ -1,5 +1,7 @@
-import { useState } from "react";
+"use client";
+
 import { isEmpty, isNil } from "lodash";
+import { useState } from "react";
 import { isBlank, isNotNil } from "../ex/utils";
 import { k } from "../ex/korean-postposition";
 
