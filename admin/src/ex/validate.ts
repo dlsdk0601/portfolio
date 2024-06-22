@@ -1,7 +1,17 @@
 import { isEmpty, isNil } from "lodash";
 import isEmail from "validator/lib/isEmail";
 import isUrl from "validator/lib/isURL";
-import { isNotNil } from "./utils";
+import { isBlank, isNotNil } from "./utils";
+
+export const vRequired = (value: any): string | undefined => {
+  if (typeof value !== "string") {
+    return "문자로 입력해주세요.";
+  }
+
+  if (isBlank(value)) {
+    return "필수 입력사항입니다.";
+  }
+};
 
 export const vEmail = (value: any): string | undefined => {
   if (typeof value !== "string") {
