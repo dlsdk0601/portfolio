@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { sleep } from "sleepjs";
+// eslint-disable-next-line camelcase
 import { unstable_batchedUpdates } from "react-dom";
 import { blockModel } from "../store/blockModel";
 import { config } from "../config/config";
@@ -71,7 +72,7 @@ export class ApiBase {
 
   post = async <T>(
     endpoint: string,
-    data?: any,
+    data: any,
     axiosRequestConfig?: AxiosRequestConfig<any>,
   ): Promise<T | null> => {
     return this.with(async () => {
@@ -91,7 +92,7 @@ export class ApiBase {
 
   put = async <T>(
     url: string,
-    data: Record<string, string>,
+    data: any,
     axiosRequestConfig?: AxiosRequestConfig<any>,
   ): Promise<T | null> => {
     return this.with(async () => {
@@ -135,4 +136,20 @@ export class ApiBase {
       }
     });
   };
+
+  g<Q, S>(url: string) {
+    return (query?: Q) => this.get<S>(url, query);
+  }
+
+  p<Q, S>(url: string) {
+    return (data: Q) => this.post<S>(url, data);
+  }
+
+  pu<Q, S>(url: string) {
+    return (data: Q) => this.put<S>(url, data);
+  }
+
+  d<Q extends Record<string, string>, S>(url: string) {
+    return (data: Q) => this.delete<S>(url, data);
+  }
 }
