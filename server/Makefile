@@ -19,7 +19,9 @@ mypy-check:
 	venv/bin/dmypy run -- was ex bin
 
 code-gen:
-	(source venv/bin/activate && $(MAKE) '_code-gen')
+	venv/bin/python bin/generate_ts_schema.py
+	venv/bin/python bin/generate_ts_api.py | venv/bin/python bin/tee.py ../admin/src/lib/api.g.ts
+
 
 _code-gen:
 	#python bin/generate_api_dart_schema.py | (type dart > /dev/null && dart format || cat) | python bin/tee.py ../portfolio_app/lib/api.schema.gen.dart
