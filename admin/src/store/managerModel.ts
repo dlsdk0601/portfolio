@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { config } from "../config/config";
 
-interface ManagerModel {
+interface ManagerModelState {
   initialized: boolean;
   id: string;
   email: string;
@@ -10,12 +10,15 @@ interface ManagerModel {
   token: string | null;
   refreshToken: string | null;
   isSigned: boolean;
-  setToken: (token: string) => void;
+}
+
+interface ManagerModelAction {
+  setToken: (token: string, refreshToken: string) => void;
   setId: (id: string) => void;
   init: () => void;
 }
 
-export const managerModel = create<ManagerModel>()(
+export const managerModel = create<ManagerModelState & ManagerModelAction>()(
   persist(
     (set, get) => ({
       initialized: false,
@@ -25,7 +28,7 @@ export const managerModel = create<ManagerModel>()(
       token: null,
       refreshToken: null,
       isSigned: false,
-      setToken: (token) => set({ token }),
+      setToken: (token, refreshToken) => set({ token, refreshToken }),
       setId: (id) => set({ id }),
       init: () => {
         return set({ initialized: true });
