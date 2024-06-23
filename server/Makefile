@@ -20,7 +20,9 @@ mypy-check:
 
 code-gen:
 	venv/bin/python bin/generate_ts_schema.py
-	venv/bin/python bin/generate_ts_api.py | venv/bin/python bin/tee.py ../admin/src/lib/api.g.ts
+	venv/bin/python bin/generate_ts_api.py sf | venv/bin/python bin/tee.py ../admin/src/api/api.g.ts
+	#venv/bin/python bin/generate_ts_api.py front | venv/bin/python bin/tee.py ../front/src/lib/api.g.ts
+	#venv/bin/python bin/generate_ts_api.py app | venv/bin/python bin/tee.py ../app/src/lib/api.g.ts
 
 
 _code-gen:
