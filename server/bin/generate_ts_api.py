@@ -1,4 +1,5 @@
 import os
+import sys
 
 from more_itertools import flatten
 from stringcase import camelcase, capitalcase
@@ -7,7 +8,7 @@ from ex.py.datetime_ex import now
 from was.application import app
 
 
-def main() -> None:
+def main(prefix: str) -> None:
     print('/* tslint:disable */')
     print('/* eslint-disable */')
     print(f'// 자동생성 파일 수정 금지 - {os.path.basename(__file__)} {now()}')
@@ -15,11 +16,11 @@ def main() -> None:
 
     schemas = app.openapi()
     # Base Class import
-    print('import { ApiBase } from "./axios"')
+    print('import { ApiBase } from "./apiBase"')
     print('')
-    schema_names = set(
-        flatten([[f'{pascal_case(key)}Req', f'{pascal_case(key)}Res'] for key, _ in schemas['paths'].items()]))
-    print(f"import {'{' + ','.join(schema_names) + '}'} from '../type/type.g';")
+    paths = list(filter(lambda x: x[0].startswith(prefix), schemas['paths'].items()))
+    schema_names = set(flatten([[f'{pascal_case(key)}Req', f'{pascal_case(key)}Res'] for key, _ in paths]))
+    print(f"import {'{' + ','.join(schema_names) + '}'} from './apiSchema.g';")
     print('')
 
     # class define
@@ -61,4 +62,11 @@ def pascal_case(name: str):
 
 
 if __name__ == '__main__':
-    main()
+    which = sys.argv[1:][0]
+    match which:
+        case 'app':
+            main('/app')
+        case 'front':
+            main('/front')
+        case default:
+            main('/sf')
