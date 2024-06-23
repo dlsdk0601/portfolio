@@ -1,17 +1,50 @@
 "use client";
 
-import React from "react";
+import React, { FormEvent, useCallback } from "react";
 import Link from "next/link";
+import { isNil } from "lodash";
+import { useRouter } from "next/navigation";
 import useValueField from "../../hooks/useValueField";
 import { vRequired } from "../../ex/validate";
 import { EmailIcon, LockIcon } from "../../styles/icons";
+import { Urls } from "../../url/url.g";
+import { api } from "../../api/api";
+import { managerModel } from "../../store/managerModel";
 
 const Page = () => {
+  const router = useRouter();
+  const setToken = managerModel((state) => state.setToken);
   const [id, setId] = useValueField<string>("", "ID", vRequired);
-  const [password, setPassword] = useValueField<string>("", "PASSWORD");
+  const [password, setPassword] = useValueField<string>("", "PASSWORD", vRequired);
+
+  const onSubmit = useCallback(
+    async (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (setId.validate()) {
+        return;
+      }
+
+      if (setPassword.validate()) {
+        return;
+      }
+
+      const res = await api.signIn({
+        id: id.value,
+        password: password.value,
+      });
+
+      if (isNil(res)) {
+        return;
+      }
+
+      setToken(res.token, res.refreshToken);
+      router.push(Urls.page.url());
+    },
+    [id.value, password.value],
+  );
 
   return (
-    <form>
+    <form onSubmit={(e) => onSubmit(e)}>
       <div className="mb-4">
         <label className="mb-2.5 block font-medium text-black dark:text-white">{id.name}</label>
         <div className="relative">
@@ -35,7 +68,7 @@ const Page = () => {
           <input
             type="password"
             placeholder="Enter yout password"
-            className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-white outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+            className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
             value={password.value}
             onChange={(e) => setPassword.set(e.target.value)}
           />
