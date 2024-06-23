@@ -40,7 +40,7 @@ async def before_request(request: Request, call_next):
         # token 이 잘 나왔다면 넘긴다.
         request.state.pk = token_err
         return await call_next(request)
- 
+
     # app
     if path.startswith('/app'):
         return await call_next(request)
@@ -63,8 +63,3 @@ if app.debug:
     )
 
 app.include_router(router=router)
-
-
-@app.get('/')
-def home() -> str:
-    return 'hello world'

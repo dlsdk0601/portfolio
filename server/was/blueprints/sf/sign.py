@@ -63,7 +63,7 @@ class RefreshTokenRes(BaseModel):
     token: str
 
 
-@router.post('/refresh')
+@router.post('/refresh-token')
 def refresh(request: Request, _: RefreshTokenReq) -> Res[RefreshTokenRes]:
     token = create_jwt_token(pk=request.state.pk)
     return ok(RefreshTokenRes(token=token))
