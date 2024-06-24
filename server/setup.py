@@ -12,6 +12,7 @@ setup(
         'sconfig==0.0.3',
         'pydantic==2.7.3',
         'stringcase==1.2.0',
+        'starlette==0.37.2',
         # DB
         'SQLAlchemy==2.0.30',
         'FastAPI-SQLAlchemy-improved==0.5.4',
