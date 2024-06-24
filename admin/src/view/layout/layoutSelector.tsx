@@ -1,11 +1,11 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { managerModel } from "../../store/managerModel";
 import { Urls } from "../../url/url.g";
 
-export function LayoutSelector() {
+export function LayoutSelector(props: PropsWithChildren) {
   const path = usePathname();
 
   // 예외 URL
@@ -13,17 +13,17 @@ export function LayoutSelector() {
 
   if (isSpecialUrl) {
     // OPT :: 예외 URL 이 추가 된다면 Replace 시킬 것.
-    return <></>;
+    return <>{props.children}</>;
   }
 
   if (path === Urls["sign-in"].page.url()) {
-    return <></>;
+    return <>{props.children}</>;
   }
 
-  return <AdminApp />;
+  return <AdminApp>{props.children}</AdminApp>;
 }
 
-export function AdminApp() {
+export function AdminApp(props: PropsWithChildren) {
   const manager = managerModel((state) => state);
   const path = usePathname();
 
@@ -37,7 +37,7 @@ export function AdminApp() {
 
   // 계정 정보 초기화 중
   if (!manager.initialized) {
-    return <></>;
+    return <>{props.children}</>;
   }
 
   if (!manager.isSigned) {
@@ -45,7 +45,7 @@ export function AdminApp() {
     return <Replace url={Urls["sign-in"].page.url({ returnTo: path })} />;
   }
 
-  return <></>;
+  return <>{props.children}</>;
 }
 
 export function Replace(props: { url: string }) {

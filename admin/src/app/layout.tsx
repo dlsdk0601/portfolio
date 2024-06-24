@@ -13,9 +13,8 @@ export default function RootLayout(props: PropsWithChildren) {
   return (
     <html lang="en">
       <body>
-        {props.children}
+        <LayoutSelector>{props.children}</LayoutSelector>
         <BlockView />
-        <LayoutSelector />
       </body>
     </html>
   );
