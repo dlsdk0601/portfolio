@@ -5,6 +5,7 @@ interface BlockModel {
   isLock: boolean;
   up: () => void;
   down: () => void;
+  with: <T>(block: () => Promise<T>) => Promise<T>;
 }
 
 export const blockModel = create<BlockModel>((set, get) => ({
@@ -20,4 +21,12 @@ export const blockModel = create<BlockModel>((set, get) => ({
       const counter = state.counter - 1;
       return { counter, isLock: counter > 0 };
     }),
+  with: async (block) => {
+    get().up();
+    try {
+      return await block();
+    } finally {
+      get().down();
+    }
+  },
 }));

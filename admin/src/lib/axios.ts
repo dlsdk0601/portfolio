@@ -4,7 +4,7 @@ import { config } from "../config/config";
 
 export class AxiosBase {
   axiosInstance = axios.create({
-    baseURL: `${config.baseUrl}/api`,
+    baseURL: config.baseUrl,
     withCredentials: true,
   });
 
@@ -16,9 +16,16 @@ export class AxiosBase {
   beforeRequest = async (axiosConfig: InternalAxiosRequestConfig<any>) => {
     axiosConfig.headers = axiosConfig.headers ?? {};
 
-    const token = sessionStorage.getItem(config.sessionStorageKey);
-    if (!isNil(token)) {
-      axiosConfig.headers["Authorization"] = `Bearer ${token}`;
+    const session = sessionStorage.getItem(config.sessionStorageKey);
+    if (isNil(session)) {
+      return axiosConfig;
+    }
+
+    const state: { state: { refreshToken: string; token: string }; version: number } =
+      JSON.parse(session);
+
+    if (!isNil(state)) {
+      axiosConfig.headers["Authorization"] = `Bearer ${state.state.token}`;
     }
 
     return axiosConfig;
