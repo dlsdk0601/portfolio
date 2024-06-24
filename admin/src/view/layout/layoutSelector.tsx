@@ -13,7 +13,7 @@ export function LayoutSelector(props: PropsWithChildren) {
 
   if (isSpecialUrl) {
     // OPT :: 예외 URL 이 추가 된다면 Replace 시킬 것.
-    return <>{props.children}</>;
+    return <></>;
   }
 
   if (path === Urls["sign-in"].page.url()) {
@@ -37,7 +37,7 @@ export function AdminApp(props: PropsWithChildren) {
 
   // 계정 정보 초기화 중
   if (!manager.initialized) {
-    return <>{props.children}</>;
+    return <></>;
   }
 
   if (!manager.isSigned) {
