@@ -1,6 +1,5 @@
 import { isString, map } from "lodash";
 // eslint-disable-next-line camelcase
-import { unstable_batchedUpdates } from "react-dom";
 import { ResStatus, ValidationError } from "./schema.g";
 import { managerModel } from "../store/managerModel";
 import { Urls } from "../url/url.g";
@@ -95,12 +94,7 @@ class Handler implements ApiHandler {
   }
 
   with<T>(block: () => Promise<T>): Promise<T> {
-    unstable_batchedUpdates(() => blockModel.getState().up());
-    try {
-      return block();
-    } finally {
-      unstable_batchedUpdates(() => blockModel.getState().down());
-    }
+    return blockModel.getState().with(block);
   }
 }
 
