@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { HashLoader } from "react-spinners";
 import { blockModel } from "../store/blockModel";
 
 const BlockView = () => {
@@ -11,10 +12,21 @@ const BlockView = () => {
   }
 
   return (
-    <div className="dark:bg-boxdart-2 dark:text-bodydark">
-      <div className="flex h-screen items-center justify-center bg-white dark:bg-black">
-        <div className="h-16 w-16 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent" />
-      </div>
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        zIndex: 9999,
+        pointerEvents: isLock ? "auto" : "none",
+        opacity: isLock ? 1 : 0,
+        transition: "opacity 300ms 100ms",
+      }}
+      className="flex items-center justify-center bg-[rgba(0,0,0,0.7)]"
+    >
+      <HashLoader />
     </div>
   );
 };
