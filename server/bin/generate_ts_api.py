@@ -20,7 +20,7 @@ def main(prefix: str) -> None:
     print('')
     paths = list(filter(lambda x: x[0].startswith(prefix), schemas['paths'].items()))
     schema_names = set(flatten([[f'{pascal_case(key)}Req', f'{pascal_case(key)}Res'] for key, _ in paths]))
-    print(f"import {'{' + ','.join(schema_names) + '}'} from './apiSchema.g';")
+    print(f"import {'{' + ','.join(schema_names) + '}'} from './schema.g';")
     print('')
 
     # class define
