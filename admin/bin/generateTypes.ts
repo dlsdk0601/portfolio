@@ -34,7 +34,7 @@ const transform = async (input: string) => {
     ts.push(item.fileContent);
   });
 
-  const targetPath = path.join(__dirname, "..", "/src/api/apiSchema.g.ts");
+  const targetPath = path.join(__dirname, "..", "/src/api/schema.g.ts");
   const tsFormatted = await prettier.format(ts.join("\n"), { filepath: targetPath });
   fs.writeFileSync(targetPath, tsFormatted);
 };
