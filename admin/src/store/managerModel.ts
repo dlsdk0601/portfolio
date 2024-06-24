@@ -9,7 +9,6 @@ interface ManagerModelState {
   phone: string;
   token: string | null;
   refreshToken: string | null;
-  isSigned: boolean;
 }
 
 interface ManagerModelAction {
@@ -27,8 +26,9 @@ export const managerModel = create<ManagerModelState & ManagerModelAction>()(
       phone: "",
       token: null,
       refreshToken: null,
-      isSigned: false,
-      setToken: (token, refreshToken) => set({ token, refreshToken }),
+      setToken: (token, refreshToken) => {
+        set({ token, refreshToken });
+      },
       setId: (id) => set({ id }),
       init: () => {
         return set({ initialized: true });

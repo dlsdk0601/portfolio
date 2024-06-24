@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { PropsWithChildren, useEffect } from "react";
+import { isNil } from "lodash";
 import { managerModel } from "../../store/managerModel";
 import { Urls } from "../../url/url.g";
 
@@ -28,7 +29,7 @@ export function AdminApp(props: PropsWithChildren) {
   const path = usePathname();
 
   useEffect(() => {
-    if (manager.isSigned) {
+    if (manager.initialized) {
       return;
     }
 
@@ -40,7 +41,7 @@ export function AdminApp(props: PropsWithChildren) {
     return <></>;
   }
 
-  if (!manager.isSigned) {
+  if (isNil(manager.token)) {
     // 로그인 전 이라면 로그인 페이지로
     return <Replace url={Urls["sign-in"].page.url({ returnTo: path })} />;
   }
