@@ -1,9 +1,9 @@
 "use client";
 
-import React, { FormEvent, useCallback } from "react";
+import React, { FormEvent, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { isNil } from "lodash";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import useValueField from "../../hooks/useValueField";
 import { vRequired } from "../../ex/validate";
 import { EmailIcon, LockIcon } from "../../styles/icons";
@@ -13,7 +13,8 @@ import { managerModel } from "../../store/managerModel";
 
 const Page = () => {
   const router = useRouter();
-  const setToken = managerModel((state) => state.setToken);
+  const query = useSearchParams();
+  const [token, setToken] = managerModel((state) => [state.token, state.setToken]);
   const [id, setId] = useValueField<string>("", "ID", vRequired);
   const [password, setPassword] = useValueField<string>("", "PASSWORD", vRequired);
 
@@ -38,10 +39,24 @@ const Page = () => {
       }
 
       setToken(res.token, res.refreshToken);
-      router.push(Urls.page.url());
+
+      const returnTo = query.get("returnTo");
+      if (isNil(returnTo)) {
+        return router.replace(Urls.account.page.url());
+      }
+
+      return router.replace(returnTo);
     },
     [id.value, password.value],
   );
+
+  useEffect(() => {
+    if (isNil(token)) {
+      return;
+    }
+
+    router.replace(Urls.account.page.url());
+  }, [token]);
 
   return (
     <form onSubmit={(e) => onSubmit(e)}>
