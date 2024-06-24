@@ -1,7 +1,7 @@
 import { isString, map } from "lodash";
 // eslint-disable-next-line camelcase
 import { unstable_batchedUpdates } from "react-dom";
-import { ResStatus, ValidationError } from "./apiSchema.g";
+import { ResStatus, ValidationError } from "./schema.g";
 import { managerModel } from "../store/managerModel";
 import { Urls } from "../url/url.g";
 import { blockModel } from "../store/blockModel";

@@ -3,7 +3,7 @@ import { sleep } from "sleepjs";
 import { AxiosBase } from "../lib/axios";
 import { ApiHandler } from "./api";
 import { config } from "../config/config";
-import { ResStatus, ValidationError } from "./apiSchema.g";
+import { ResStatus, ValidationError } from "./schema.g";
 
 export interface Res<T> {
   data: T | null;
