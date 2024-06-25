@@ -21,10 +21,7 @@ def create_jwt_token(pk: int, expires_delta: Union[timedelta, None] = None):
         expire = datetime.utcnow() + expires_delta
 
     to_encode['exp'] = expire
-
-    to_encode.update({'exp': str(expire)})
-
-    encoded_jwt = jwt.encode(to_encode, config.JWT_SECRET_KEY, algorithm=config.ALGORITHM)
+    encoded_jwt = jwt.encode(payload=to_encode, key=config.JWT_SECRET_KEY, algorithm=config.ALGORITHM)
     return encoded_jwt
 
 
@@ -37,7 +34,6 @@ def sf_middleware(request: Request) -> int | ResStatus:
     access_token = raw_access_token.split('Bearer ')[1]
     if not access_token:
         return ResStatus.LOGIN_REQUIRED
-
     try:
         token = jwt.decode(jwt=access_token, key=config.JWT_SECRET_KEY, algorithms=[config.ALGORITHM])
         return token.get('pk')

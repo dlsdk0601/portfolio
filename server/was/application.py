@@ -22,7 +22,6 @@ app.add_middleware(
 @app.middleware('http')
 async def before_request(request: Request, call_next):
     path = request.url.path
-    print(path)
 
     # admin
     if path.startswith('/sf'):
@@ -45,7 +44,7 @@ async def before_request(request: Request, call_next):
     if path.startswith('/app'):
         return await call_next(request)
 
-        # front
+    # front
     if path.startswith('/front'):
         return await call_next(request)
 
