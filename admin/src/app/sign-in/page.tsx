@@ -6,7 +6,7 @@ import { isNil } from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import useValueField from "../../hooks/useValueField";
 import { vRequired } from "../../ex/validate";
-import { EmailIcon, LockIcon } from "../../styles/icons";
+import { EmailIcon, LockIcon } from "../../view/icons";
 import { Urls } from "../../url/url.g";
 import { api } from "../../api/api";
 import { managerModel } from "../../store/managerModel";

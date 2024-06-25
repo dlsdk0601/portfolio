@@ -1,5 +1,4 @@
 import { isString, map } from "lodash";
-// eslint-disable-next-line camelcase
 import { ResStatus, ValidationError } from "./schema.g";
 import { managerModel } from "../store/managerModel";
 import { Urls } from "../url/url.g";
