@@ -5,6 +5,7 @@ import { PropsWithChildren, useEffect } from "react";
 import { isNil } from "lodash";
 import { managerModel } from "../../store/managerModel";
 import { Urls } from "../../url/url.g";
+import { ignorePromise } from "../../ex/utils";
 
 export function LayoutSelector(props: PropsWithChildren) {
   const path = usePathname();
@@ -33,7 +34,7 @@ export function AdminApp(props: PropsWithChildren) {
       return;
     }
 
-    manager.init();
+    ignorePromise(() => manager.init());
   }, []);
 
   // 계정 정보 초기화 중
