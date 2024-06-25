@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker, Session
 
 from ex.faker_ex import faker_unique, faker_call
 from was import config
-from was.model.manager import Manager
+from was.model.manager import Manager, ManagerType
 
 # fastapi 는 비동기로 돌아가서 app_context 를 알 수가 없다.
 # 알수 있는데 아직 방법을 못찾은 걸수도 있음
@@ -46,7 +46,8 @@ def _import_manager(db: Session, faker: Faker) -> None:
         manager = Manager(
             id=manager_id, name=faker.name(),
             password=Manager.hash_password(manager_id),
-            email=faker.email(), phone=faker.phone_number()
+            email=faker.email(), phone=faker.phone_number(),
+            job=faker.job(), type=ManagerType.NORMAL
         )
 
         return manager
@@ -58,6 +59,8 @@ def _import_manager(db: Session, faker: Faker) -> None:
     managers[0].password = Manager.hash_password('1234')
     managers[0].email = 'test@test.com'
     managers[0].phone = '010222333'
+    managers[0].job = 'Developer'
+    managers[0].type = ManagerType.SUPER
 
     db.add_all(managers)
     db.commit()
