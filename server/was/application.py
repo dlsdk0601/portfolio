@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_sqlalchemy import DBSessionMiddleware
 
-from ex.api import ResStatus, Res
+from ex.api import ResStatus, Res, err
 from ex.middleware import sf_middleware
 from was import config, model
 from was.blueprints import router
@@ -29,15 +29,20 @@ async def before_request(request: Request, call_next):
             # 로그인은 그냥 넘긴다.
             return await call_next(request)
 
-        token_err = sf_middleware(request)
+        manager = sf_middleware(request)
 
         # token 해석이 잘못되었다면 err 를 뱉는다.
-        if isinstance(token_err, ResStatus):
-            res: Res = Res(data=None, errors=[], status=token_err, validation_errors=[])
+        if isinstance(manager, ResStatus):
+            res: Res = Res(data=None, errors=[], status=manager, validation_errors=[])
             return Response(content=res.json())
 
-        # token 이 잘 나왔다면 넘긴다.
-        request.state.pk = token_err
+        if manager is None:
+            return Response(content=err('계정이 조회되지 않습니다.'))
+
+        if manager.enable is False:
+            return Response(content=err('중지된 계정입니다.'))
+
+        request.state.manager = manager
         return await call_next(request)
 
     # app
@@ -50,7 +55,7 @@ async def before_request(request: Request, call_next):
 
     return await call_next(request)
 
-
+ 
 # 개발 중에만 활성화 한다.
 if app.debug:
     app.add_middleware(

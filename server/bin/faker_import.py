@@ -1,32 +1,15 @@
-from contextlib import contextmanager
 from typing import Callable
 from uuid import UUID
 
 import requests
 from faker import Faker
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session
 
 from ex.api import BaseModel
 from ex.faker_ex import faker_unique, faker_call
-from was import config
+from ex.middleware import get_db
 from was.model.asset import Asset
 from was.model.manager import Manager, ManagerType
-
-# fastapi 는 비동기로 돌아가서 app_context 를 알 수가 없다.
-# 알수 있는데 아직 방법을 못찾은 걸수도 있음
-# faker 를 넣을때만 session 을 열러준다.
-engine = create_engine(config.SQLALCHEMY_DATABASE_URI)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-
-@contextmanager
-def get_db():
-    session = SessionLocal()
-    try:
-        yield session
-    finally:
-        session.close()
 
 
 def main() -> None:

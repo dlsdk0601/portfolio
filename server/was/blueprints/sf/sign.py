@@ -30,6 +30,9 @@ def sign_in(req: SignInReq) -> Res[SignInRes]:
     if Manager.hash_password(req.password) != manager.password:
         return err('비밀번호가 잘못되었습니다.')
 
+    if manager.enable is False:
+        return err('중지된 계정입니다.')
+
     token = create_jwt_token(pk=manager.pk)
     refresh_token = create_jwt_token(pk=manager.pk, expires_delta=timedelta(days=7))
 
@@ -65,8 +68,7 @@ class ProfileRes(BaseModel):
 
 @router.post('/profile')
 def profile(request: Request, _: ProfileReq) -> Res[ProfileRes]:
-    manager = db.sync_session.query(Manager).filter_by(pk=request.state.pk).one_or_none()
-
+    manager = request.state.manager
     if not manager:
         return err('회원이 조회되지 않습니다.\n다시 로그인을 해주세요.')
 
