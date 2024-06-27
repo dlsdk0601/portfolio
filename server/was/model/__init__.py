@@ -2,7 +2,7 @@ from fastapi_sqlalchemy import SQLAlchemy
 from sqlalchemy.engine import make_url
 
 from was import config
-from was.model import manager
+from was.model import manager, asset
 
 db: SQLAlchemy = SQLAlchemy(
     url=make_url(config.SQLALCHEMY_DATABASE_URI),
@@ -12,5 +12,6 @@ db: SQLAlchemy = SQLAlchemy(
 # Model = DeclarativeBase
 # Model = db.Base  # type: ignore
 meta_datas = [
-    manager.Model.metadata
+    manager.Model.metadata,
+    asset.Model.metadata
 ]
