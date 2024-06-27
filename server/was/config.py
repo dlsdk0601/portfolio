@@ -24,10 +24,11 @@ SQLALCHEMY_DATABASE_URI = environ.get(
 SQLALCHEMY_ECHO = False
 
 # AWS
+AWS_BUCKET = ''
 AWS_ACCESS_KEY_ID = ''
 AWS_SECRET_ACCESS_KEY = ''
 AWS_REGION = 'ap-northeast-2'
-AWS_BUCKET = ''
+AWS_FRONT = f'https://{AWS_BUCKET}.s3.ap-northeast-2.amazonaws.com/'
 
 configure(__name__)
 

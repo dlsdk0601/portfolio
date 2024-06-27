@@ -1,12 +1,16 @@
 from contextlib import contextmanager
 from typing import Callable
+from uuid import UUID
 
+import requests
 from faker import Faker
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 
+from ex.api import BaseModel
 from ex.faker_ex import faker_unique, faker_call
 from was import config
+from was.model.asset import Asset
 from was.model.manager import Manager, ManagerType
 
 # fastapi 는 비동기로 돌아가서 app_context 를 알 수가 없다.
@@ -28,6 +32,7 @@ def get_db():
 def main() -> None:
     importers: list[Callable[[Session, Faker], None]] = [
         _import_manager,
+        _import_asset,
     ]
     with get_db() as db:
         for importer in importers:
@@ -63,6 +68,34 @@ def _import_manager(db: Session, faker: Faker) -> None:
     managers[0].type = ManagerType.SUPER
 
     db.add_all(managers)
+    db.commit()
+
+
+class LoremPicsum(BaseModel):
+    id: str
+    author: str
+    width: int
+    height: int
+    url: str
+    download_url: str
+
+
+def _import_asset(db: Session, faker: Faker) -> None:
+    def new_asset(picsum: LoremPicsum) -> Asset:
+        asset = Asset(
+            name=picsum.id + '.jpg',
+            content_type='image/jpeg', uuid=UUID(int=int(picsum.id)),
+            url=picsum.download_url + '.jpg',
+            download_url=picsum.download_url + '.jpg'
+        )
+
+        return asset
+
+    r = requests.get('https://picsum.photos/v2/list', {'page': 1, 'limit': 30})
+    r.raise_for_status()
+    json = r.json()
+    assets = [new_asset(LoremPicsum.parse_obj(i)) for i in json]
+    db.add_all(assets)
     db.commit()
 
 
