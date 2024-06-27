@@ -40,6 +40,7 @@ def upgrade() -> None:
                     sa.Column('email', sa.String(length=128), nullable=False, comment='이메일'),
                     sa.Column('phone', sa.String(length=16), nullable=False, comment='핸드폰 번호'),
                     sa.Column('job', sa.String(length=32), nullable=False, comment='직업'),
+                    sa.Column('enable', sa.Boolean, nullable=False, comment='상태'),
                     sa.Column('create_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
                     sa.Column('update_at', sa.DateTime(timezone=True), nullable=True),
                     sa.PrimaryKeyConstraint('pk'),

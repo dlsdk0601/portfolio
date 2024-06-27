@@ -52,7 +52,8 @@ def _import_manager(db: Session, faker: Faker) -> None:
             id=manager_id, name=faker.name(),
             password=Manager.hash_password(manager_id),
             email=faker.email(), phone=faker.phone_number(),
-            job=faker.job(), type=ManagerType.NORMAL
+            job=faker.job(), type=ManagerType.NORMAL,
+            enable=faker.pybool()
         )
 
         return manager
@@ -66,6 +67,7 @@ def _import_manager(db: Session, faker: Faker) -> None:
     managers[0].phone = '010222333'
     managers[0].job = 'Developer'
     managers[0].type = ManagerType.SUPER
+    managers[0].enable = True
 
     db.add_all(managers)
     db.commit()
