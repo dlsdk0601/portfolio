@@ -27,18 +27,19 @@ export function LayoutSelector(props: PropsWithChildren) {
 
 export function AdminApp(props: PropsWithChildren) {
   const manager = managerModel((state) => state);
+  const initialized = manager.initialized;
   const path = usePathname();
 
   useEffect(() => {
-    if (manager.initialized) {
+    if (initialized) {
       return;
     }
 
     ignorePromise(() => manager.init());
-  }, []);
+  }, [initialized]);
 
   // 계정 정보 초기화 중
-  if (!manager.initialized) {
+  if (!initialized) {
     return <></>;
   }
 
