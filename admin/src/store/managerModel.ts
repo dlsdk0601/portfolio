@@ -43,10 +43,10 @@ export const managerModel = create<ManagerModelState & ManagerModelAction>()(
         set({ token, refreshToken });
       },
       init: async () => {
-        if (!get().token) {
-          get().deInit();
-          return;
-        }
+        // if (!get().token) {
+        //   get().deInit();
+        //   return;
+        // }
 
         const res = await api.profile({});
 
