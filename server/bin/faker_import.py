@@ -41,7 +41,7 @@ def _import_manager(db: Session, faker: Faker) -> None:
 
         return manager
 
-    managers = faker_call(faker, new_manager, 10)
+    managers = faker_call(faker, new_manager, 100)
 
     # test 계정
     managers[0].id = 'test'
