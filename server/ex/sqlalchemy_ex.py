@@ -6,7 +6,7 @@ from sqlalchemy.orm import Query
 from sqlalchemy.sql import ColumnElement
 from sqlalchemy.sql.elements import BooleanClauseList
 
-from ex.api import BaseModel, GenericModel
+from ex.api import BaseModel
 
 null: None = None
 true: bool = True
@@ -27,12 +27,12 @@ PAGE_ROW_ITEM = TypeVar('PAGE_ROW_ITEM', bound=BaseModel)
 TableArgs = Tuple[Index | dict[str, str], ...]
 
 
-class PageRow(GenericModel, Generic[PAGE_ROW_ITEM]):
+class PageRow(BaseModel, Generic[PAGE_ROW_ITEM]):
     no: int
     item: PAGE_ROW_ITEM
 
 
-class Pagination(GenericModel, Generic[PAGE_ROW_ITEM]):
+class Pagination(BaseModel, Generic[PAGE_ROW_ITEM]):
     page: int
     pages: list[int]
     prev_page: int
@@ -77,7 +77,7 @@ def icontains(column, string: str):
     return func.lower(column).contains(string.lower(), autoescape=True)
 
 
-def isearch(string: str, *columns):
+def isearch(string: str, *columns) -> ColumnElement[bool]:
     keywords = list(filter(bool, map(lambda x: x.strip(), string.split(' '))))
     conditions = []
 
