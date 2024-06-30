@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import classNames from "classnames";
 import { Urls } from "../../url/url.g";
 import { layoutModel } from "../../store/layoutModel";
+import { NavProfileIcon } from "../icons";
 
 const LeftSidebarView = () => {
   const pathname = usePathname();
@@ -51,13 +52,24 @@ const LeftSidebarView = () => {
       </div>
 
       <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
-        {/* <!-- Sidebar Menu --> */}
         <nav className="mt-5 px-4 py-4 lg:mt-9 lg:px-6">
-          {/* <!-- Menu Group --> */}
           <div>
-            <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">MENU</h3>
-
             <ul className="mb-6 flex flex-col gap-1.5">
+              <li>
+                <Link
+                  href={Urls.account.page.url()}
+                  className={classNames(
+                    "group flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium leading-none text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4",
+                    {
+                      "bg-graydark dark:bg-meta-4": pathname === Urls.account.page.pathname,
+                    },
+                  )}
+                >
+                  <NavProfileIcon />
+                  계정
+                </Link>
+              </li>
+
               {/* <!-- Menu Item Dashboard --> */}
               <SidebarLinkGroup isActive={pathname === "/" || pathname.includes("dashboard")}>
                 {(handleClick, open) => {
@@ -139,6 +151,7 @@ const LeftSidebarView = () => {
                   );
                 }}
               </SidebarLinkGroup>
+
               {/* <!-- Menu Item Dashboard --> */}
 
               {/* <!-- Menu Item Calendar --> */}
