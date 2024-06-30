@@ -3,13 +3,10 @@ from dataclasses import dataclass
 from enum import auto
 from typing import TypeVar, Generic, Optional, Callable, Any, Type
 
-import pydantic.generics
+import pydantic
 from stringcase import camelcase
 
 from ex.py.enum_ex import StringEnum
-
-
-# noinspection PyPackageRequirements
 
 
 class BaseModel(pydantic.BaseModel):
@@ -17,12 +14,14 @@ class BaseModel(pydantic.BaseModel):
         alias_generator = camelcase
         populate_by_name = True
         arbitrary_types_allowed = True
+        from_attributes = True
 
 
-class GenericModel(pydantic.BaseModel):
-    class Config:
-        alias_generator = camelcase
-        populate_by_name = True
+# class GenericModel(pydantic.generics):
+#     class Config:
+#         alias_generator = camelcase
+#         allow_population_by_field_name = True
+#         arbitrary_types_allowed = True
 
 
 RES_DATA = TypeVar('RES_DATA', bound=BaseModel)
@@ -50,6 +49,21 @@ def ok(data: RES_DATA) -> Res[RES_DATA]:
 
 def err(*errors: str) -> Res[RES_DATA]:
     return Res(data=None, errors=list(errors), validation_errors=[], status=ResStatus.OK)
+
+
+def no_permission(error: str | None) -> Res[RES_DATA]:
+    errors = list(error) if error else ['권한이 없습니다.']
+    return Res(data=None, errors=errors, validation_errors=[], status=ResStatus.NO_PERMISSION)
+
+
+def not_found(error: str | None) -> Res[RES_DATA]:
+    errors = list(error) if error else ['조회할 수 없습니다.']
+    return Res(data=None, errors=errors, validation_errors=[], status=ResStatus.NOT_FOUND)
+
+
+def login_required(error: str | None) -> Res[RES_DATA]:
+    errors = list(error) if error else ['로그인을 먼저 해주세요.']
+    return Res(data=None, errors=errors, validation_errors=[], status=ResStatus.LOGIN_REQUIRED)
 
 
 API_REQ = TypeVar('API_REQ', bound=BaseModel)
