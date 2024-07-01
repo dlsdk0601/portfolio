@@ -9,6 +9,7 @@ export type TableViewRow = TableViewRowItem[];
 export const PaginationView = <T extends any>(props: {
   pagination: Pagination<T> | null;
   mapper: (item: T) => TableViewRow;
+  onClicks?: (() => void)[];
 }) => {
   if (isNil(props.pagination)) {
     return <div className="h-[500px]" />;
@@ -38,6 +39,7 @@ export const PaginationView = <T extends any>(props: {
             ["번호", entry.no],
             ...props.mapper(entry.item),
           ])}
+          onClicks={props.onClicks}
         />
 
         <PageView
@@ -50,7 +52,7 @@ export const PaginationView = <T extends any>(props: {
   );
 };
 
-export const TableView = (props: { rows: TableViewRow[] }) => {
+export const TableView = (props: { rows: TableViewRow[]; onClicks?: (() => void)[] }) => {
   return (
     <table className="w-full table-auto">
       <thead>
@@ -66,12 +68,21 @@ export const TableView = (props: { rows: TableViewRow[] }) => {
         </tr>
       </thead>
       <tbody>
+        {/* TODO :: client side 로 빼서 useParams 로 처리 */}
         {props.rows.map((row, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <tr key={`pagination-tbody-tr-${index}`}>
+          <tr
+            // eslint-disable-next-line react/no-array-index-key
+            key={`pagination-tbody-tr-${row}`}
+            className="cursor-pointer hover:bg-gray"
+            onClick={props.onClicks && props.onClicks[index]}
+          >
             {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
-            {row.map(([_, data]) => (
-              <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark xl:pl-11">
+            {row.map(([_, data], rowIndex) => (
+              <td
+                // eslint-disable-next-line react/no-array-index-key
+                key={rowIndex}
+                className="border-b border-[#eee] px-4 py-5 dark:border-strokedark xl:pl-11"
+              >
                 <p className="text-black dark:text-white">{data}</p>
               </td>
             ))}

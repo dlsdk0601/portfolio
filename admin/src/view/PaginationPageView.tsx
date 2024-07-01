@@ -32,8 +32,9 @@ export const PageView = (props: { pages: number[]; prevPage: number; nextPage: n
               <PaginationLeftArrowIcon />
             </Link>
           </li>
-          {props.pages.map((page) => (
-            <li>
+          {props.pages.map((page, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <li key={`page-${page}-${index}`}>
               <Link
                 href={setQuery(page)}
                 className={classNames(
