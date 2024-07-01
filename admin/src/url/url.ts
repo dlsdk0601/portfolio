@@ -20,6 +20,12 @@ export class PageUrl<T extends Record<string, any>> {
     const q: Record<string, string> = {};
 
     Object.keys(query).forEach((item) => {
+      // query 값 중에 path에 있다면 거기에 처리 한다.
+      if (this.pathname.includes(item)) {
+        this.pathname.replace(`[${item}]`, `${query[item]}`);
+        return;
+      }
+
       q[item] = `${query[item]}`;
     });
     const queryParams = new URLSearchParams(q);
