@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { config } from "../config/config";
 
-export class PageUrl {
+export class PageUrl<T extends Record<string, any>> {
   readonly pathname: string;
 
   constructor(pathname: string) {
@@ -12,13 +12,18 @@ export class PageUrl {
     return config.baseUrl + this.pathname;
   }
 
-  url(query?: Record<string, string>) {
+  url(query?: T) {
     if (_.isNil(query)) {
       return this.pathname;
     }
 
-    const q = new URLSearchParams(query);
-    return `${this.pathname}?${q.toString()}`;
+    const q: Record<string, string> = {};
+
+    Object.keys(query).forEach((item) => {
+      q[item] = `${query[item]}`;
+    });
+    const queryParams = new URLSearchParams(q);
+    return `${this.pathname}?${queryParams.toString()}`;
   }
 
   urlPk(query: { pk: number | "new" }) {
