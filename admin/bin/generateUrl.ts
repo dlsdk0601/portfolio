@@ -1,11 +1,14 @@
 import path from "path";
 import * as fs from "fs";
+import { readFileSync } from "node:fs";
 import prettier from "prettier";
+import { head } from "lodash";
 import { isBlank, removeSuffix } from "../src/ex/utils";
 
 type Page = {
   kind: "page";
   readonly name: string;
+  readonly query?: string;
 };
 
 type Dir = {
@@ -31,9 +34,25 @@ function parseSource(parentDir: string): Array<Page | Dir> {
       entry.name.endsWith(".tsx") &&
       !ignoreFiles.includes(removeSuffix(entry.name, ".tsx"))
     ) {
+      const tsx = readFileSync(path.join(parentDir, entry.name), { encoding: "utf-8" })
+        .split("\n")
+        .filter((line) => !line.trim().startsWith("//"))
+        .join("\n");
+
+      const queries: RegExpMatchArray[] = Array.from(tsx.matchAll(/interface Query\s*{[^}]*}/g));
+
+      if (queries.length > 1) {
+        throw new Error(
+          `Query 가 두번 정의되었습니다. : file = ${path.join(parentDir, entry.name)}`,
+        );
+      }
+
+      const query = Array.from(head(queries) ?? [])[0];
+
       contents.push({
         kind: "page",
         name: removeSuffix(entry.name, ".tsx"),
+        query: query && query.replaceAll("interface Query", ""),
       });
       continue;
     }
@@ -69,13 +88,17 @@ function generateSource(page: Page | Dir, parents: string[]): string[] {
       // OPT :: nested folder
       const pathname = `/${newParents.join("/")}`;
       const key = `"${page.name}"`;
-      lines.push(
-        `${key}: new PageUrl("${
-          pathname.endsWith("/") && pathname !== "/"
-            ? pathname.substring(0, pathname.length - 1)
-            : pathname
-        }"),`,
-      );
+      const endpoint =
+        pathname.endsWith("/") && pathname !== "/"
+          ? pathname.substring(0, pathname.length - 1)
+          : pathname;
+
+      if (page.query) {
+        lines.push(`${key}: new PageUrl<Partial<${page.query}>>("${endpoint}"),`);
+      } else {
+        lines.push(`${key}: new PageUrl("${endpoint}"),`);
+      }
+
       break;
     }
     case "dir":
