@@ -9,7 +9,6 @@ export type TableViewRow = TableViewRowItem[];
 export const PaginationView = <T extends any>(props: {
   pagination: Pagination<T> | null;
   mapper: (item: T) => TableViewRow;
-  onClicks?: (() => void)[];
 }) => {
   if (isNil(props.pagination)) {
     return <div className="h-[500px]" />;
@@ -39,7 +38,6 @@ export const PaginationView = <T extends any>(props: {
             ["번호", entry.no],
             ...props.mapper(entry.item),
           ])}
-          onClicks={props.onClicks}
         />
 
         <PageView
@@ -52,7 +50,7 @@ export const PaginationView = <T extends any>(props: {
   );
 };
 
-export const TableView = (props: { rows: TableViewRow[]; onClicks?: (() => void)[] }) => {
+export const TableView = (props: { rows: TableViewRow[] }) => {
   return (
     <table className="w-full table-auto">
       <thead>
@@ -68,13 +66,11 @@ export const TableView = (props: { rows: TableViewRow[]; onClicks?: (() => void)
         </tr>
       </thead>
       <tbody>
-        {/* TODO :: client side 로 빼서 useParams 로 처리 */}
         {props.rows.map((row, index) => (
           <tr
             // eslint-disable-next-line react/no-array-index-key
             key={`pagination-tbody-tr-${row}`}
             className="cursor-pointer hover:bg-gray"
-            onClick={props.onClicks && props.onClicks[index]}
           >
             {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
             {row.map(([_, data], rowIndex) => (
