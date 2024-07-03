@@ -57,7 +57,7 @@ def no_permission(error: str | None) -> Res[RES_DATA]:
 
 
 def not_found(error: str | None) -> Res[RES_DATA]:
-    errors = list(error) if error else ['조회할 수 없습니다.']
+    errors = list(error) if error else ['데이터를 조회할 수 없습니다.']
     return Res(data=None, errors=errors, validation_errors=[], status=ResStatus.NOT_FOUND)
 
 
