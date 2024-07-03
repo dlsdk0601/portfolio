@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from starlette.requests import Request
 
-from ex.api import Res, ok, no_permission, BaseModel
+from ex.api import Res, ok, no_permission, BaseModel, not_found
 from ex.sqlalchemy_ex import isearch, Conditions, api_paginate, Pagination
 from was.model import db
 from was.model.manager import Manager, ManagerType
@@ -65,3 +65,17 @@ class ShowRes(BaseModel):
     phone: str
     job: str
     enable: bool
+
+
+@router.post('/manager-show')
+def manager_show(req: ShowReq) -> Res[ShowRes]:
+    manager: Manager | None = db.sync_session.query(Manager).filter_by(pk=req.pk, enable=True).one_or_none()
+
+    if manager is None:
+        return not_found(None)
+
+    return ok(ShowRes(
+        pk=req.pk, id=req.pk, name=req.name,
+        email=req.email, phone=req.phone, job=req.job,
+        enable=req.enable
+    ))
