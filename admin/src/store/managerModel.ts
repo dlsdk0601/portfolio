@@ -3,6 +3,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { isNil } from "lodash";
 import { config } from "../config/config";
 import { api } from "../api/api";
+import { ManagerType } from "../api/schema.g";
 
 interface ManagerModelState {
   initialized: boolean;
@@ -12,6 +13,7 @@ interface ManagerModelState {
   email: string;
   phone: string;
   job: string;
+  type: ManagerType | null;
   token: string | null;
   refreshToken: string | null;
 }
@@ -31,6 +33,7 @@ const initialState: ManagerModelState = {
   email: "",
   phone: "",
   job: "",
+  type: null,
   token: null,
   refreshToken: null,
 };
@@ -43,11 +46,6 @@ export const managerModel = create<ManagerModelState & ManagerModelAction>()(
         set({ token, refreshToken });
       },
       init: async () => {
-        // if (!get().token) {
-        //   get().deInit();
-        //   return;
-        // }
-
         const res = await api.profile({});
 
         if (isNil(res)) {
@@ -63,6 +61,7 @@ export const managerModel = create<ManagerModelState & ManagerModelAction>()(
           email: res.email,
           phone: res.phone,
           job: res.job,
+          type: res.type,
         });
       },
       deInit: () => set({ ...initialState, initialized: true }),
