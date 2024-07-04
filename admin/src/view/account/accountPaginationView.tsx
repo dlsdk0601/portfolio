@@ -12,6 +12,8 @@ import { SelectView } from "../selectView";
 import { SearchActionLayoutView } from "../searchActionBarView";
 import { api } from "../../api/api";
 import { ignorePromise } from "../../ex/utils";
+import { managerModel } from "../../store/managerModel";
+import { Replace } from "../layout/layoutSelector";
 
 export const AccountPaginationSearchView = () => {
   const router = useRouter();
@@ -57,6 +59,7 @@ export const AccountPaginationView = (props: {
   search: string;
   enable: boolean | null;
 }) => {
+  const managerType = managerModel((state) => state.type);
   const [pagination, setPagination] = useState<PaginationManagerListResItem | null>(null);
 
   useEffect(() => {
@@ -77,13 +80,27 @@ export const AccountPaginationView = (props: {
     setPagination(res.pagination);
   }, [props]);
 
+  // 수퍼 계정이 아니면 조회되지 않는다.
+  if (managerType !== "SUPER") {
+    return <Replace url={Urls.profile.page.url()} />;
+  }
+
   return (
     <PaginationView
       pagination={pagination}
       mapper={(item) => [
         ["ID", item.id],
-        ["이름", <Link href={Urls.account["[pk]"].page.url({ pk: item.pk })}>{item.name}</Link>],
+        ["이름", item.name],
         ["상태", <EnableBadge enable={item.enable} />],
+        [
+          "상세",
+          <Link
+            href={Urls.account["[pk]"].page.url({ pk: item.pk })}
+            className="inline-flex items-center justify-center rounded-md border border-primary px-7 py-4 text-center font-medium text-primary hover:bg-opacity-90 lg:px-4 xl:px-4"
+          >
+            상세
+          </Link>,
+        ],
       ]}
     />
   );
