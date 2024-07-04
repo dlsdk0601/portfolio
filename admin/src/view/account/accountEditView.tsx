@@ -75,7 +75,7 @@ export const AccountFormEditView = (props: {
   const [enable, setEnable] = useValueField<boolean>(false, "상태");
 
   useEffect(() => {
-    setName.set(props.id);
+    setName.set(props.name);
     setPhone.set(props.phone);
     setEmail.set(props.email);
     setId.set(props.id);
