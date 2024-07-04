@@ -70,7 +70,7 @@ export const TableView = (props: { rows: TableViewRow[] }) => {
           <tr
             // eslint-disable-next-line react/no-array-index-key
             key={`pagination-tbody-tr-${row}`}
-            className="cursor-pointer hover:bg-gray"
+            className="hover:bg-gray"
           >
             {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
             {row.map(([_, data], rowIndex) => (
