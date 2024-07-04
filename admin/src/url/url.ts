@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _, { isNil } from "lodash";
 import { config } from "../config/config";
 
 export class PageUrl<T extends Record<string, any>> {
@@ -20,6 +20,10 @@ export class PageUrl<T extends Record<string, any>> {
     const q: Record<string, string> = {};
 
     Object.keys(query).forEach((item) => {
+      if (isNil(query[item])) {
+        return;
+      }
+
       // query 값 중에 path에 있다면 거기에 처리 한다.
       if (this.pathname.includes(item)) {
         this.pathname.replace(`[${item}]`, `${query[item]}`);
