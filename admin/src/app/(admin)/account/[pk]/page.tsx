@@ -1,29 +1,14 @@
-"use client";
-
-import React from "react";
-import { useParams } from "next/navigation";
+import { parseQuery } from "../../../../ex/query";
+import { AccountEditView } from "../../../../view/account/accountEditView";
 
 interface Query {
   pk: number;
 }
 
-const AccountEditPage = (props: { params: Query }) => {
-  const pk = props.params.pk;
-  console.log(pk);
-  console.log(typeof pk);
+const AccountEditPage = (props: { params: Record<string, string> }) => {
+  const param = parseQuery<Query>(props.params);
 
-  const param = useParams<{ pk: string }>();
-  console.log(param);
-  console.log(param.pk);
-  console.log(typeof param.pk);
-
-  return (
-    <div>
-      test
-      <p>pk: {pk}</p>
-      <p>param: {param.pk}</p>
-    </div>
-  );
+  return <AccountEditView pk={param.pk ?? null} />;
 };
 
 export default AccountEditPage;
