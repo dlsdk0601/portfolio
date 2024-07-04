@@ -17,9 +17,7 @@ const parseValue = (key: string, value: string) => {
   return value;
 };
 
-type QUERY_VALUE = string | number | boolean | Date;
-
-export const parseQuery = <T extends Record<string, QUERY_VALUE>>(q: Partial<T>) => {
+export const parseQuery = <T>(q: Record<string, string>): Partial<T> => {
   const query: Partial<T> = {};
 
   Object.entries(q).forEach(([key, v]) => {
