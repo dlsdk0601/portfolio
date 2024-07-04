@@ -5,7 +5,7 @@ from fastapi import APIRouter, Request
 from ex.api import BaseModel, Res, ok, err
 from ex.middleware import create_jwt_token
 from was.model import db
-from was.model.manager import Manager
+from was.model.manager import Manager, ManagerType
 
 router = APIRouter(prefix='/sign')
 
@@ -64,6 +64,7 @@ class ProfileRes(BaseModel):
     email: str
     phone: str
     job: str
+    type: ManagerType
 
 
 @router.post('/profile')
@@ -74,5 +75,6 @@ def profile(request: Request, _: ProfileReq) -> Res[ProfileRes]:
 
     return ok(ProfileRes(
         pk=manager.pk, id=manager.id, name=manager.name,
-        email=manager.email, phone=manager.phone, job=manager.job
+        email=manager.email, phone=manager.phone, job=manager.job,
+        type=manager.type
     ))
