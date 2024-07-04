@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from starlette.requests import Request
 
-from ex.api import Res, ok, no_permission, BaseModel, not_found
+from ex.api import Res, ok, no_permission, BaseModel, not_found, err
 from ex.sqlalchemy_ex import isearch, Conditions, api_paginate, Pagination
 from was.model import db
 from was.model.manager import Manager, ManagerType
@@ -53,11 +53,11 @@ def manager_list(request: Request, req: ManagerListReq) -> Res[ManagerListRes]:
     return ok(ManagerListRes(pagination=pagination))
 
 
-class ShowReq(BaseModel):
+class ManagerShowReq(BaseModel):
     pk: int
 
 
-class ShowRes(BaseModel):
+class ManagerShowRes(BaseModel):
     pk: int
     id: str
     name: str
@@ -68,13 +68,21 @@ class ShowRes(BaseModel):
 
 
 @router.post('/manager-show')
-def manager_show(req: ShowReq) -> Res[ShowRes]:
+def manager_show(request: Request, req: ManagerShowReq) -> Res[ManagerShowRes]:
+    bg: Manager | None = request.state.manager
+
+    if bg is None or bg.type != ManagerType.SUPER:
+        return no_permission(None)
+
+    if bg.pk == req.pk:
+        return err('profile setting 페이지를 이용해주세요.')
+
     manager: Manager | None = db.sync_session.query(Manager).filter_by(pk=req.pk, enable=True).one_or_none()
 
     if manager is None:
         return not_found(None)
 
-    return ok(ShowRes(
+    return ok(ManagerShowRes(
         pk=req.pk, id=req.pk, name=req.name,
         email=req.email, phone=req.phone, job=req.job,
         enable=req.enable
