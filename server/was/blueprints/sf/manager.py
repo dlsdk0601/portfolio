@@ -77,13 +77,13 @@ def manager_show(request: Request, req: ManagerShowReq) -> Res[ManagerShowRes]:
     if bg.pk == req.pk:
         return err('profile setting 페이지를 이용해주세요.')
 
-    manager: Manager | None = db.sync_session.query(Manager).filter_by(pk=req.pk, enable=True).one_or_none()
+    manager: Manager | None = db.sync_session.query(Manager).filter_by(pk=req.pk).one_or_none()
 
     if manager is None:
         return not_found(None)
 
     return ok(ManagerShowRes(
-        pk=req.pk, id=req.pk, name=req.name,
-        email=req.email, phone=req.phone, job=req.job,
-        enable=req.enable
+        pk=manager.pk, id=manager.id, name=manager.name,
+        email=manager.email, phone=manager.phone, job=manager.job,
+        enable=manager.enable
     ))
