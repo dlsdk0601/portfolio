@@ -2,6 +2,7 @@
 
 import { isNil } from "lodash";
 import { useCallback, useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import TextFieldView from "../textFieldView";
 import { EmailIcon, ProfileIcon } from "../icons";
 import useValueField from "../../hooks/useValueField";
@@ -9,7 +10,7 @@ import { vEmail, vRequired } from "../../ex/validate";
 import { Replace } from "../layout/layoutSelector";
 import { Urls } from "../../url/url.g";
 import { api } from "../../api/api";
-import { ignorePromise, isNotNil } from "../../ex/utils";
+import { ignorePromise, isNotNil, preventDefaulted } from "../../ex/utils";
 import { ManagerShowRes } from "../../api/schema.g";
 import { CheckBoxView } from "../checkBoxView";
 
@@ -64,15 +65,18 @@ export const AccountFormEditView = (props: {
   email: string;
   phone: string;
   job: string;
-  enable: boolean | null;
+  enable?: boolean;
 }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const pk = props.pk;
   const [name, setName] = useValueField<string>("", "이름", vRequired);
   const [phone, setPhone] = useValueField<string>("", "휴대폰 번호", vRequired);
   const [email, setEmail] = useValueField<string>("", "이메일", vRequired, vEmail);
   const [id, setId] = useValueField<string>("", "ID", vRequired);
   const [job, setJob] = useValueField<string>("", "직업");
-  const [enable, setEnable] = useValueField<boolean>(false, "상태");
+  const [enable, setEnable] = useValueField<boolean>(true, "상태");
 
   useEffect(() => {
     setName.set(props.name);
@@ -87,12 +91,29 @@ export const AccountFormEditView = (props: {
   }, [props]);
 
   const onSubmit = useCallback(async () => {
-    console.log(pk);
-  }, [pk]);
+    const res = await api.managerEdit({
+      pk,
+      id: id.value,
+      name: name.value,
+      phone: phone.value,
+      email: email.value,
+      job: job.value,
+      enable: enable.value,
+    });
+
+    if (isNil(res)) {
+      return;
+    }
+
+    alert("저장되었습니다.");
+    router.replace(pathname);
+  }, [pk, id, name, phone, email, job, enable]);
 
   return (
-    <form>
-      <CheckBoxView field={enable} onChange={(checked) => setEnable.set(checked)} col={2} />
+    <form onSubmit={preventDefaulted(() => onSubmit())}>
+      {props.enable && (
+        <CheckBoxView field={enable} onChange={(checked) => setEnable.set(checked)} col={2} />
+      )}
 
       <div className="flex flex-col gap-5.5 sm:flex-row">
         <TextFieldView
