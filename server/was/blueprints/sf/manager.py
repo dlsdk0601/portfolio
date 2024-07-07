@@ -87,3 +87,44 @@ def manager_show(request: Request, req: ManagerShowReq) -> Res[ManagerShowRes]:
         email=manager.email, phone=manager.phone, job=manager.job,
         enable=manager.enable
     ))
+
+
+class ManagerEditReq(BaseModel):
+    pk: int | None
+    id: str
+    name: str
+    email: str
+    phone: str
+    job: str
+    enable: bool
+
+
+class ManagerEditRes(BaseModel):
+    pk: int
+
+
+@router.post('/manager-edit')
+def manager_edit(request: Request, req: ManagerEditReq) -> Res[ManagerEditRes]:
+    bg: Manager | None = request.state.manager
+
+    if bg is None or bg.type != ManagerType.SUPER:
+        return no_permission(None)
+
+    manager: Manager | None = db.sync_session.query(Manager).filter_by(pk=req.pk).one_or_none()
+
+    if req.pk is None:
+        manager = Manager()
+        manager.type = ManagerType.NORMAL
+
+    manager.id = req.id
+    manager.name = req.name
+    manager.email = req.email
+    manager.phone = req.phone
+    manager.job = req.job
+    manager.enable = req.enable
+    db.session.add(manager)
+    db.session.commit()
+
+    return ok(ManagerEditRes(
+        pk=manager.pk
+    ))
