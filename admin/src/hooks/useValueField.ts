@@ -1,8 +1,8 @@
 "use client";
 
-import { isEmpty, isNil } from "lodash";
+import { isNil } from "lodash";
 import { useState } from "react";
-import { isBlank, isNotNil } from "../ex/utils";
+import { isNotNil } from "../ex/utils";
 import { k } from "../ex/korean-postposition";
 
 export type ValueField<T> = {
@@ -49,11 +49,11 @@ const useValueField = <T>(
   const validate = (): boolean => {
     let res = false;
 
-    if (isEmpty(validators) && isBlank(state.value)) {
-      onDefaultError();
-      res = true;
-      return res;
-    }
+    // if (isEmpty(validators) && isBlank(state.value)) {
+    //   onDefaultError();
+    //   res = true;
+    //   return res;
+    // }
 
     // 숫자 타입은 1 이하를 잡는다.
     if (typeof state.value === "number" && state.value < 1) {
