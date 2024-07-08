@@ -2,6 +2,7 @@ import { isEmpty, isNil } from "lodash";
 import isEmail from "validator/lib/isEmail";
 import isUrl from "validator/lib/isURL";
 import { isBlank, isNotNil } from "./utils";
+import { SetValueField } from "../hooks/useValueField";
 
 export const vRequired = (value: any): string | undefined => {
   if (typeof value !== "string") {
@@ -64,11 +65,6 @@ export const vPassword = (value: any): string | undefined => {
     return "문자로 입력해주세요.";
   }
 
-  // 값이 없을 경우 무시
-  if (isNil(value) || isEmpty(value)) {
-    return "비밀번호는 필수 입력사항입니다.";
-  }
-
   const reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,}$/;
   if (!value.match(reg)) {
     return "비밀번호는 8자 이상 대문자, 소문자, 숫자, 특수문자를 포함해야 합니다.";
@@ -127,3 +123,16 @@ export const vFileExtension = (value: any, types: FileType[]): string | undefine
     return error;
   }
 };
+
+export function validateFields(setFields: SetValueField<any>[]) {
+  let isValid = true;
+  for (const field of setFields) {
+    const isErr = field.validate();
+
+    if (isErr) {
+      isValid = false;
+    }
+  }
+
+  return isValid;
+}
