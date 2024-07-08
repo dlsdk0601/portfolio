@@ -1,8 +1,8 @@
-import { parseQuery } from "../../../../ex/query";
+import { cPk, parseQuery } from "../../../../ex/query";
 import { AccountEditView } from "../../../../view/account/accountEditView";
 
 interface Query {
-  pk: number;
+  pk: cPk;
 }
 
 const AccountEditPage = (props: { params: Record<string, string> }) => {

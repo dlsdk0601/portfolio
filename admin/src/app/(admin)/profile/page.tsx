@@ -15,12 +15,15 @@ const Page = () => {
 
   return (
     <AccountFormEditView
-      pk={manager.pk}
-      id={manager.id}
-      name={manager.name}
-      email={manager.email}
-      phone={manager.phone}
-      job={manager.job}
+      manager={{
+        pk: manager.pk,
+        id: manager.id,
+        name: manager.name,
+        email: manager.email,
+        phone: manager.phone,
+        job: manager.job,
+        enable: true,
+      }}
     />
   );
 };

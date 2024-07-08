@@ -1,8 +1,10 @@
+import Link from "next/link";
 import {
   AccountPaginationSearchView,
   AccountPaginationView,
 } from "../../../view/account/accountPaginationView";
 import { parseQuery } from "../../../ex/query";
+import { Urls } from "../../../url/url.g";
 
 export interface Query {
   page: number;
@@ -22,6 +24,15 @@ const Page = async (props: { searchParams: Record<string, string> }) => {
         search={query.search ?? ""}
         enable={query.enable ?? null}
       />
+
+      <div className="flex justify-end px-5">
+        <Link
+          className="inline-flex items-center justify-center rounded-full border-2 border-primary px-10 py-4 text-center font-medium text-primary transition-all hover:bg-primary hover:text-white lg:px-6 xl:px-8"
+          href={Urls.account["[pk]"].page.url({ pk: "new" })}
+        >
+          Button
+        </Link>
+      </div>
     </section>
   );
 };
