@@ -2,19 +2,20 @@
 
 import { isNil } from "lodash";
 import { useCallback, useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import TextFieldView from "../textFieldView";
 import { EmailIcon, ProfileIcon } from "../icons";
 import useValueField from "../../hooks/useValueField";
-import { vEmail, vRequired } from "../../ex/validate";
+import { validateFields, vEmail, vPassword, vPhone, vRequired } from "../../ex/validate";
 import { Replace } from "../layout/layoutSelector";
 import { Urls } from "../../url/url.g";
 import { api } from "../../api/api";
-import { ignorePromise, isNotNil, preventDefaulted } from "../../ex/utils";
+import { ignorePromise, isNotBlank, preventDefaulted } from "../../ex/utils";
 import { ManagerShowRes } from "../../api/schema.g";
 import { CheckBoxView } from "../checkBoxView";
+import { cPk } from "../../ex/query";
 
-export const AccountEditView = (props: { pk: number | null }) => {
+export const AccountEditView = (props: { pk: cPk | null }) => {
   const pk = props.pk;
 
   if (isNil(pk)) {
@@ -31,7 +32,11 @@ export const AccountEditView = (props: { pk: number | null }) => {
     ignorePromise(() => init(pk));
   }, [pk]);
 
-  const init = useCallback(async (pkValue: number) => {
+  const init = useCallback(async (pkValue: cPk) => {
+    if (pkValue === "new") {
+      return;
+    }
+
     const res = await api.managerShow({ pk: pkValue });
 
     if (isNil(res)) {
@@ -41,59 +46,54 @@ export const AccountEditView = (props: { pk: number | null }) => {
     setManager({ ...res });
   }, []);
 
-  if (isNil(manager)) {
-    return <></>;
-  }
-
-  return (
-    <AccountFormEditView
-      pk={manager.pk}
-      id={manager.id}
-      name={manager.name}
-      email={manager.email}
-      phone={manager.phone}
-      job={manager.job}
-      enable={manager.enable}
-    />
-  );
+  return <AccountFormEditView manager={manager} isShowEnable />;
 };
 
 export const AccountFormEditView = (props: {
-  pk: number;
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  job: string;
-  enable?: boolean;
+  manager: ManagerShowRes | null;
+  isShowEnable?: boolean;
 }) => {
   const router = useRouter();
-  const pathname = usePathname();
 
-  const pk = props.pk;
+  const manager = props.manager;
   const [name, setName] = useValueField<string>("", "이름", vRequired);
-  const [phone, setPhone] = useValueField<string>("", "휴대폰 번호", vRequired);
+  const [phone, setPhone] = useValueField<string>("", "휴대폰 번호", vPhone);
   const [email, setEmail] = useValueField<string>("", "이메일", vRequired, vEmail);
   const [id, setId] = useValueField<string>("", "ID", vRequired);
-  const [job, setJob] = useValueField<string>("", "직업");
+  const [password, setPassword] = useValueField<string>("", "PASSWORD", vPassword);
+  const [job, setJob] = useValueField<string>("", "직업", vRequired);
   const [enable, setEnable] = useValueField<boolean>(true, "상태");
 
   useEffect(() => {
-    setName.set(props.name);
-    setPhone.set(props.phone);
-    setEmail.set(props.email);
-    setId.set(props.id);
-    setJob.set(props.job);
-
-    if (isNotNil(props.enable)) {
-      setEnable.set(props.enable);
+    if (isNil(manager)) {
+      return;
     }
-  }, [props]);
+
+    setName.set(manager.name);
+    setPhone.set(manager.phone);
+    setEmail.set(manager.email);
+    setId.set(manager.id);
+    setJob.set(manager.job);
+    setEnable.set(manager.enable);
+  }, [manager]);
 
   const onSubmit = useCallback(async () => {
+    const isValid = validateFields([setName, setPhone, setEmail, setId, setJob]);
+
+    if (!isValid) {
+      alert("데이터가 유효하지 않습니다.");
+      return;
+    }
+
+    if (isNotBlank(password.value) && setPassword.validate()) {
+      alert("데이터가 유효하지 않습니다.");
+      return;
+    }
+
     const res = await api.managerEdit({
-      pk,
+      pk: isNil(manager) ? null : manager.pk,
       id: id.value,
+      password: password.value,
       name: name.value,
       phone: phone.value,
       email: email.value,
@@ -106,12 +106,12 @@ export const AccountFormEditView = (props: {
     }
 
     alert("저장되었습니다.");
-    router.replace(pathname);
-  }, [pk, id, name, phone, email, job, enable]);
+    router.replace(Urls.account["[pk]"].page.url({ pk: res.pk }));
+  }, [manager, id, name, phone, email, job, enable, password]);
 
   return (
     <form onSubmit={preventDefaulted(() => onSubmit())}>
-      {props.enable && (
+      {props.isShowEnable && (
         <CheckBoxView field={enable} onChange={(checked) => setEnable.set(checked)} col={2} />
       )}
 
@@ -128,6 +128,12 @@ export const AccountFormEditView = (props: {
       <TextFieldView field={email} onChange={(value) => setEmail.set(value)} icon={<EmailIcon />} />
 
       <TextFieldView field={id} onChange={(value) => setId.set(value)} />
+
+      <TextFieldView
+        type="password"
+        field={password}
+        onChange={(value) => setPassword.set(value)}
+      />
 
       <TextFieldView field={job} onChange={(value) => setJob.set(value)} />
 

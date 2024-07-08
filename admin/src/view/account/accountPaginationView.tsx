@@ -44,7 +44,7 @@ export const AccountPaginationSearchView = () => {
       />
 
       <input
-        className="w-100 rounded-r-lg border border-stroke bg-transparent px-5 py-2.5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary"
+        className="w-100 rounded-r-lg border border-stroke bg-transparent px-5 py-2.5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
         placeholder="검색어를 입력주세요."
         type="text"
         value={search}
