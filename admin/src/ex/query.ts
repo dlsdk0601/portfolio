@@ -1,6 +1,8 @@
 import moment from "moment/moment";
 import { isNil } from "lodash";
 
+export type cPk = number | "new";
+
 const parseValue = (key: string, value: string) => {
   if (key.endsWith("At")) {
     return moment(value).toDate();
