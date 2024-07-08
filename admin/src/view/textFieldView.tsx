@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { isNil } from "lodash";
 import { ValueField } from "../hooks/useValueField";
 import { k } from "../ex/korean-postposition";
-import { isNotNil } from "../ex/utils";
+import { isNotBlank, isNotNil } from "../ex/utils";
 
 const TextFieldView = (props: {
   field: ValueField<string>;
@@ -35,6 +35,7 @@ const TextFieldView = (props: {
             {
               "pl-11.5": isNotNil(props.icon),
               "pl-6": isNil(props.icon),
+              "border-meta-1 focus:border-meta-1": isNotBlank(props.field.error),
             },
           )}
           name={props.field.name}
@@ -43,6 +44,9 @@ const TextFieldView = (props: {
           onChange={(e) => props.onChange(e.target.value)}
         />
       </div>
+      {isNotBlank(props.field.error) && (
+        <p className="mt-1 text-xs italic text-meta-1">{props.field.error}</p>
+      )}
     </div>
   );
 };
