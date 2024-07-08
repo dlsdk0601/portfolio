@@ -97,6 +97,7 @@ class ManagerEditReq(BaseModel):
     phone: str
     job: str
     enable: bool
+    password: str
 
 
 class ManagerEditRes(BaseModel):
@@ -113,8 +114,19 @@ def manager_edit(request: Request, req: ManagerEditReq) -> Res[ManagerEditRes]:
     manager: Manager | None = db.sync_session.query(Manager).filter_by(pk=req.pk).one_or_none()
 
     if req.pk is None:
+        # 새로 가입 할 경우, id 유무를 따진다. 
+        exist_manager = db.sync_session.query(Manager).filter_by(id=req.id).one_or_none()
+
+        if exist_manager is not None:
+            return err('이미 존재하는 아이디 입니다.')
+
         manager = Manager()
         manager.type = ManagerType.NORMAL
+
+    if req.password == '':
+        manager.password = Manager.hash_password(req.id)
+    else:
+        manager.password = Manager.hash_password(req.password)
 
     manager.id = req.id
     manager.name = req.name
