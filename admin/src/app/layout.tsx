@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function RootLayout(props: PropsWithChildren) {
   return (
     <html lang="en">
-      <body>
+      <body className="sidebar-expanded">
         <LayoutSelector>{props.children}</LayoutSelector>
         <BlockView />
       </body>

@@ -16,7 +16,7 @@ export const PaginationView = <T extends any>(props: {
 
   if (props.pagination.total === 0) {
     return (
-      <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+      <div className="rounded-sm px-5 pb-2.5 pt-6 dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
           Total: {props.pagination.total}
         </h4>
@@ -28,7 +28,7 @@ export const PaginationView = <T extends any>(props: {
   }
 
   return (
-    <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+    <div className="rounded-sm px-5 pb-2.5 pt-6 dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
         Total: {props.pagination.total}
       </h4>
@@ -70,7 +70,7 @@ export const TableView = (props: { rows: TableViewRow[] }) => {
           <tr
             // eslint-disable-next-line react/no-array-index-key
             key={`pagination-tbody-tr-${row}`}
-            className="hover:bg-gray"
+            className="hover:bg-gray dark:hover:bg-bodydark1"
           >
             {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
             {row.map(([_, data], rowIndex) => (

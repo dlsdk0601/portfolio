@@ -16,7 +16,7 @@ export const SelectView = <T,>(props: {
   return (
     <div className="relative z-20 bg-white dark:bg-form-input">
       <select
-        className="relative z-20 w-full appearance-none rounded-l-lg border border-stroke bg-transparent py-2.5 pl-7 pr-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
+        className="relative z-20 w-full appearance-none rounded-l-lg border border-stroke bg-transparent py-2.5 pl-7 pr-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
         value={stringify(props.value)}
         onChange={(e) => props.onChange(parseStringify(e.target.value))}
       >
