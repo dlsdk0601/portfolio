@@ -24,7 +24,7 @@ export class AxiosBase {
     const state: { state: { refreshToken: string; token: string }; version: number } =
       JSON.parse(session);
 
-    if (!isNil(state)) {
+    if (!isNil(state.state.token)) {
       axiosConfig.headers["Authorization"] = `Bearer ${state.state.token}`;
     }
 
