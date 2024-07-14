@@ -1,6 +1,6 @@
 class Config {
   // BASIC
-  readonly baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:5001";
+  readonly baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:8000";
   readonly apiDelay = Number(process.env.NEXT_PUBLIC_API_DELAY ?? 0);
 
   // sessionStorage key
