@@ -5,7 +5,7 @@ from fastapi_sqlalchemy import DBSessionMiddleware
 from ex.api import ResStatus, Res, err
 from ex.middleware import sf_middleware
 from was import config, model
-from was.blueprints import router
+from was.blueprints import router, sf_prefix, app_prefix, front_prefix
 
 app = FastAPI(
     debug=config.DEBUG
@@ -24,7 +24,7 @@ async def before_request(request: Request, call_next):
     path = request.url.path
 
     # admin
-    if path.startswith('/sf'):
+    if path.startswith(sf_prefix):
         if path.startswith('/sf/sign/sign-in'):
             # 로그인은 그냥 넘긴다.
             return await call_next(request)
@@ -46,16 +46,16 @@ async def before_request(request: Request, call_next):
         return await call_next(request)
 
     # app
-    if path.startswith('/app'):
+    if path.startswith(app_prefix):
         return await call_next(request)
 
     # front
-    if path.startswith('/front'):
+    if path.startswith(front_prefix):
         return await call_next(request)
 
     return await call_next(request)
 
- 
+
 # 개발 중에만 활성화 한다.
 if app.debug:
     app.add_middleware(
