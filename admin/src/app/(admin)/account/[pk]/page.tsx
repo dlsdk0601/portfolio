@@ -8,7 +8,7 @@ interface Query {
 const AccountEditPage = (props: { params: Record<string, string> }) => {
   const param = parseQuery<Query>(props.params);
 
-  return <AccountEditView pk={param.pk ?? null} />;
+  return <AccountEditView pk={param.pk ?? null} enter="ACCOUNT" />;
 };
 
 export default AccountEditPage;

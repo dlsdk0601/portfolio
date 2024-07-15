@@ -15,6 +15,7 @@ const Page = () => {
 
   return (
     <AccountFormEditView
+      enter="PROFILE"
       manager={{
         pk: manager.pk,
         id: manager.id,

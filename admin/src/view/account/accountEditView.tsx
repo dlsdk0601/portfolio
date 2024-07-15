@@ -15,7 +15,7 @@ import { ManagerShowRes } from "../../api/schema.g";
 import { CheckBoxView } from "../checkBoxView";
 import { cPk } from "../../ex/query";
 
-export const AccountEditView = (props: { pk: cPk | null }) => {
+export const AccountEditView = (props: { pk: cPk | null; enter: "ACCOUNT" | "PROFILE" }) => {
   const pk = props.pk;
 
   if (isNil(pk)) {
@@ -46,11 +46,12 @@ export const AccountEditView = (props: { pk: cPk | null }) => {
     setManager({ ...res });
   }, []);
 
-  return <AccountFormEditView manager={manager} isShowEnable />;
+  return <AccountFormEditView manager={manager} enter={props.enter} isShowEnable />;
 };
 
 export const AccountFormEditView = (props: {
   manager: ManagerShowRes | null;
+  enter: "ACCOUNT" | "PROFILE";
   isShowEnable?: boolean;
 }) => {
   const router = useRouter();
@@ -106,7 +107,11 @@ export const AccountFormEditView = (props: {
     }
 
     alert("저장되었습니다.");
-    router.replace(Urls.account["[pk]"].page.url({ pk: res.pk }));
+    if (props.enter === "ACCOUNT") {
+      return router.replace(Urls.account["[pk]"].page.url({ pk: res.pk }));
+    }
+
+    router.replace(Urls.profile.page.url());
   }, [manager, id, name, phone, email, job, enable, password]);
 
   return (

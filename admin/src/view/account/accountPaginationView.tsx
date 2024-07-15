@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { isNil } from "lodash";
@@ -59,12 +59,17 @@ export const AccountPaginationView = (props: {
   search: string;
   enable: boolean | null;
 }) => {
+  const initialize = useRef(false);
   const managerType = managerModel((state) => state.type);
   const [pagination, setPagination] = useState<PaginationManagerListResItem | null>(null);
 
   useEffect(() => {
+    if (initialize.current) {
+      return;
+    }
+
     ignorePromise(() => init());
-  }, [props]);
+  }, [props, initialize.current]);
 
   const init = useCallback(async () => {
     const res = await api.managerList({
@@ -78,6 +83,7 @@ export const AccountPaginationView = (props: {
     }
 
     setPagination(res.pagination);
+    initialize.current = true;
   }, [props]);
 
   // 수퍼 계정이 아니면 조회되지 않는다.
