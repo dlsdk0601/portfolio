@@ -79,7 +79,7 @@ export const TableView = (props: { rows: TableViewRow[] }) => {
                 key={rowIndex}
                 className="border-b border-[#eee] px-4 py-5 dark:border-strokedark xl:pl-11"
               >
-                <p className="text-black dark:text-white">{data}</p>
+                <span className="text-black dark:text-white">{data}</span>
               </td>
             ))}
           </tr>
