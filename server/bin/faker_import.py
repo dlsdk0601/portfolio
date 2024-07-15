@@ -9,6 +9,7 @@ from ex.api import BaseModel
 from ex.faker_ex import faker_unique, faker_call
 from ex.middleware import get_db
 from was.model.asset import Asset
+from was.model.contact import Contact, ContactType
 from was.model.manager import Manager, ManagerType
 
 
@@ -16,6 +17,7 @@ def main() -> None:
     importers: list[Callable[[Session, Faker], None]] = [
         _import_manager,
         _import_asset,
+        _import_contact
     ]
     with get_db() as db:
         for importer in importers:
@@ -81,6 +83,23 @@ def _import_asset(db: Session, faker: Faker) -> None:
     json = r.json()
     assets = [new_asset(LoremPicsum.parse_obj(i)) for i in json]
     db.add_all(assets)
+    db.commit()
+
+
+def _import_contact(db: Session, faker: Faker) -> None:
+    contacts = [
+        Contact(
+            type=ContactType.INSTAGRAM, id='jungin.__.a'
+        ),
+        Contact(
+            type=ContactType.GITHUB, id='dlsdk0601'
+        ),
+        Contact(
+            type=ContactType.EMAIL, id='inajung7008@gmail.com'
+        ),
+    ]
+
+    db.add_all(contacts)
     db.commit()
 
 
