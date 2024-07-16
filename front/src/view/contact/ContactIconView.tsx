@@ -1,6 +1,6 @@
-import { CONTACT_ICON } from "../../action/contact";
+import { ContactType } from "../../api/schema.g";
 
-const ContactIConView = (props: { icon: CONTACT_ICON }) => {
+const ContactIConView = (props: { icon: ContactType }) => {
   switch (props.icon) {
     case "GITHUB":
       return (
@@ -20,7 +20,7 @@ const ContactIConView = (props: { icon: CONTACT_ICON }) => {
           <path d="M9 18c-4.51 2-5-2-7-2" />
         </svg>
       );
-    case "MAIL":
+    case "EMAIL":
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
