@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter
 
 from ex.api import BaseModel, Res, ok
 from was.model import db
@@ -30,7 +30,7 @@ class ContactShowRes(BaseModel):
 
 
 @router.get('/contact-show')
-def contact_show(_: ContactShowReq = Query()) -> Res[ContactShowRes]:
+def contact_show() -> Res[ContactShowRes]:
     contacts = db.sync_session.query(Contact).filter_by(delete_at=None).order_by(Contact.pk).all()
 
     return ok(ContactShowRes(
