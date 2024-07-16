@@ -1,7 +1,7 @@
 import path from "path";
 import * as fs from "node:fs";
 import prettier from "prettier";
-import { generateApi } from "swagger-typescript-api/dist/types";
+import { generateApi } from "swagger-typescript-api";
 import { ignorePromise } from "../src/ex/utils";
 
 const transform = async (input: string) => {
