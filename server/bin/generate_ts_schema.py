@@ -16,7 +16,6 @@ file_name = 'openapi.json'
 
 def generate_openapi_json():
     openapi_schema = app.openapi()
-    # openapi_schema['components']['schemas']['Res'] = Res.schema()
     sf_schema, front_schema, app_schema = filtered_api(openapi_schema)
 
     ts_run_command = 'bun run bin/generateTypes.ts'
@@ -33,16 +32,38 @@ def filtered_api(schema: dict[str, Any]):
 
 def get_filter_schema(schema: dict[str, Any], prefix: str) -> dict[str, Any]:
     paths = {}
+    schemas = {
+        "HTTPValidationError": schema['components']['schemas']["HTTPValidationError"],
+        "ValidationError": schema['components']['schemas']["ValidationError"],
+        "ResStatus": schema['components']['schemas']["ResStatus"],
+    }
     for path, path_item in schema['paths'].items():
         if path.startswith(prefix):
             paths[path] = path_item
+            schema_name = get_schema_name(path)
+            schemas[f'{schema_name}Req'] = schema['components']['schemas'][f'{schema_name}Req']
+            schemas[f'{schema_name}Res'] = schema['components']['schemas'][f'{schema_name}Res']
+            schemas[f'Res_{schema_name}Res_'] = schema['components']['schemas'][f'Res_{schema_name}Res_']
+            if v := schema['components']['schemas'].get(f'{schema_name}ResItem'):
+                schemas[f'{schema_name}ResItem'] = v
 
     return {
         'openapi': schema['openapi'],
         'info': schema['info'],
         'paths': paths,
         'components': schema['components']
+        # OPT :: 각 프로젝트에 해당하는 타입만 골라내기 
+        # 'components': {
+        #     "schemas": schemas
+        # }
     }
+
+
+def get_schema_name(path: str) -> str:
+    parts = path.split('/')
+    last_parts = parts[-1].split('-')
+    name = ''.join(last.capitalize() for last in last_parts)
+    return name
 
 
 def save_schema_to_json(schema: dict[str, Any], root_path: Path, command: str):

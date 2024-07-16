@@ -26,7 +26,7 @@ def main(prefix: str) -> None:
     # class define
     print(f'export class Api extends ApiBase {{')
     url: str
-    for url, value in schemas['paths'].items():
+    for url, value in paths:
         url_name = pascal_case(url)
 
         if 'get' in value:
