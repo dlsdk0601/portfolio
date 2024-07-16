@@ -112,7 +112,7 @@ def manager_edit(request: Request, req: ManagerEditReq) -> Res[ManagerEditRes]:
         return no_permission(None)
 
     manager: Manager | None = db.sync_session.query(Manager).filter_by(pk=req.pk).one_or_none()
-
+ 
     if req.pk is None:
         # 새로 가입 할 경우, id 유무를 따진다. 
         exist_manager = db.sync_session.query(Manager).filter_by(id=req.id).one_or_none()
@@ -122,6 +122,9 @@ def manager_edit(request: Request, req: ManagerEditReq) -> Res[ManagerEditRes]:
 
         manager = Manager()
         manager.type = ManagerType.NORMAL
+
+    if manager is None:
+        return err('회원이 조회되지 않습니다.')
 
     if req.password == '':
         manager.password = Manager.hash_password(req.id)
