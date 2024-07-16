@@ -89,13 +89,13 @@ def _import_asset(db: Session, faker: Faker) -> None:
 def _import_contact(db: Session, faker: Faker) -> None:
     contacts = [
         Contact(
-            type=ContactType.INSTAGRAM, id='jungin.__.a'
+            type=ContactType.INSTAGRAM, id='jungin.__.a', href='https://instagram/jungin.__.a'
         ),
         Contact(
-            type=ContactType.GITHUB, id='dlsdk0601'
+            type=ContactType.GITHUB, id='dlsdk0601', href='https://github.com/dlsdk0601'
         ),
         Contact(
-            type=ContactType.EMAIL, id='inajung7008@gmail.com'
+            type=ContactType.EMAIL, id='inajung7008@gmail.com', href='mailto:inajung7008@gmail.com'
         ),
     ]
 

@@ -36,8 +36,10 @@ def upgrade() -> None:
                     sa.Column('pk', sa.Integer(), autoincrement=True, nullable=False),
                     sa.Column('type', contact_type, nullable=False, comment='연락처 타입'),
                     sa.Column('id', sa.String(length=64), nullable=False, comment='매체 아이디'),
+                    sa.Column('href', sa.String(length=256), nullable=False, comment='링크'),
                     sa.Column('create_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
                     sa.Column('update_at', sa.DateTime(timezone=True), nullable=True),
+                    sa.Column('delete_at', sa.DateTime(timezone=True), nullable=True),
                     sa.PrimaryKeyConstraint('pk')
                     )
 
