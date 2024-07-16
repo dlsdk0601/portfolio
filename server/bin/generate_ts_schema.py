@@ -40,12 +40,12 @@ def get_filter_schema(schema: dict[str, Any], prefix: str) -> dict[str, Any]:
     for path, path_item in schema['paths'].items():
         if path.startswith(prefix):
             paths[path] = path_item
-            schema_name = get_schema_name(path)
-            schemas[f'{schema_name}Req'] = schema['components']['schemas'][f'{schema_name}Req']
-            schemas[f'{schema_name}Res'] = schema['components']['schemas'][f'{schema_name}Res']
-            schemas[f'Res_{schema_name}Res_'] = schema['components']['schemas'][f'Res_{schema_name}Res_']
-            if v := schema['components']['schemas'].get(f'{schema_name}ResItem'):
-                schemas[f'{schema_name}ResItem'] = v
+            # schema_name = get_schema_name(path)
+            # schemas[f'{schema_name}Req'] = schema['components']['schemas'][f'{schema_name}Req']
+            # schemas[f'{schema_name}Res'] = schema['components']['schemas'][f'{schema_name}Res']
+            # schemas[f'Res_{schema_name}Res_'] = schema['components']['schemas'][f'Res_{schema_name}Res_']
+            # if v := schema['components']['schemas'].get(f'{schema_name}ResItem'):
+            #     schemas[f'{schema_name}ResItem'] = v
 
     return {
         'openapi': schema['openapi'],
