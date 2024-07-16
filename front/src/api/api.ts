@@ -1,9 +1,8 @@
 import { isString, map } from "lodash";
 import { ResStatus, ValidationError } from "./schema.g";
-import { managerModel } from "../store/managerModel";
 import { Urls } from "../url/url.g";
-import { blockModel } from "../store/blockModel";
 import { Api } from "./api.g";
+import { blockModel } from "../store/blockModel";
 
 export interface ApiHandler {
   catch(e: any): void;
@@ -27,20 +26,21 @@ class Handler implements ApiHandler {
       case ResStatus.OK:
         return;
       case ResStatus.INVALID_ACCESS_TOKEN: {
-        // 처음 부터 로그인이 안된 경우
-        if (managerModel.getState().token === null) {
-          // return-to 체크가 불가능
-          window.location.href = Urls["sign-in"].page.url();
-        }
-
-        if (confirm("사용자 정보가 만료되었습니다.\n재시작 하시겠습니까?")) {
-          window.location.replace(Urls["sign-in"].page.url());
-        }
+        // 처음 부터 로그인이 안된 경우, public 은 해당 사항이 없다.
+        // if (managerModel.getState().token === null) {
+        //   // return-to 체크가 불가능
+        //   window.location.href = Urls["sign-in"].page.url();
+        // }
+        //
+        // if (confirm("사용자 정보가 만료되었습니다.\n재시작 하시겠습니까?")) {
+        //   window.location.replace(Urls["sign-in"].page.url());
+        // }
         return;
       }
       case ResStatus.LOGIN_REQUIRED: {
-        alert("로그인 페이지로 이동합니다.");
-        window.location.href = Urls["sign-in"].page.url();
+        // public 은 해당 사항이 없다.
+        // alert("로그인 페이지로 이동합니다.");
+        // window.location.href = Urls["sign-in"].page.url();
         return;
       }
       case ResStatus.NO_PERMISSION: {
