@@ -29,8 +29,8 @@ class ContactShowRes(BaseModel):
     contacts: list[ContactShowResItem]
 
 
-@router.get('/contact-show')
-def contact_show() -> Res[ContactShowRes]:
+@router.post('/contact-show')
+def contact_show(_: ContactShowReq) -> Res[ContactShowRes]:
     contacts = db.sync_session.query(Contact).filter_by(delete_at=None).order_by(Contact.pk).all()
 
     return ok(ContactShowRes(
