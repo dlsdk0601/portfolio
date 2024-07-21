@@ -25,7 +25,7 @@ const LeftSidebarView = () => {
     >
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <Link href={Urls.page.url()}>
-          <Image width={176} height={32} src="/images/logo/logo.svg" alt="Logo" priority />
+          <Image width={176} height={32} src="/assets/images/logo/logo.svg" alt="Logo" priority />
         </Link>
 
         <button
@@ -67,6 +67,21 @@ const LeftSidebarView = () => {
                 >
                   <NavProfileIcon />
                   계정
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={Urls.contact.page.url()}
+                  className={classNames(
+                    "group flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium leading-none text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4",
+                    {
+                      "bg-graydark dark:bg-meta-4": pathname === Urls.contact.page.pathname,
+                    },
+                  )}
+                >
+                  {/* <NavProfileIcon /> */}
+                  <i className="mdi mdi-contacts-outline text-lg" />
+                  연락처
                 </Link>
               </li>
 
