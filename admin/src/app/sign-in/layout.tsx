@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, Suspense } from "react";
 
 const Layout = (props: PropsWithChildren) => {
   return (
@@ -9,7 +9,7 @@ const Layout = (props: PropsWithChildren) => {
             Sign In to Portfolio Admin
           </h2>
 
-          {props.children}
+          <Suspense>{props.children}</Suspense>
         </div>
       </div>
     </div>
