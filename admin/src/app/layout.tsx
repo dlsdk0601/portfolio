@@ -1,7 +1,8 @@
 import { PropsWithChildren } from "react";
 import type { Metadata } from "next";
-import "../styles/globals.css";
-import "../styles/satoshi.css";
+import "../../public/css/globals.css";
+import "../../public/css/satoshi.css";
+import "../../public/css/icons.css";
 import BlockView from "../view/blockView";
 import { LayoutSelector } from "../view/layout/layoutSelector";
 
