@@ -1,0 +1,85 @@
+# docker 파일, Makefile 은 빌드에 사용될뿐 관계 없다.
+**/Dockerfile
+**/Makefile
+
+# 일반적인 숨김파일 모두 무시
+.*
+**/.*
+
+# 일반적인 로그 파일
+*.log
+**/*.log
+
+# temporaly files
+tmp
+**/tmp
+
+# local builds
+**/build
+
+# git
+.git
+
+# intellij
+.idea
+**/.idea
+
+# python
+**/venv
+**/*.egg-info
+**/__pycache__
+**/*.pyc
+
+# node.js
+**/node_modules
+**/.pnp
+**/.pnp.js
+**/coverage
+**/.next
+**/out
+**/*.pem
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/.pnpm-debug.log*
+**/.env*.local
+**/.vercel
+**/*.tsbuildinfo
+**/next-env.d.ts
+**/*.g.d.ts
+**/*.g.ts
+**/.env
+
+
+# flutter
+**/*.class
+**/*.swp
+**/.DS_Store
+**/migrate_working_dir
+**/doc/api
+**/ios/Flutter/.last_build_id
+**/.dart_tool
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.packages
+**/.pub-cache
+**/.pub
+**/app.*.symbols
+**/app.*.map.json
+**/android/app/debug
+**/android/app/profile
+**/android/app/release
+**/*.apk
+
+#build_runner
+**/*.g.dart
+**/*.freezed.dart
+**/*.gen.dart
+**/lib/src/version.dart
+
+# main entry point - 로컬 개발등 자유롭게 만들게 하도록 전부 무시 한다.
+**/main_*.dart
+
+# 어차피 docker 에서는 사용하지 않는다.
+q6b6-app/ios
+q6b6-app/android
