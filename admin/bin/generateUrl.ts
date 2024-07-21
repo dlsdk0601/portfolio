@@ -121,6 +121,7 @@ ts.push("/* tslint:disable */");
 ts.push("/* eslint-disable */");
 ts.push(`// 자동 생성 파일 수정하지 말것 ${new Date().toString()}`);
 ts.push("import { PageUrl } from './url';");
+ts.push("import { cPk } from '../ex/query';");
 ts.push("export const Urls = {");
 ts.push(...generateSources(pages, []));
 ts.push("};");
