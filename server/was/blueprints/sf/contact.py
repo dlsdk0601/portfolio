@@ -13,7 +13,7 @@ router = APIRouter(prefix='/contact')
 class ContactListReq(BaseModel):
     page: int
     search: str
-    type: ContactType
+    type: ContactType | None
 
 
 class ContactListResItem(BaseModel):
@@ -43,6 +43,9 @@ def contact_list(request: Request, req: ContactListReq) -> Res[ContactListRes]:
     conditions: Conditions = [
         isearch(req.search, Contact.id, Contact.href)
     ]
+
+    if req.type is not None:
+        conditions.append(Contact.type == req.type)
 
     q = db.sync_session.query(Contact).filter(*conditions).order_by(Contact.pk.desc())
     pagination = api_paginate(query=q, page=req.page, map_=ContactListResItem.from_model)
