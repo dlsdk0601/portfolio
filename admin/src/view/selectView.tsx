@@ -3,7 +3,7 @@
 import React from "react";
 import { BottomArrowIcon } from "./icons";
 
-interface SELECT_OPTION<T> {
+export interface SELECT_OPTION<T> {
   label: string;
   value: T;
 }
@@ -44,5 +44,9 @@ export const stringify = <T,>(value: T): string => {
 };
 
 export const parseStringify = <T,>(value: string): T => {
+  if (value === stringify(value)) {
+    return value as T;
+  }
+
   return JSON.parse(value);
 };
