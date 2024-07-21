@@ -2,7 +2,6 @@ import path from "path";
 import * as fs from "node:fs";
 import { generateApi } from "swagger-typescript-api";
 import prettier from "prettier";
-import { ignorePromise } from "../src/ex/utils";
 
 const transform = async (input: string) => {
   const data = await generateApi({
@@ -39,4 +38,6 @@ const transform = async (input: string) => {
   fs.writeFileSync(targetPath, tsFormatted);
 };
 
-ignorePromise(() => transform(path.resolve(process.cwd(), "openapi.json")));
+transform(path.resolve(process.cwd(), "openapi.json")).then(() =>
+  console.log("GENERATE SCHEMA SUCCESS"),
+);
