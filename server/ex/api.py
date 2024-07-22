@@ -61,6 +61,7 @@ def not_found(error: str | None) -> Res[RES_DATA]:
     return Res(data=None, errors=errors, validation_errors=[], status=ResStatus.NOT_FOUND)
 
 
+
 def login_required(error: str | None) -> Res[RES_DATA]:
     errors = list(error) if error else ['로그인을 먼저 해주세요.']
     return Res(data=None, errors=errors, validation_errors=[], status=ResStatus.LOGIN_REQUIRED)
