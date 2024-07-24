@@ -22,14 +22,14 @@ from ex.py.enum_ex import StringEnum
 class BaseModel(pydantic.BaseModel):
     class Config:
         alias_generator = camelcase
-        allow_population_by_field_name = True
+        populate_by_name = True
         arbitrary_types_allowed = True
 
 
-class GenericModel(pydantic.generics.GenericModel):
+class GenericModel(pydantic.BaseModel):
     class Config:
         alias_generator = camelcase
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 RES_DATA = TypeVar('RES_DATA', bound=BaseModel)
@@ -56,7 +56,7 @@ def ok(data: RES_DATA) -> Res[RES_DATA]:
 
 
 def err(*errors: str) -> Res[RES_DATA]:
-    return Res(errors=list(errors), validation_errors=[], status=ResStatus.OK)
+    return Res(data=None, errors=list(errors), validation_errors=[], status=ResStatus.OK)
 
 
 def no_permission(error: str | None) -> Res[RES_DATA]:
@@ -190,15 +190,16 @@ class ApiBlueprint(Blueprint, Generic[API_PERMISSION]):
             try:
                 req = req_type.parse_obj(request.get_json(force=True))
             except ValidationError as validation_errors:
-                return res_jsonify(Res(errors=[], validation_errors=validation_errors.errors(), status=ResStatus.OK))
+                return res_jsonify(
+                    Res(data=None, errors=[], validation_errors=validation_errors.errors(), status=ResStatus.OK))
             try:
                 res = f(req)
             except HTTPException as e:
                 if e.code != 404:
                     raise
-                res = Res(status=ResStatus.NOT_FOUND, errors=[], validation_errors=[])
+                res = Res(data=None, status=ResStatus.NOT_FOUND, errors=[], validation_errors=[])
         else:
-            res = Res(status=ResStatus.NO_PERMISSION, errors=[], validation_errors=[])
+            res = Res(data=None, status=ResStatus.NO_PERMISSION, errors=[], validation_errors=[])
 
         return res_jsonify(res)
 
