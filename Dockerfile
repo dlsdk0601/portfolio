@@ -15,17 +15,19 @@ ENV NEXT_PUBLIC_BASE_URL='' NEXT_PUBLIC_API_DELAY='0'
 # APT 바이너리 유지하도록, 클린업 삭제
 RUN rm /etc/apt/apt.conf.d/docker-clean
 
-# proxy 설정
-ARG NO_PROXY=''
-ENV NO_PROXY=$NO_PROXY
-
-# 빌드 시스템 설치
+# 빌드 시스템 캐싱
+# --mount=target=/var/lib/apt/lists,type=cache => 패키지 목록 폴더 캐싱
+# --mount=target=/var/cache/apt,type=cache => 다운로드한 패키지 파일 캐싱
+# --mount=target=/root/.bun,type=cache => bun 으로 다운로드한 채키지들 캐싱
+# --mount=target=/root/.cache,type=cache => 다양한 애플리케이션들이 사용하는 일반적인 캐시 폴더 캐싱
+# --mount=target=/download,type=cache => 다운로드 폴더 캐싱
 RUN --mount=target=/var/lib/apt/lists,type=cache \
     --mount=target=/var/cache/apt,type=cache \
-    --mount=target=/root/.npm,type=cache \
+    --mount=target=/root/.bun,type=cache \
     --mount=target=/root/.cache,type=cache \
     --mount=target=/download,type=cache
 
+# ca-certificates curl gnupg unzip python bun 설치
 RUN <<EOF
 #!/bin/bash
 set -euxo pipefail
@@ -45,13 +47,16 @@ EOF
 ENV BUN_INSTALL="/root/.bun"
 ENV PATH="$BUN_INSTALL/bin:$PATH"
 
+# 프로젝트 복사 및 WORKDIR 설정
 COPY . /app
 WORKDIR /app
 
+# 프로젝트 의존성 캐싱
 RUN --mount=target=/root/.npm,type=cache \
     --mount=target=/root/.cache,type=cache \
     --mount=target=/root/.pub-cahce,type=cache
 
+# python, next 채키지 설치, generate 파일 실행, build
 RUN <<EOF
 #!/bin/bash
 set -euxo pipefail
