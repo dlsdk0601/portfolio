@@ -29,7 +29,7 @@ code-gen:
 	venv/bin/python bin/generate_ts_api.py sf | venv/bin/python bin/tee.py ../admin/src/api/api.g.ts
 	venv/bin/python bin/generate_ts_api.py front | venv/bin/python bin/tee.py ../front/src/api/api.g.ts
 	#venv/bin/python bin/generate_ts_api.py front | venv/bin/python bin/tee.py ../front/src/lib/api.g.ts
-	#venv/bin/python bin/generate_ts_api.py app | venv/bin/python bin/tee.py ../app/src/lib/api.g.ts
+	#venv/bin/python bin/generate_ts_api.py application | venv/bin/python bin/tee.py ../application/src/lib/api.g.ts
 
 
 # 개발용 테스트 데이터 DB 생성
