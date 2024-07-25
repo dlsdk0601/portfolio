@@ -31,6 +31,7 @@ contact_type = postgresql.ENUM(ContactType, create_type=False, name='contacttype
 
 
 def upgrade() -> None:
+    contact_type.create(op.get_bind())
     op.create_table('contact',
                     sa.Column('pk', sa.Integer(), autoincrement=True, nullable=False),
                     sa.Column('type', contact_type, nullable=False, comment='연락처 타입'),
@@ -45,3 +46,4 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     op.drop_table('contact')
+    contact_type.drop(op.get_bind())
