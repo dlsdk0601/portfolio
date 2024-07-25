@@ -9,17 +9,24 @@ from ex.api import ApiBlueprint, ResStatus, res_jsonify, Res
 from ex.flask_ex import global_proxy
 from was import config
 from was.model import db
-from was.model.manager import Manager
+from was.model.manager import Manager, ManagerType
 
 
 class AdminBlueprint(ApiBlueprint[None]):
     def validate_login(self) -> bool:
-        # return bg.manager is not None
-        return True
+        return bg.manager is not None
 
-    def validate_permission(self, permisssion: Tuple[None, ...]) -> bool:
-        # OPT :: 필요하면 처리
-        return True
+    def validate_permission(self, permission: Tuple[ManagerType]) -> bool:
+        if bg.manager is None:
+            return False
+
+        if not permission:
+            return True
+
+         if permission != ManagerType.SUPER:
+             return False
+
+        return False
 
 
 app = AdminBlueprint('admin_app', __name__)
