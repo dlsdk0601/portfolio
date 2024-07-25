@@ -12,21 +12,24 @@ from was.model import db
 from was.model.manager import Manager, ManagerType
 
 
-class AdminBlueprint(ApiBlueprint[None]):
+class AdminBlueprint(ApiBlueprint[ManagerType]):
     def validate_login(self) -> bool:
         return bg.manager is not None
 
-    def validate_permission(self, permission: Tuple[ManagerType]) -> bool:
+    def validate_permission(self, permission: Tuple[ManagerType, ...]) -> bool:
         if bg.manager is None:
             return False
 
         if not permission:
             return True
 
-         if permission != ManagerType.SUPER:
-             return False
+        has_permission = True
+        for pair in permission:
+            type_, p = pair
+            if type_ != ManagerType.SUPER:
+                has_permission = False
 
-        return False
+        return has_permission
 
 
 app = AdminBlueprint('admin_app', __name__)
@@ -36,7 +39,7 @@ class ManagerGlobal:
     _MANAGER_PK = 'MANAGER_PK'
     _manager: Optional[Manager]
 
-    def set_manager(self, manager: Manager):
+    def set_manager(self, manager: Manager | None):
         self._manager = manager
 
     @property
