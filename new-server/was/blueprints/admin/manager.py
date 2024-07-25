@@ -1,4 +1,4 @@
-from ex.api import BaseModel, Res, ok
+from ex.api import BaseModel, Res, ok, no_permission
 from ex.sqlalchemy_ex import Pagination, Conditions, isearch, api_paginate
 from was.blueprints.admin import app, bg
 from was.model import db
@@ -32,6 +32,9 @@ class ManagerListRes(BaseModel):
 def manager_list(req: ManagerListReq) -> Res[ManagerListRes]:
     manager = bg.manager
 
+    if not manager:
+        return no_permission(error=None)
+
     conditions: Conditions = [
         Manager.pk != manager.pk,
         isearch(req.search, Manager.id, Manager.email, Manager.name)
@@ -40,7 +43,7 @@ def manager_list(req: ManagerListReq) -> Res[ManagerListRes]:
     if req.enable is not None:
         conditions.append(Manager.enable == req.enable)
 
-    q = db.session.query(Manager).filter(*conditions).order_by(Manager.pk.desc())
+    q = db.select(Manager).filter(*conditions).order_by(Manager.pk.desc())
     pagination = api_paginate(q=q, page=req.page, map_=ManagerListResItem.from_model)
 
     return ok(ManagerListRes(
