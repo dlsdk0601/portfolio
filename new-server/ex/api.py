@@ -116,6 +116,7 @@ class ApiBlueprint(Blueprint, Generic[API_PERMISSION]):
 
     def _api(self, f: API_ENDPOINT) -> API_ENDPOINT:
         hints = get_type_hints(f)
+        print(f"Type hints for {f.__name__}: {hints}")
 
         req_type: Optional[Type[BaseModel]] = hints.get('req', hints.get('_'))
         assert req_type is not None, 'request 의 이름은 반드시 req 나 _ 로 지정해야 한다.'
@@ -125,10 +126,13 @@ class ApiBlueprint(Blueprint, Generic[API_PERMISSION]):
         res_type: Optional[GenericAlias] = hints.get('return')
 
         assert res_type is not None, 'response 는 반드시 지정해야 한다.'
-        assert hasattr(res_type, '__origin__') and hasattr(res_type, '__args__'), \
-            'response 는 Res[T] 형태의 Generic 으로 선언되어야 한다.'
-        assert res_type.__origin__ == Res, 'response 는 Res 를 사용해야 한다. '
-        res_data_type: Type[BaseModel] = res_type.__args__[0]
+        assert hasattr(res_type, '__pydantic_generic_metadata__'), 'response 는 Res[T] 형태의 Generic 으로 선언되어야 한다.'
+
+        res_type_origin = res_type.__pydantic_generic_metadata__['origin']
+        res_type_args = res_type.__pydantic_generic_metadata__['args']
+
+        assert res_type_origin == Res, 'response 는 Res 를 사용해야 한다. '
+        res_data_type: Type[BaseModel] = res_type_args[0]
 
         endpoint = f.__name__
         self._end_points.add(endpoint)
