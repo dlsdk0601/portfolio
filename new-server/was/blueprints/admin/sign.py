@@ -18,7 +18,7 @@ class SignInRes(BaseModel):
     refresh_token: str
 
 
-@app.api()
+@app.api(public=True)
 def sign_in(req: SignInReq) -> Res[SignInRes]:
     manager: Manager | None = db.session.query(Manager).filter_by(id=req.id).one_or_none()
 
@@ -45,7 +45,8 @@ class RefreshTokenRes(BaseModel):
     token: str
 
 
-@app.api()
+# TODO :: 확인 해보고 public 지울 것 
+@app.api(public=True)
 def refresh(_: RefreshTokenReq) -> Res[RefreshTokenRes]:
     refresh_token: str | None = request.headers.get('Authorization')
     pk_err = decode_jwt(refresh_token)
@@ -75,7 +76,7 @@ class ProfileRes(BaseModel):
 @app.api()
 def profile(_: ProfileReq) -> Res[ProfileRes]:
     manager = bg.manager
-    
+
     if not manager:
         return err('회원이 조회되지 않습니다.\n다시 로그인을 해주세요.')
 
