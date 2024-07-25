@@ -26,7 +26,7 @@ class ContactShowRes(BaseModel):
     contacts: list[ContactShowResItem]
 
 
-@app.api()
+@app.api(public=True)
 def contact_show(_: ContactShowReq) -> Res[ContactShowRes]:
     contacts = db.session.query(Contact).filter_by(delete_at=None).order_by(Contact.pk).all()
 
