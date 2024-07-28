@@ -14,7 +14,7 @@ setup(
         'werkzeug==3.0.3',
         'Flask-Cors==4.0.0',
         # DB
-        'SQLAlchemy==2.0.30',
+        'SQLAlchemy==2.0.27',
         'Flask-SQLAlchemy==3.1.1',
         'alembic==1.13.1',
         'psycopg2-binary==2.9.9',
