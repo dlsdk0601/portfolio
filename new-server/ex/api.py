@@ -51,6 +51,14 @@ class Res(BaseModel, Generic[RES_DATA]):
     status: ResStatus
 
 
+class ApiMethod(StringEnum):
+    GET = auto()
+    POST = auto()
+    PUT = auto()
+    PATCH = auto()
+    DELETE = auto()
+
+
 def ok(data: RES_DATA) -> Res[RES_DATA]:
     return Res(data=data, errors=[], validation_errors=[], status=ResStatus.OK)
 
@@ -106,15 +114,16 @@ class ApiBlueprint(Blueprint, Generic[API_PERMISSION]):
         super().register(app, options)
         self._app = app
 
-    def api(self, *permissions: API_PERMISSION, public: bool = False) -> Callable[[API_ENDPOINT], API_ENDPOINT]:
+    def api(self, *permissions: API_PERMISSION, public: bool = False, method: ApiMethod = ApiMethod.POST) -> Callable[
+        [API_ENDPOINT], API_ENDPOINT]:
         def _decorated(f: API_ENDPOINT) -> API_ENDPOINT:
             self._permissions[f] = permissions
             self._public_endpoints[f] = public
-            return self._api(f)
+            return self._api(f, method)
 
         return _decorated
 
-    def _api(self, f: API_ENDPOINT) -> API_ENDPOINT:
+    def _api(self, f: API_ENDPOINT, method: ApiMethod) -> API_ENDPOINT:
         hints = get_type_hints(f)
 
         req_type: Optional[Type[BaseModel]] = hints.get('req', hints.get('_'))
@@ -137,13 +146,14 @@ class ApiBlueprint(Blueprint, Generic[API_PERMISSION]):
         self._end_points.add(endpoint)
 
         rule = f'{API_PREFIX}{spinalcase(endpoint)}'
-        self._api_schemas.append(ApiScheme(endpoint=endpoint, url=rule, req=req_type, res_data=res_data_type))
+        self._api_schemas.append(
+            ApiScheme(endpoint=endpoint, url=rule, req=req_type, res_data=res_data_type, method=method))
 
         self.add_url_rule(
             rule=rule,
             endpoint=endpoint,
             view_func=partial(self._api_wrapper, f, req_type),
-            methods=['POST']  # OPT :: get 같은 API 가 에러나면 POST 로 처리
+            methods=[method]
         )
 
         # Unit Test 등에서 편리하게 사용하도록 Session.remove 를 전부 넣어준다.
@@ -213,9 +223,12 @@ class ApiScheme:
     url: str
     req: Type[BaseModel]
     res_data: Type[BaseModel]
+    method: ApiMethod
 
 
 # datetime.time 같은 pydantic 의 json encoder 를 사용하기 위해서 직접 response 를 생성한다.
+
+
 def res_jsonify(res: Res) -> Response:
     return current_app.response_class(
         res.json(by_alias=True)
