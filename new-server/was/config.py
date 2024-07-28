@@ -2,7 +2,7 @@ from os import environ
 
 from sconfig import configure
 
-PORT = 8000
+PORT = 5001
 DEBUG = False
 SECRET_KEY = '30d3ce2d112b78ca50ad16ca4448d9188856a912b57a677efb9e349b8c863263'
 SECRET_PASSWORD_BASE_SALT = SECRET_KEY
