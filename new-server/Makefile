@@ -24,9 +24,9 @@ mypy-check:
 	venv/bin/dmypy run -- was ex bin
 
 code-gen:
-	venv/bin/python bin/generate_ts_schema.py
-	#venv/bin/python bin/test.py sf | venv/bin/python bin/tee.py ../admin/src/api/schema.g.ts
-	venv/bin/python bin/generate_ts_api.py sf | venv/bin/python bin/tee.py ../admin/src/api/api.g.ts
+	venv/bin/python bin/generate_ts_schema.py admin | venv/bin/python bin/tee.py ../admin/src/api/schema.g.ts
+	venv/bin/python bin/generate_ts_schema.py front | venv/bin/python bin/tee.py ../front/src/api/schema.g.ts
+	venv/bin/python bin/generate_ts_api.py admin | venv/bin/python bin/tee.py ../admin/src/api/api.g.ts
 	venv/bin/python bin/generate_ts_api.py front | venv/bin/python bin/tee.py ../front/src/api/api.g.ts
 	#venv/bin/python bin/generate_ts_api.py front | venv/bin/python bin/tee.py ../front/src/lib/api.g.ts
 	#venv/bin/python bin/generate_ts_api.py application | venv/bin/python bin/tee.py ../application/src/lib/api.g.ts
