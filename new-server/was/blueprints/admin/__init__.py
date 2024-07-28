@@ -46,6 +46,13 @@ class ManagerGlobal:
     def manager(self) -> Manager | None:
         return self._manager
 
+    @property
+    def pk(self) -> int | None:
+        if not self.manager:
+            return None
+
+        return self.manager.pk
+
 
 bg = global_proxy('manager', ManagerGlobal)
 
