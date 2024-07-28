@@ -28,7 +28,7 @@ class ManagerType(StringEnum):
 
 manager_type = postgresql.ENUM(ManagerType, create_type=False, name='managertype')
 
-
+ 
 def upgrade() -> None:
     manager_type.create(op.get_bind())
     op.create_table('manager',
@@ -50,4 +50,4 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     op.drop_table('manager')
-    op.drop_table('manager')
+    manager_type.drop(op.get_bind())
