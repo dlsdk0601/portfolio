@@ -116,7 +116,6 @@ class ApiBlueprint(Blueprint, Generic[API_PERMISSION]):
 
     def _api(self, f: API_ENDPOINT) -> API_ENDPOINT:
         hints = get_type_hints(f)
-        print(f"Type hints for {f.__name__}: {hints}")
 
         req_type: Optional[Type[BaseModel]] = hints.get('req', hints.get('_'))
         assert req_type is not None, 'request 의 이름은 반드시 req 나 _ 로 지정해야 한다.'

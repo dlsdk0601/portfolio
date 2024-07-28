@@ -1,4 +1,3 @@
-import importlib
 import logging
 import pkgutil
 import sys
@@ -58,7 +57,7 @@ def load_submodules(module) -> None:
     for finder, name, is_pkg in pkgutil.iter_modules(module.__path__):
         module_name = f"{module.__name__}.{name}"
         if module_name not in sys.modules:
-            child_module = importlib.import_module(module_name)
+            child_module = finder.find_module(module_name).load_module()  # type: ignore
         else:
             child_module = sys.modules[module_name]
 
