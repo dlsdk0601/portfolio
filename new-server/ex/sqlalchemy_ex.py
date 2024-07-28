@@ -115,5 +115,5 @@ def pg_try_xlock2(session: Session | scoped_session[Session], group_id: int, loc
     )
 
 
-Condition = Union[ColumnElement[bool], BooleanClauseList, bool]
+Condition = Union[ColumnElement[bool], BooleanClauseList]
 Conditions = List[Condition]
