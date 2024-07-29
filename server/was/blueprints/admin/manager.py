@@ -1,3 +1,5 @@
+from sqlalchemy import select
+
 from ex.api import BaseModel, Res, ok, no_permission, err
 from ex.sqlalchemy_ex import Pagination, Conditions, isearch, api_paginate
 from was.blueprints.admin import app, bg
@@ -43,8 +45,8 @@ def manager_list(req: ManagerListReq) -> Res[ManagerListRes]:
     if req.enable is not None:
         conditions.append(Manager.enable == req.enable)
 
-    q = db.select(Manager).filter(*conditions).order_by(Manager.pk.desc())
-    pagination = api_paginate(q=q, page=req.page, map_=ManagerListResItem.from_model)
+    q = select(Manager).filter(*conditions).order_by(Manager.pk.desc())
+    pagination: Pagination[ManagerListResItem] = api_paginate(q=q, page=req.page, map_=ManagerListResItem.from_model)
 
     return ok(ManagerListRes(
         pagination=pagination,
