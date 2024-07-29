@@ -2,14 +2,14 @@ import datetime
 import os.path
 import re
 import sys
+import types
 from enum import Enum
-from typing import Iterable, Type, Any, get_origin, TypeVar, get_args
+from typing import Iterable, Type, Any, get_origin, TypeVar, get_args, Union
 from uuid import UUID
 
 from more_itertools import flatten
 from pydantic import BaseModel
-from pydantic.v1.fields import ModelField
-from pydantic_core.core_schema import set_schema
+from pydantic.fields import FieldInfo
 from stringcase import camelcase
 from werkzeug.datastructures import FileStorage
 
@@ -25,7 +25,7 @@ def generate(_app: ApiBlueprint) -> None:
     print('')
 
     api_schemas = list(flatten([i.req, i.res_data] for i in _app.export_api_schema()))
-    models: set[Type[BaseModel | Enum]] = set_schema(api_schemas)
+    models: set[Type[BaseModel | Enum]] = get_flat_models_from_models(api_schemas)
     models.add(ResStatus)
     models.add(Res)
     for model in sorted(models, key=lambda x: x.__name__):
@@ -38,10 +38,12 @@ def generate(_app: ApiBlueprint) -> None:
 def generate_class(model: Type[BaseModel]) -> str:
     name = _de_generic_name(model.__name__)
     properties: list[str] = []
-    field: ModelField
-    for field in model.__fields__.values():
-        type_ = _field_type(field.outer_type_, field.type_, bool(field.required))
-        properties.append(f'    {camelcase(field.name)}: {type_};\n')
+    field: FieldInfo
+    for field in model.model_fields.values():
+        print('field')
+        print(field)
+        type_ = _field_type(field.annotation)
+        properties.append(f'    {camelcase(field.alias)}: {type_};\n')
 
     type_parameters = list(map(lambda x: x.__name__, getattr(model, '__parameters__', [])))
     if type_parameters:
@@ -53,42 +55,50 @@ def generate_class(model: Type[BaseModel]) -> str:
     return src
 
 
-def _field_type(outer_type: Any, field_type: Any, required: bool):
-    origin_type = get_origin(outer_type)
-    if outer_type is str or outer_type is UUID:
+def _field_type(field_type: Any):
+    origin_type = get_origin(field_type)
+    print('---')
+    print(field_type)
+    print(origin_type)
+    if field_type is str or field_type is UUID:
         type_ = 'string'
-    elif outer_type is int:
+    elif field_type is int:
         type_ = 'number'
-    elif outer_type is bool:
+    elif field_type is bool:
         type_ = 'boolean'
-    elif outer_type is datetime.datetime:
+    elif field_type is datetime.datetime:
         type_ = 'string'
-    elif outer_type is datetime.date:
+    elif field_type is datetime.date:
         type_ = 'string'
-    elif outer_type is FileStorage:
+    elif field_type is FileStorage:
         type_ = 'File'
-    elif outer_type is Any:
+    elif field_type is Any:
         type_ = 'any'
-    elif isinstance(outer_type, TypeVar):
-        type_ = outer_type.__name__
-    elif _safe_issubclass(outer_type, Enum):
-        type_ = outer_type.__name__
-    elif getattr(outer_type, 'Config', None) is not None:
+    elif isinstance(field_type, TypeVar):
+        type_ = field_type.__name__
+    elif _safe_issubclass(field_type, Enum):
+        type_ = field_type.__name__
+    elif getattr(field_type, 'Config', None) is not None:
         # Model Type
-        type_ = outer_type.__name__
+        type_ = field_type.__name__
     elif origin_type is list:
-        type_ = f'Array<{_field_type(field_type, field_type, required)}>'
+        type_ = f'Array<{_field_type(field_type)}>'
     elif origin_type is dict:
-        args = ', '.join(map(lambda arg: _field_type(arg, arg, True), get_args(outer_type)))
+        args = ', '.join(map(lambda arg: _field_type(arg), get_args(field_type)))
         type_ = f'Record<{args}>'
+    elif origin_type is types.UnionType:
+        type_ = ' | '.join(map(lambda arg: _field_type(arg), get_args(field_type)))
+    elif field_type is type(None):
+        type_ = 'null'
+
     else:
         raise NotImplementedError(
             f'TODO :: 타입 처리 : '
-            f'{outer_type=}, {field_type=}, {origin_type=}'
+            f'{field_type=}, {origin_type=}'
         )
 
-    if not required:
-        type_ += ' | null'
+    # if not required:
+    #     type_ += ' | null'
     return _de_generic_name(type_)
 
 
@@ -103,6 +113,31 @@ def generate_enum(model: Type[Enum]) -> str:
         f"  }}",
         f"}}"
     ])
+
+
+def get_flat_models_from_models(models: list[Type[BaseModel]]) -> set[Type[BaseModel | Enum]]:
+    model_set: set[Type[BaseModel | Enum]] = set()
+
+    def extract_models(model: Type[BaseModel], sets: set[Type[Union[BaseModel, Enum]]]) -> None:
+        if model in sets:
+            return
+        sets.add(model)
+
+        for field in model.model_fields.values():
+            field_type = field.annotation
+            origin = get_origin(field_type)
+            if origin is Union:
+                field_type = get_args(field_type)[0]
+
+            if isinstance(field_type, type) and issubclass(field_type, BaseModel):
+                extract_models(field_type, sets)
+            elif isinstance(field_type, type) and issubclass(field_type, Enum):
+                sets.add(field_type)
+
+    for m in models:
+        extract_models(m, model_set)
+
+    return model_set
 
 
 def _quotes(items: Iterable[str]) -> Iterable[str]:
