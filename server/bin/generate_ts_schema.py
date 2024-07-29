@@ -77,7 +77,7 @@ def _field_type(field_type: Any):
         # Model Type
         type_ = field_type.__name__
     elif origin_type is list:
-        type_ = ' | '.join(map(lambda arg: _field_type(arg), get_args(field_type)))
+        type_ = 'Array<' + ' | '.join(map(lambda arg: _field_type(arg), get_args(field_type))) + '>'
     elif origin_type is dict:
         args = ', '.join(map(lambda arg: _field_type(arg), get_args(field_type)))
         type_ = f'Record<{args}>'
@@ -101,10 +101,12 @@ def generate_enum(model: Type[Enum]) -> str:
     return '\n'.join([
         f"export type {model.__name__} = {' | '.join(_quotes(model))};",
         f"export const {camelcase(model.__name__)}Values: {model.__name__}[] = [{', '.join(_quotes(model))}];",
-        f"export function to{model.__name__}(str: string) : {model.__name__} | undefined {{",
+        f"export function to{model.__name__}(str: string | null) : {model.__name__} | null {{",
         f"  switch(str) {{",
         *[f'    case {i}:' for i in _quotes(model)],
         f"      return str",
+        f"  default:",
+        f"      return null;",
         f"  }}",
         f"}}"
     ])
