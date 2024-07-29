@@ -72,7 +72,8 @@ def decode_jwt(token: str | None) -> int | ResStatus:
     if token is None:
         return ResStatus.INVALID_ACCESS_TOKEN
     try:
-        decoded = jwt.decode(token, config.JWT_SECRET_KEY, algorithms=['HS256'])
+        pure_token = token.split(' ')[1]
+        decoded = jwt.decode(pure_token, config.JWT_SECRET_KEY, algorithms=['HS256'])
         pk = decoded.get('pk')
 
         if pk is None:
@@ -90,29 +91,30 @@ def decode_jwt(token: str | None) -> int | ResStatus:
 
 @app.before_request
 def before_request() -> Response | None:
+    require_access_token = True
+    match ((request.endpoint or '').split('.', maxsplit=2)):
+        case [_, endpoint]:
+            if endpoint in ['sign_in']:
+                require_access_token = False
+        case _:
+            # 비 정상적인 상황, 무시하면 로그인 요청이 넘어 갈 것이다.
+            pass
+
+    if not require_access_token:
+        return None
+
     token: str | None = request.headers.get('Authorization')
-    pk_err = decode_jwt(token)
+    pk_or_err = decode_jwt(token)
     manager: Manager | None = None
 
-    if isinstance(pk_err, int):
-        manager = db.session.execute(
-            db.select(Manager).filter_by(pk=pk_err)
-        ).scalar_one_or_none()
+    if isinstance(pk_or_err, int):
+        manager = db.get_or_404(Manager, pk_or_err)
 
     if manager is None:
-        require_access_token = True
-        match ((request.endpoint or '').split('.', maxsplit=2)):
-            case [_, endpoint]:
-                if endpoint in ['sign_in']:
-                    require_access_token = False
-            case _:
-                # 비 정상적인 상황, 무시하면 로그인 요청이 넘어 갈 것이다.
-                pass
-        if require_access_token:
-            return res_jsonify(Res(data=None, errors=[], status=ResStatus.INVALID_ACCESS_TOKEN, validation_errors=[]))
+        return res_jsonify(Res(data=None, errors=[], status=ResStatus.INVALID_ACCESS_TOKEN, validation_errors=[]))
 
-    if isinstance(pk_err, ResStatus):
-        return res_jsonify(Res(data=None, errors=[], status=pk_err, validation_errors=[]))
+    if isinstance(pk_or_err, ResStatus):
+        return res_jsonify(Res(data=None, errors=[], status=pk_or_err, validation_errors=[]))
 
     bg.set_manager(manager)
 
