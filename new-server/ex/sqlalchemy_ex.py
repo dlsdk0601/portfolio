@@ -1,11 +1,9 @@
 from itertools import count
-from typing import TypeVar, Generic, List, Union, Tuple, Callable
+from typing import TypeVar, Generic, Union, Tuple, Callable
 
 from flask_sqlalchemy.session import Session
 from sqlalchemy import func, or_, and_, text, Index
 from sqlalchemy.orm import scoped_session
-# user.deleted_at == None 을 별로 좋아하지 않는다.
-# user.deleted_at == null
 from sqlalchemy.sql import ColumnElement
 from sqlalchemy.sql.elements import BooleanClauseList
 from sqlalchemy.sql.selectable import Select
@@ -13,6 +11,8 @@ from sqlalchemy.sql.selectable import Select
 from ex.api import BaseModel, GenericModel
 from was.model import db
 
+# user.deleted_at == None 을 별로 좋아하지 않는다.
+# user.deleted_at == null
 null: None = None
 true: bool = True
 false: bool = False
@@ -45,13 +45,13 @@ class PageRow(GenericModel, Generic[PAGE_ROW_ITEM]):
 
 class Pagination(GenericModel, Generic[PAGE_ROW_ITEM]):
     page: int
-    pages: List[int]
+    pages: list[int]
     prev_page: int
     next_page: int
     has_prev: bool
     has_next: bool
     total: int
-    rows: List[PageRow[PAGE_ROW_ITEM]]
+    rows: list[PageRow[PAGE_ROW_ITEM]]
 
 
 # OPT :: per_nav ?
@@ -116,4 +116,4 @@ def pg_try_xlock2(session: Session | scoped_session[Session], group_id: int, loc
 
 
 Condition = Union[ColumnElement[bool], BooleanClauseList]
-Conditions = List[Condition]
+Conditions = list[Condition]
