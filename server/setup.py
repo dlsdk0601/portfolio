@@ -5,17 +5,17 @@ setup(
     version='1.0.0',
     packages=find_packages(),
     install_requires=[
+        'setuptools==69.1.0',
         # was
-        'fastapi==0.111.0',
-        'uvicorn==0.30.1',
-        'werkzeug==3.0.3',
+        'Flask==3.0.2',
         'sconfig==0.0.3',
         'pydantic==2.7.3',
         'stringcase==1.2.0',
-        'starlette==0.37.2',
+        'werkzeug==3.0.3',
+        'Flask-Cors==4.0.0',
         # DB
-        'SQLAlchemy==2.0.30',
-        'FastAPI-SQLAlchemy-improved==0.5.4',
+        'SQLAlchemy==2.0.27',
+        'Flask-SQLAlchemy==3.1.1',
         'alembic==1.13.1',
         'psycopg2-binary==2.9.9',
         'coint-paginatify-sqlalchemy==0.0.4',

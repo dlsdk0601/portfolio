@@ -1,7 +1,15 @@
-from fastapi import APIRouter
+from typing import Tuple
 
-from was.blueprints.front import contact
+from ex.api import ApiBlueprint
 
-router = APIRouter()
 
-router.include_router(router=contact.router)
+class FrontBlueprint(ApiBlueprint[None]):
+    def validate_login(self) -> bool:
+        return True
+
+    def validate_permission(self, permisssion: Tuple[None, ...]) -> bool:
+        # OPT :: 필요하면 처리
+        return True
+
+
+app = FrontBlueprint('front_app', __name__)

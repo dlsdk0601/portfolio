@@ -1,9 +1,8 @@
 from logging.config import fileConfig
 
+from alembic import context
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-
-from alembic import context
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -19,6 +18,7 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 target_metadata = None
+
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -50,15 +50,16 @@ def run_migrations_offline() -> None:
         context.run_migrations()
 
 
-from was.config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_ECHO
-from was.model import meta_datas
+# model 설정
+import was.application
 
 # noinspection PyRedeclaration
-# target_metadata = was.application.model.Model.metadata
-target_metadata = meta_datas
+target_metadata = was.application.model.db.metadata
+# 타입, Server Default 둘 다 auto migration 에서 처리하도록 한다.
 context_configs = dict(compare_type=True, compare_server_default=True)
-config.set_main_option('sqlalchemy.url', SQLALCHEMY_DATABASE_URI)
-config.set_main_option('sqlalchemy.echo', str(SQLALCHEMY_ECHO))
+config.set_main_option('sqlalchemy.url', was.application.app.config['SQLALCHEMY_DATABASE_URI'])
+config.set_main_option('sqlalchemy.echo', str(was.application.app.config['SQLALCHEMY_ECHO']))
+
 
 def run_migrations_online() -> None:
     """Run migrations in 'online' mode.

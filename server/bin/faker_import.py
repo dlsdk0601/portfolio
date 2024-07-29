@@ -3,32 +3,33 @@ from uuid import UUID
 
 import requests
 from faker import Faker
-from sqlalchemy.orm import Session
 
 from ex.api import BaseModel
 from ex.faker_ex import faker_unique, faker_call
-from ex.middleware import get_db
+from was.application import app
+from was.model import db
 from was.model.asset import Asset
 from was.model.contact import Contact, ContactType
 from was.model.manager import Manager, ManagerType
 
 
 def main() -> None:
-    importers: list[Callable[[Session, Faker], None]] = [
+    importers: list[Callable[[Faker], None]] = [
         _import_manager,
         _import_asset,
         _import_contact
     ]
-    with get_db() as db:
-        for importer in importers:
+
+    for importer in importers:
+        with app.app_context():
             print(f'import {importer.__name__.removeprefix("_import_")} ...', flush=True, end='')
             faker = Faker('ko_KR')
             faker.seed_instance(importer.__name__)
-            importer(db, faker)
+            importer(faker)
             print('done')
 
 
-def _import_manager(db: Session, faker: Faker) -> None:
+def _import_manager(faker: Faker) -> None:
     ids: set[str] = set()
 
     def new_manager():
@@ -54,8 +55,8 @@ def _import_manager(db: Session, faker: Faker) -> None:
     managers[0].type = ManagerType.SUPER
     managers[0].enable = True
 
-    db.add_all(managers)
-    db.commit()
+    db.session.add_all(managers)
+    db.session.commit()
 
 
 class LoremPicsum(BaseModel):
@@ -67,7 +68,7 @@ class LoremPicsum(BaseModel):
     download_url: str
 
 
-def _import_asset(db: Session, faker: Faker) -> None:
+def _import_asset(_: Faker) -> None:
     def new_asset(picsum: LoremPicsum) -> Asset:
         asset = Asset(
             name=picsum.id + '.jpg',
@@ -82,11 +83,11 @@ def _import_asset(db: Session, faker: Faker) -> None:
     r.raise_for_status()
     json = r.json()
     assets = [new_asset(LoremPicsum.parse_obj(i)) for i in json]
-    db.add_all(assets)
-    db.commit()
+    db.session.add_all(assets)
+    db.session.commit()
 
 
-def _import_contact(db: Session, faker: Faker) -> None:
+def _import_contact(faker: Faker) -> None:
     contacts = [
         Contact(
             type=ContactType.INSTAGRAM, id='jungin.__.a', href='https://instagram/jungin.__.a'
@@ -99,8 +100,8 @@ def _import_contact(db: Session, faker: Faker) -> None:
         ),
     ]
 
-    db.add_all(contacts)
-    db.commit()
+    db.session.add_all(contacts)
+    db.session.commit()
 
 
 if __name__ == '__main__':

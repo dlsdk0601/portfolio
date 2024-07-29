@@ -1,20 +1,14 @@
 import uuid as py_uuid
-from typing import Union, IO, TYPE_CHECKING, Optional
+from typing import Union, IO, Optional
 
 import boto3
 from sqlalchemy import String, UUID
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column
 from werkzeug.datastructures import FileStorage
 
 from ex.api import BaseModel
 from was import config
-
-if TYPE_CHECKING:
-    from was.model import db
-
-Model = DeclarativeBase
-Model = declarative_base()  # type: ignore
+from was.model import Model, db
 
 
 class Bsset(BaseModel):
@@ -26,8 +20,6 @@ class Bsset(BaseModel):
 
 
 class Asset(Model):
-    __tablename__ = 'asset'
-
     pk: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, comment='기본키')
     name: Mapped[str] = mapped_column(String(128), nullable=False, comment='파일명')
     content_type: Mapped[str] = mapped_column(String(64), nullable=False, comment='미디어 종류')
@@ -65,7 +57,7 @@ class Asset(Model):
         if not uuids:
             return []
 
-        assets = db.sync_session.query(cls).filter(cls.uuid.in_(uuids)).all()
+        assets = db.session.query(cls).filter(cls.uuid.in_(uuids)).all()
 
         def asset_key(asset: Asset) -> int:
             for index, uuid in enumerate(uuids):
@@ -78,7 +70,7 @@ class Asset(Model):
 
     @classmethod
     def from_uuid(cls, uuid_: py_uuid.UUID) -> Optional['Asset']:
-        return db.sync_session.query(cls).filter_by(uuid=uuid_).one_or_none()
+        return db.session.query(cls).filter_by(uuid=uuid_).one_or_none()
 
     def to_bsset(self) -> Bsset:
         return Bsset(

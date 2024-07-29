@@ -1,16 +1,14 @@
 from datetime import datetime
 from enum import auto
 
-from sqlalchemy import String, DateTime, func, Enum, Boolean
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
+from sqlalchemy import String, DateTime, func, Boolean
+from sqlalchemy.dialects import postgresql
+from sqlalchemy.orm import Mapped, mapped_column
 
 from ex.py.enum_ex import StringEnum
 from ex.py.hash_ex import hash_password
 from was import config
-
-Model = DeclarativeBase
-Model = declarative_base()  # type: ignore
+from was.model import Model
 
 
 class ManagerType(StringEnum):
@@ -19,11 +17,9 @@ class ManagerType(StringEnum):
 
 
 class Manager(Model):
-    __tablename__ = 'manager'
-
     pk: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
-    type: Mapped[ManagerType] = mapped_column(Enum(ManagerType), nullable=False, comment='타입')
+    type: Mapped[ManagerType] = mapped_column(postgresql.ENUM(ManagerType), nullable=False, comment='타입')
     id: Mapped[str] = mapped_column(String(128), nullable=False, comment='아이디')
     password: Mapped[str] = mapped_column(String(128), nullable=False, comment='hash 패스워드')
     name: Mapped[str] = mapped_column(String(64), nullable=False, comment='이름')

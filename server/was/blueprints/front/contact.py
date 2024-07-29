@@ -1,10 +1,7 @@
-from fastapi import APIRouter
-
-from ex.api import BaseModel, Res, ok
+from ex.api import BaseModel, ok, Res
+from was.blueprints.front import app
 from was.model import db
 from was.model.contact import ContactType, Contact
-
-router = APIRouter(prefix='/contact')
 
 
 class ContactShowReq(BaseModel):
@@ -29,9 +26,9 @@ class ContactShowRes(BaseModel):
     contacts: list[ContactShowResItem]
 
 
-@router.post('/contact-show')
+@app.api(public=True)
 def contact_show(_: ContactShowReq) -> Res[ContactShowRes]:
-    contacts = db.sync_session.query(Contact).filter_by(delete_at=None).order_by(Contact.pk).all()
+    contacts = db.session.query(Contact).filter_by(delete_at=None).order_by(Contact.pk).all()
 
     return ok(ContactShowRes(
         contacts=list(map(lambda x: ContactShowResItem.from_model(x), contacts))

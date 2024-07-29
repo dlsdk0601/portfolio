@@ -2,13 +2,10 @@ from datetime import datetime
 from enum import auto
 
 from sqlalchemy import Enum, String, DateTime, func
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column
 
 from ex.py.enum_ex import StringEnum
-
-Model = DeclarativeBase
-Model = declarative_base()  # type: ignore
+from was.model import Model
 
 
 class ContactType(StringEnum):

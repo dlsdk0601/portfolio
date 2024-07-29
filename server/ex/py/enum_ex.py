@@ -81,36 +81,3 @@ class StringEnum(str, LabelEnum):
         return self.value
 
 
-class State(StringEnum):
-    @classmethod
-    def transitions(cls: 'Self') -> Dict['Self', Set['Self']]:
-        return {}
-
-    def can_transit(self, next_state: 'Self') -> bool:
-        if self == next_state:
-            return True
-
-        transitions = self.__class__.transitions()
-        return next_state in transitions.get(self, set())
-
-    def validate_transition(self, next_state: 'Self') -> Optional[str]:
-        if self.can_transit(next_state):
-            return None
-
-        return f'{self}에서 {next_state}로는 변경할 수 없습니다.'
-
-    def validate_terminal(self) -> Optional[str]:
-        # 상태 변경이 존재하면, 계속 변경할 수 있다.
-        if self.transitions().get(self, set()):
-            return None
-
-        return f'{self}에서는 수정할 수 없습니다.'
-
-    def validate(self, is_initial: bool, next_state: 'Self') -> Optional[str]:
-        if is_initial:
-            initial = first(type(self).transitions().keys(), None)
-            if self != initial:
-                return f'잘못된 {self} 상태입니다. 생성 시에는 반드시 {initial} 상태이어야 합니다.'
-            if next_state != initial:
-                return f'잘못된 {next_state} 상태 요청입니다. 생성 시에는 반드시 {initial} 상태이어야 합니다.'
-        return self.validate_terminal() or self.validate_transition(next_state)
