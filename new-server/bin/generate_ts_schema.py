@@ -40,8 +40,6 @@ def generate_class(model: Type[BaseModel]) -> str:
     properties: list[str] = []
     field: FieldInfo
     for field in model.model_fields.values():
-        print('field')
-        print(field)
         type_ = _field_type(field.annotation)
         properties.append(f'    {camelcase(field.alias)}: {type_};\n')
 
@@ -51,15 +49,12 @@ def generate_class(model: Type[BaseModel]) -> str:
     src = ''
     src += f'export type {name} = {{\n'
     src += ''.join(properties)
-    src += '}};'
+    src += '};'
     return src
 
 
 def _field_type(field_type: Any):
     origin_type = get_origin(field_type)
-    print('---')
-    print(field_type)
-    print(origin_type)
     if field_type is str or field_type is UUID:
         type_ = 'string'
     elif field_type is int:
@@ -82,11 +77,11 @@ def _field_type(field_type: Any):
         # Model Type
         type_ = field_type.__name__
     elif origin_type is list:
-        type_ = f'Array<{_field_type(field_type)}>'
+        type_ = ' | '.join(map(lambda arg: _field_type(arg), get_args(field_type)))
     elif origin_type is dict:
         args = ', '.join(map(lambda arg: _field_type(arg), get_args(field_type)))
         type_ = f'Record<{args}>'
-    elif origin_type is types.UnionType:
+    elif origin_type is types.UnionType or origin_type is Union:
         type_ = ' | '.join(map(lambda arg: _field_type(arg), get_args(field_type)))
     elif field_type is type(None):
         type_ = 'null'
@@ -125,15 +120,25 @@ def get_flat_models_from_models(models: list[Type[BaseModel]]) -> set[Type[BaseM
 
         for field in model.model_fields.values():
             field_type = field.annotation
-            origin = get_origin(field_type)
-            if origin is Union:
-                field_type = get_args(field_type)[0]
+            process_field_type(field_type, sets)
 
-            if isinstance(field_type, type) and issubclass(field_type, BaseModel):
+    def process_field_type(field_type, sets):
+        origin = get_origin(field_type)
+        if origin in {Union, types.UnionType}:
+            for arg in get_args(field_type):
+                process_field_type(arg, sets)
+        elif origin in {list, tuple, set, frozenset}:
+            for arg in get_args(field_type):
+                process_field_type(arg, sets)
+        elif origin is dict:
+            for arg in get_args(field_type):
+                process_field_type(arg, sets)
+        elif isinstance(field_type, type):
+            if issubclass(field_type, BaseModel):
                 extract_models(field_type, sets)
-            elif isinstance(field_type, type) and issubclass(field_type, Enum):
+            elif issubclass(field_type, Enum):
                 sets.add(field_type)
-
+ 
     for m in models:
         extract_models(m, model_set)
 
