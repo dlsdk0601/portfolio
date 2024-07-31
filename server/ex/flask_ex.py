@@ -1,3 +1,4 @@
+import importlib
 import logging
 import pkgutil
 import sys
@@ -53,11 +54,10 @@ def register_blueprints(app: Flask, *blueprints: Union[ModuleType, Tuple[ModuleT
 
 
 def load_submodules(module) -> None:
-    # OPT :: ignore find_module type check, 너무 상황이 복잡하니 나중에 다시 확인 한다.
     for finder, name, is_pkg in pkgutil.iter_modules(module.__path__):
         module_name = f"{module.__name__}.{name}"
         if module_name not in sys.modules:
-            child_module = finder.find_module(module_name).load_module()  # type: ignore
+            child_module = importlib.import_module(module_name)
         else:
             child_module = sys.modules[module_name]
 
