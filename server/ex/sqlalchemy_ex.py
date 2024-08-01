@@ -54,7 +54,6 @@ class Pagination(GenericModel, Generic[PAGE_ROW_ITEM]):
     rows: list[PageRow[PAGE_ROW_ITEM]]
 
 
-# OPT :: per_nav ?
 def api_paginate(q: Select, page, map_: Callable[[T], PAGE_ROW_ITEM], per_page=10) -> Pagination[PAGE_ROW_ITEM]:
     p = (db.paginate(q, page=page, per_page=per_page))
     total = p.total

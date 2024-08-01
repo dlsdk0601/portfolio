@@ -7,8 +7,12 @@ import Link from "next/link";
 import { Urls } from "../../url/url.g";
 import { SearchActionLayoutView } from "../searchActionBarView";
 import { SelectView } from "../selectView";
-import { ContactType, PaginationContactListResItem } from "../../api/schema.g";
-import { contactTypes, labelToContactType } from "../../api/enum";
+import {
+  ContactType,
+  contactTypeValues,
+  PaginationContactListResItem,
+  toContactType,
+} from "../../api/schema.g";
 import { ignorePromise } from "../../ex/utils";
 import { api } from "../../api/api";
 import { PaginationView } from "../paginationView";
@@ -21,7 +25,7 @@ export const ContactPaginationSearchView = () => {
 
   useEffect(() => {
     setSearch(params.get("search") ?? "");
-    setType(labelToContactType(params.get("type")));
+    setType(toContactType(params.get("type")));
   }, []);
 
   const onSearch = useCallback(() => {
@@ -32,9 +36,9 @@ export const ContactPaginationSearchView = () => {
     <SearchActionLayoutView onSubmit={() => onSearch()}>
       <SelectView<ContactType | null>
         value={type}
-        options={["타입", ...contactTypes].map((item) => ({
+        options={["타입", ...contactTypeValues].map((item) => ({
           label: item,
-          value: labelToContactType(item),
+          value: toContactType(item),
         }))}
         onChange={(value) => setType(value)}
       />
@@ -72,7 +76,7 @@ export const ContactPaginationView = (props: {
       return;
     }
 
-    setPagination(res.contacts);
+    setPagination(res.pagination);
   }, [props]);
 
   return (
@@ -98,11 +102,11 @@ export const ContactPaginationView = (props: {
 
 export const contactTypeToIcon = (type: ContactType): ReactNode => {
   switch (type) {
-    case ContactType.EMAIL:
+    case "EMAIL":
       return <i className="mdi mdi-email-outline text-3xl" />;
-    case ContactType.GITHUB:
+    case "GITHUB":
       return <i className="mdi mdi-github text-3xl" />;
-    case ContactType.INSTAGRAM:
+    case "INSTAGRAM":
       return <i className="mdi mdi-instagram text-3xl" />;
     default:
       return <></>;
