@@ -50,11 +50,11 @@ class Pagination(GenericModel, Generic[PAGE_ROW_ITEM]):
     next_page: int
     has_prev: bool
     has_next: bool
-    total: int
+    total: int | None
     rows: list[PageRow[PAGE_ROW_ITEM]]
 
 
-def api_paginate(q: Select, page, map_: Callable[[T], PAGE_ROW_ITEM], per_page=10) -> Pagination[PAGE_ROW_ITEM]:
+def api_paginate(q: Select, page, map_: Callable[[T], PAGE_ROW_ITEM], per_page=10) -> 'Pagination[PAGE_ROW_ITEM]':
     p = (db.paginate(q, page=page, per_page=per_page))
     total = p.total
     if total == 0 or total is None:
@@ -71,7 +71,7 @@ def api_paginate(q: Select, page, map_: Callable[[T], PAGE_ROW_ITEM], per_page=1
     items = tuple(map(map_, p.items))
     items_indexed = tuple(zip(count(total - start, step=-1), items))
 
-    pagination: Pagination[PAGE_ROW_ITEM] = Pagination(
+    return Pagination(
         page=p.page,
         pages=list(pages),
         prev_page=max(p.page - 1, 1),
@@ -81,8 +81,6 @@ def api_paginate(q: Select, page, map_: Callable[[T], PAGE_ROW_ITEM], per_page=1
         total=p.total,
         rows=[PageRow(no=index, item=item) for (index, item) in items_indexed]
     )
-
-    return pagination
 
 
 # https://github.com/sqlalchemy/sqlalchemy/issues/3482

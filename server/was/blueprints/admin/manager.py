@@ -46,7 +46,7 @@ def manager_list(req: ManagerListReq) -> Res[ManagerListRes]:
         conditions.append(Manager.enable == req.enable)
 
     q = select(Manager).filter(*conditions).order_by(Manager.pk.desc())
-    pagination: Pagination[ManagerListResItem] = api_paginate(q=q, page=req.page, map_=ManagerListResItem.from_model)
+    pagination = api_paginate(q=q, page=req.page, map_=ManagerListResItem.from_model)
 
     return ok(ManagerListRes(
         pagination=pagination,
