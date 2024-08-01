@@ -39,6 +39,7 @@ RES_DATA = TypeVar('RES_DATA', bound=BaseModel)
 class ResStatus(StringEnum):
     OK = auto()
     INVALID_ACCESS_TOKEN = auto()
+    EXPIRED_TOKEN = auto()
     NO_PERMISSION = auto()
     NOT_FOUND = auto()
     LOGIN_REQUIRED = auto()

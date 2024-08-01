@@ -81,7 +81,7 @@ def decode_jwt(token: str | None) -> int | ResStatus:
 
         return pk
     except ExpiredSignatureError:
-        return ResStatus.INVALID_ACCESS_TOKEN
+        return ResStatus.EXPIRED_TOKEN
     except InvalidTokenError:
         return ResStatus.INVALID_ACCESS_TOKEN
     except Exception as e:
