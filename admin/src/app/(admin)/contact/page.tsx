@@ -4,7 +4,7 @@ import {
   ContactPaginationSearchView,
   ContactPaginationView,
 } from "../../../view/contact/contactPaginationView";
-import { labelToContactType } from "../../../api/enum";
+import { toContactType } from "../../../api/schema.g";
 
 export interface Query {
   page: number;
@@ -22,7 +22,7 @@ const Page = (props: { searchParams: Record<string, string> }) => {
       <ContactPaginationView
         page={query.page ?? 1}
         search={query.search ?? ""}
-        type={labelToContactType(query.type) ?? null}
+        type={toContactType(query.type ?? null)}
       />
     </section>
   );
