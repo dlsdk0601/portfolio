@@ -1,13 +1,18 @@
 import { map } from "lodash";
 import { notFound } from "next/navigation";
-import { ResStatus, ValidationError } from "./schema.g";
+import { ResStatus } from "./schema.g";
 import { Api } from "./api.g";
 import { blockModel } from "../store/blockModel";
+
+export interface PydanticValidationError {
+  loc: string[];
+  msg: string;
+}
 
 export interface ApiHandler {
   catch(e: any): void;
 
-  handleValidationErrors(errors: ValidationError[]): void;
+  handleValidationErrors(errors: PydanticValidationError[]): void;
 
   handlerErrors(errors: string[]): void;
 
@@ -19,20 +24,20 @@ export interface ApiHandler {
 class Handler implements ApiHandler {
   handleStatus(status: ResStatus) {
     switch (status) {
-      case ResStatus.OK:
+      case "OK":
         return;
-      case ResStatus.INVALID_ACCESS_TOKEN: {
+      case "INVALID_ACCESS_TOKEN": {
         throw new Error("사용자 정보가 만료되었습니다.\n재시작 하시겠습니까?", {
-          cause: ResStatus.INVALID_ACCESS_TOKEN,
+          cause: "INVALID_ACCESS_TOKEN",
         });
       }
-      case ResStatus.LOGIN_REQUIRED: {
-        throw new Error("로그인 페이지로 이동합니다.", { cause: ResStatus.LOGIN_REQUIRED });
+      case "LOGIN_REQUIRED": {
+        throw new Error("로그인 페이지로 이동합니다.", { cause: "LOGIN_REQUIRED" });
       }
-      case ResStatus.NO_PERMISSION: {
-        throw new Error("권한이 없습니다.", { cause: ResStatus.NO_PERMISSION });
+      case "NO_PERMISSION": {
+        throw new Error("권한이 없습니다.", { cause: "NO_PERMISSION" });
       }
-      case ResStatus.NOT_FOUND:
+      case "NOT_FOUND":
       default: {
         notFound();
       }
@@ -45,7 +50,7 @@ class Handler implements ApiHandler {
     throw new Error("예상치 못한 에러가 발생했습니다.");
   }
 
-  handleValidationErrors(errors: ValidationError[]) {
+  handleValidationErrors(errors: PydanticValidationError[]) {
     console.error(...errors);
     const messages = map(errors, (err) => `${err.loc} : ${err.msg}`).join("\n");
     if (messages) {

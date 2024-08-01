@@ -1,14 +1,14 @@
 import { AxiosRequestConfig } from "axios";
 import { sleep } from "sleepjs";
 import { AxiosBase } from "../lib/axios";
-import { ApiHandler } from "./api";
+import { ApiHandler, PydanticValidationError } from "./api";
 import { config } from "../config/config";
-import { ResStatus, ValidationError } from "./schema.g";
+import { ResStatus } from "./schema.g";
 
 export interface Res<T> {
   data: T | null;
   errors: string[];
-  validationErrors: ValidationError[];
+  validationErrors: PydanticValidationError[];
   status: ResStatus;
 }
 
@@ -127,7 +127,7 @@ export abstract class ApiBase extends AxiosBase {
   }
 
   private handleResponse<U>(res: Res<U>) {
-    if (res.status !== ResStatus.OK) {
+    if (res.status !== "OK") {
       this.handler.handleStatus(res.status);
       return null;
     }

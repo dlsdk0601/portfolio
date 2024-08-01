@@ -1,14 +1,19 @@
 import { isString, map } from "lodash";
-import { ResStatus, ValidationError } from "./schema.g";
+import { ResStatus } from "./schema.g";
 import { managerModel } from "../store/managerModel";
 import { Urls } from "../url/url.g";
 import { blockModel } from "../store/blockModel";
 import { Api } from "./api.g";
 
+export interface PydanticValidationError {
+  loc: string[];
+  msg: string;
+}
+
 export interface ApiHandler {
   catch(e: any): void;
 
-  handleValidationErrors(errors: ValidationError[]): void;
+  handleValidationErrors(errors: PydanticValidationError[]): void;
 
   handlerErrors(errors: string[]): void;
 
@@ -24,9 +29,9 @@ class Handler implements ApiHandler {
     }
 
     switch (status) {
-      case ResStatus.OK:
+      case "OK":
         return;
-      case ResStatus.INVALID_ACCESS_TOKEN: {
+      case "INVALID_ACCESS_TOKEN": {
         // 처음 부터 로그인이 안된 경우
         if (managerModel.getState().token === null) {
           // return-to 체크가 불가능
@@ -38,17 +43,17 @@ class Handler implements ApiHandler {
         }
         return;
       }
-      case ResStatus.LOGIN_REQUIRED: {
+      case "LOGIN_REQUIRED": {
         alert("로그인 페이지로 이동합니다.");
         window.location.href = Urls["sign-in"].page.url();
         return;
       }
-      case ResStatus.NO_PERMISSION: {
+      case "NO_PERMISSION": {
         alert("권한이 없습니다.");
         window.location.href = Urls.page.url();
         return;
       }
-      case ResStatus.NOT_FOUND:
+      case "NOT_FOUND":
       default: {
         alert("존재하지 않는 페이지 또는 데이터입니다.");
       }
@@ -71,7 +76,7 @@ class Handler implements ApiHandler {
     alert(JSON.stringify(e));
   }
 
-  handleValidationErrors(errors: ValidationError[]) {
+  handleValidationErrors(errors: PydanticValidationError[]) {
     console.error(...errors);
 
     try {
