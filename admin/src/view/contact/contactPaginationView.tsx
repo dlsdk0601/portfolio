@@ -89,7 +89,7 @@ export const ContactPaginationView = (props: {
         [
           "상세",
           <Link
-            href={Urls.account["[pk]"].page.url({ pk: item.pk })}
+            href={Urls.contact["[pk]"].page.url({ pk: item.pk })}
             className="inline-flex items-center justify-center rounded-md border border-primary px-7 py-4 text-center font-medium text-primary hover:opacity-60 lg:px-4 xl:px-4"
           >
             상세
