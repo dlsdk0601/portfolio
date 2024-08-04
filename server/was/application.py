@@ -56,7 +56,7 @@ def check():
     return jsonify(res)
 
 
-def get_alembic_revision() -> Tuple[str, list[str]]:
+def get_alembic_revision() -> Tuple[str | None, list[str]]:
     alembic_dir = os.path.join(os.path.dirname(__file__), '..', 'alembic')
     alembic_script_dir = ScriptDirectory(alembic_dir)
 
