@@ -11,6 +11,6 @@ export interface Pagination<T> {
   nextPage: number;
   hasPrev: boolean;
   hasNext: boolean;
-  total: number;
+  total: number | null;
   rows: PageRow<T>[];
 }
