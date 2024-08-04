@@ -5,6 +5,10 @@ ENV TZ=Asia/Seoul
 ENV PGTZ=$TZ
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+# COMMIT HASH 확인용
+ARG GIT_COMMIT_HASH="N/A"
+ENV GIT_COMMIT_HASH=${GIT_COMMIT_HASH}
+
 # node.js 운영
 ENV NODE_ENV=production
 

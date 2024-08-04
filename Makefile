@@ -1,5 +1,5 @@
 docker-build:
-	docker build -t portfolio .
+	docker build -t portfolio --progress=plain --build-arg='GIT_COMMIT_HASH=$(shell git rev-parse HEAD)' .
 
 docker-bash: docker-build
 	docker run -it --rm portfolio bash
