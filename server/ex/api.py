@@ -24,12 +24,15 @@ class BaseModel(pydantic.BaseModel):
         alias_generator = camelcase
         populate_by_name = True
         arbitrary_types_allowed = True
+        by_alias = True
 
 
 class GenericModel(pydantic.BaseModel):
     class Config:
         alias_generator = camelcase
         populate_by_name = True
+        arbitrary_types_allowed = True
+        by_alias = True
 
 
 RES_DATA = TypeVar('RES_DATA', bound=BaseModel)
@@ -46,7 +49,7 @@ class ResStatus(StringEnum):
 
 
 class Res(BaseModel, Generic[RES_DATA]):
-    data: Optional[RES_DATA]
+    data: RES_DATA | None
     errors: list[str]
     validation_errors: list[dict[str, Any]]
     status: ResStatus
