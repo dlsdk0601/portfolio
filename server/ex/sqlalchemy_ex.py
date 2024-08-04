@@ -1,5 +1,5 @@
 from itertools import count
-from typing import TypeVar, Generic, Union, Tuple, Callable
+from typing import TypeVar, Generic, Union, Tuple, Callable, Any
 
 from flask_sqlalchemy.session import Session
 from sqlalchemy import func, or_, and_, text, Index
@@ -54,7 +54,8 @@ class Pagination(GenericModel, Generic[PAGE_ROW_ITEM]):
     rows: list[PageRow[PAGE_ROW_ITEM]]
 
 
-def api_paginate(q: Select, page, map_: Callable[[T], PAGE_ROW_ITEM], per_page=10) -> 'Pagination[PAGE_ROW_ITEM]':
+# def api_paginate(q: Select, page, map_: Callable[[T], PAGE_ROW_ITEM], per_page=10) -> Pagination[PAGE_ROW_ITEM]:
+def api_paginate(q: Select, page, map_: Callable[[T], PAGE_ROW_ITEM], per_page=10) -> dict[str, Any]:
     p = (db.paginate(q, page=page, per_page=per_page))
     total = p.total
     if total == 0 or total is None:
@@ -73,14 +74,14 @@ def api_paginate(q: Select, page, map_: Callable[[T], PAGE_ROW_ITEM], per_page=1
 
     return Pagination(
         page=p.page,
-        pages=list(pages),
+        pages=pages,
         prev_page=max(p.page - 1, 1),
         next_page=min(p.page + 1, last),
         has_prev=p.has_prev,
         has_next=p.has_next,
-        total=p.total,
-        rows=[PageRow(no=index, item=item) for (index, item) in items_indexed]
-    )
+        total=total,
+        rows=[PageRow[PAGE_ROW_ITEM](no=index, item=item) for (index, item) in items_indexed]
+    ).dict(by_alias=True)
 
 
 # https://github.com/sqlalchemy/sqlalchemy/issues/3482
