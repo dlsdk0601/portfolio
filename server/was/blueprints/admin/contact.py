@@ -3,6 +3,7 @@ from sqlalchemy import select
 from ex.api import BaseModel, Res, ok
 from ex.sqlalchemy_ex import Pagination, Conditions, isearch, api_paginate, null
 from was.blueprints.admin import app
+from was.model import db
 from was.model.contact import ContactType, Contact
 
 
@@ -43,3 +44,26 @@ def contact_list(req: ContactListReq) -> Res[ContactListRes]:
     pagination = api_paginate(q=q, page=req.page, map_=ContactListResItem.from_model)
 
     return ok(ContactListRes(pagination=pagination))
+
+
+class ContactShowReq(BaseModel):
+    pk: int
+
+
+class ContactShowRes(BaseModel):
+    pk: int
+    type: ContactType
+    id: str
+    href: str
+
+
+@app.api()
+def contact_show(req: ContactShowReq) -> Res[ContactShowRes]:
+    contact = db.get_or_404(Contact, req.pk)
+
+    return ok(
+        ContactShowRes(
+            pk=contact.pk, type=contact.type,
+            id=contact.id, href=contact.href,
+        )
+    )
