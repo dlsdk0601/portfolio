@@ -32,3 +32,7 @@ export const parseQuery = <T>(q: Record<string, string>): Partial<T> => {
 
   return query;
 };
+
+export const isNewPk = (p: cPk) => {
+  return p === "new";
+};
