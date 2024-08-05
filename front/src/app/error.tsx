@@ -2,7 +2,6 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { ResStatus } from "../api/schema.g";
 import { Urls } from "../url/url.g";
 
 const ErrorPage = (props: { error: Error; reset: () => void }) => {
@@ -12,9 +11,9 @@ const ErrorPage = (props: { error: Error; reset: () => void }) => {
   let onClick = () => props.reset();
 
   switch (props.error.cause) {
-    case ResStatus.LOGIN_REQUIRED:
-    case ResStatus.NO_PERMISSION:
-    case ResStatus.INVALID_ACCESS_TOKEN: {
+    case "LOGIN_REQUIRED":
+    case "NO_PERMISSION":
+    case "INVALID_ACCESS_TOKEN": {
       // 사실 로그인 페이지로 보내는게 맞지만, public 사이트는 불필요
       onClick = () => router.push(Urls.page.url());
       break;
