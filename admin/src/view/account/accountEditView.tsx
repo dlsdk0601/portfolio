@@ -13,7 +13,7 @@ import { api } from "../../api/api";
 import { ignorePromise, isNotBlank, preventDefaulted } from "../../ex/utils";
 import { ManagerShowRes } from "../../api/schema.g";
 import { CheckBoxView } from "../checkBoxView";
-import { cPk } from "../../ex/query";
+import { cPk, isNewPk } from "../../ex/query";
 
 export const AccountEditView = (props: { pk: cPk | null; enter: "ACCOUNT" | "PROFILE" }) => {
   const pk = props.pk;
@@ -32,12 +32,12 @@ export const AccountEditView = (props: { pk: cPk | null; enter: "ACCOUNT" | "PRO
     ignorePromise(() => init(pk));
   }, [pk]);
 
-  const init = useCallback(async (pkValue: cPk) => {
-    if (pkValue === "new") {
+  const init = useCallback(async (p: cPk) => {
+    if (isNewPk(p)) {
       return;
     }
 
-    const res = await api.managerShow({ pk: pkValue });
+    const res = await api.managerShow({ pk: p });
 
     if (isNil(res)) {
       return;
