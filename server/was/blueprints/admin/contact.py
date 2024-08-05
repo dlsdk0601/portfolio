@@ -1,6 +1,6 @@
-from sqlalchemy import select
+from sqlalchemy import select, func
 
-from ex.api import BaseModel, Res, ok
+from ex.api import BaseModel, Res, ok, err
 from ex.sqlalchemy_ex import Pagination, Conditions, isearch, api_paginate, null
 from was.blueprints.admin import app
 from was.model import db
@@ -67,3 +67,55 @@ def contact_show(req: ContactShowReq) -> Res[ContactShowRes]:
             id=contact.id, href=contact.href,
         )
     )
+
+
+class ContactEditReq(BaseModel):
+    pk: int | None
+    type: ContactType
+    id: str
+    href: str
+
+
+class ContactEditRes(BaseModel):
+    pk: int
+
+
+@app.api()
+def contact_edit(req: ContactEditReq) -> Res[ContactEditRes]:
+    contact = Contact()
+    db.session.add(contact)
+
+    if req.pk is not None:
+        contact = db.get_or_404(Contact, req.pk)
+
+    if contact.delete_at is not None:
+        return err('이미 삭제된 데이터 입니다.')
+
+    contact.type = req.type
+    contact.id = req.id
+    contact.href = req.href
+
+    db.session.commit()
+
+    return ok(ContactEditRes(pk=contact.pk))
+
+
+class ContactDeleteReq(BaseModel):
+    pk: int
+
+
+class ContactDeleteRes(BaseModel):
+    pk: int
+
+
+@app.api()
+def delete_contact(req: ContactDeleteReq) -> Res[ContactDeleteRes]:
+    contact = db.get_or_404(req.pk)
+
+    if contact.delete_at is not None:
+        return err('이미 삭제된 데이터 입니다.')
+
+    contact.delete_at = func.now()
+    db.session.commit()
+
+    return ok(ContactDeleteRes(pk=contact.pk))
