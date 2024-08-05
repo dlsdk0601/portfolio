@@ -1,6 +1,6 @@
 from sqlalchemy import select
 
-from ex.api import BaseModel, Res, ok, no_permission, err
+from ex.api import BaseModel, Res, ok, err
 from ex.sqlalchemy_ex import Pagination, Conditions, isearch, api_paginate
 from was.blueprints.admin import app, bg
 from was.model import db
@@ -32,13 +32,8 @@ class ManagerListRes(BaseModel):
 
 @app.api()
 def manager_list(req: ManagerListReq) -> Res[ManagerListRes]:
-    manager = bg.manager
-
-    if not manager:
-        return no_permission(error=None)
-
     conditions: Conditions = [
-        Manager.pk != manager.pk,
+        Manager.pk != bg.pk,
         isearch(req.search, Manager.id, Manager.email, Manager.name)
     ]
 
@@ -97,10 +92,6 @@ class ManagerEditRes(BaseModel):
 
 @app.api()
 def manager_edit(req: ManagerEditReq) -> Res[ManagerEditRes]:
-    manager = bg.manager
-    if manager is None or manager.type != ManagerType.SUPER:
-        return no_permission(error=None)
-
     manager = Manager(type=ManagerType.NORMAL)
     db.session.add(manager)
 
