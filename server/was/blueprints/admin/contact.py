@@ -61,6 +61,9 @@ class ContactShowRes(BaseModel):
 def contact_show(req: ContactShowReq) -> Res[ContactShowRes]:
     contact = db.get_or_404(Contact, req.pk)
 
+    if contact.delete_at is not None:
+        return err('이미 삭제된 데이터 입니다.')
+
     return ok(
         ContactShowRes(
             pk=contact.pk, type=contact.type,
@@ -109,8 +112,8 @@ class ContactDeleteRes(BaseModel):
 
 
 @app.api()
-def delete_contact(req: ContactDeleteReq) -> Res[ContactDeleteRes]:
-    contact = db.get_or_404(req.pk)
+def contact_delete(req: ContactDeleteReq) -> Res[ContactDeleteRes]:
+    contact = db.get_or_404(Contact, req.pk)
 
     if contact.delete_at is not None:
         return err('이미 삭제된 데이터 입니다.')
