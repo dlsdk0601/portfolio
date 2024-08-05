@@ -131,6 +131,7 @@ export function validateFields(setFields: SetValueField<any>[]) {
 
     if (isErr) {
       isValid = false;
+      break;
     }
   }
 
