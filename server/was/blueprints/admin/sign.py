@@ -45,7 +45,6 @@ class RefreshTokenRes(BaseModel):
     token: str
 
 
-# TODO :: 확인 해보고 public 지울 것 
 @app.api(public=True)
 def refresh(_: RefreshTokenReq) -> Res[RefreshTokenRes]:
     refresh_token: str | None = request.headers.get('Authorization')
