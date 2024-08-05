@@ -99,7 +99,7 @@ export const ContactFormEditView = (props: { contact: ContactShowRes | null }) =
       return;
     }
 
-    const res = await api.deleteContact({ pk: contact.pk });
+    const res = await api.contactDelete({ pk: contact.pk });
 
     if (isNil(res)) {
       return;
