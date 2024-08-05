@@ -49,12 +49,6 @@ const useValueField = <T>(
   const validate = (): boolean => {
     let res = false;
 
-    // if (isEmpty(validators) && isBlank(state.value)) {
-    //   onDefaultError();
-    //   res = true;
-    //   return res;
-    // }
-
     // 숫자 타입은 1 이하를 잡는다.
     if (typeof state.value === "number" && state.value < 1) {
       onDefaultError();
