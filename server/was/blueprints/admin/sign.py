@@ -6,6 +6,7 @@ from ex.api import BaseModel, Res, err, ok, ResStatus, login_required
 from was.blueprints.admin import app, decode_jwt, create_jwt_token, bg
 from was.model import db
 from was.model.manager import Manager, ManagerType
+from was.model.manager_auth_log import ManagerAuthLog
 
 
 class SignInReq(BaseModel):
@@ -31,8 +32,15 @@ def sign_in(req: SignInReq) -> Res[SignInRes]:
     if manager.enable is False:
         return err('중지된 계정입니다.')
 
+    remote_ip = str({key: val for key, val in request.headers.items()})
     token = create_jwt_token(pk=manager.pk)
     refresh_token = create_jwt_token(pk=manager.pk, expires_delta=timedelta(days=7))
+    log = ManagerAuthLog(
+        manager=manager, remote_ip=remote_ip
+    )
+
+    db.session.add(log)
+    db.session.commit()
 
     return ok(SignInRes(token=token, refresh_token=refresh_token))
 
@@ -48,12 +56,21 @@ class RefreshTokenRes(BaseModel):
 @app.api(public=True)
 def refresh(_: RefreshTokenReq) -> Res[RefreshTokenRes]:
     refresh_token: str | None = request.headers.get('Authorization')
-    pk_err = decode_jwt(refresh_token)
+    pk_or_err = decode_jwt(refresh_token)
 
-    if isinstance(pk_err, ResStatus):
+    if isinstance(pk_or_err, ResStatus):
         return login_required(error='로그인을 다시 해주세요.')
 
-    token = create_jwt_token(pk=pk_err)
+    manager = db.get_or_404(Manager, pk_or_err)
+    remote_ip = str({key: val for key, val in request.headers.items()})
+    token = create_jwt_token(pk=pk_or_err)
+    
+    log = ManagerAuthLog(
+        manager=manager, remote_ip=remote_ip
+    )
+
+    db.session.add(log)
+    db.session.commit()
 
     return ok(RefreshTokenRes(token=token))
 
