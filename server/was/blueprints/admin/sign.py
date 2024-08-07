@@ -32,11 +32,10 @@ def sign_in(req: SignInReq) -> Res[SignInRes]:
     if manager.enable is False:
         return err('중지된 계정입니다.')
 
-    remote_ip = str({key: val for key, val in request.headers.items()})
     token = create_jwt_token(pk=manager.pk)
     refresh_token = create_jwt_token(pk=manager.pk, expires_delta=timedelta(days=7))
     log = ManagerAuthLog(
-        manager=manager, remote_ip=remote_ip
+        manager=manager, remote_ip=request.remote_addr
     )
 
     db.session.add(log)
@@ -64,7 +63,7 @@ def refresh(_: RefreshTokenReq) -> Res[RefreshTokenRes]:
     manager = db.get_or_404(Manager, pk_or_err)
     remote_ip = str({key: val for key, val in request.headers.items()})
     token = create_jwt_token(pk=pk_or_err)
-    
+
     log = ManagerAuthLog(
         manager=manager, remote_ip=remote_ip
     )
