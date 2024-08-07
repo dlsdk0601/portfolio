@@ -5,11 +5,7 @@ import { isBlank, isNotNil } from "./utils";
 import { SetValueField } from "../hooks/useValueField";
 
 export const vRequired = (value: any): string | undefined => {
-  if (typeof value !== "string") {
-    return "문자로 입력해주세요.";
-  }
-
-  if (isBlank(value)) {
+  if (isBlank(value) || isNil(value)) {
     return "필수 입력사항입니다.";
   }
 };
