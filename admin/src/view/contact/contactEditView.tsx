@@ -7,13 +7,13 @@ import { cPk, isNewPk } from "../../ex/query";
 import { Replace } from "../layout/layoutSelector";
 import { Urls } from "../../url/url.g";
 import { ContactShowRes, ContactType, contactTypeValues, toContactType } from "../../api/schema.g";
-import { ignorePromise, preventDefaulted } from "../../ex/utils";
+import { ignorePromise, isNotNil, preventDefaulted } from "../../ex/utils";
 import { api } from "../../api/api";
 import useValueField from "../../hooks/useValueField";
 import { validateFields, vRequired } from "../../ex/validate";
 import TextFieldView from "../textFieldView";
 import { ProfileIcon } from "../icons";
-import { SelectView } from "../selectView";
+import { SelectFieldView } from "../selectView";
 
 export const ContactEditView = (props: { pk: cPk | null }) => {
   const pk = props.pk;
@@ -68,7 +68,7 @@ export const ContactFormEditView = (props: { contact: ContactShowRes | null }) =
   }, [contact]);
 
   const onSubmit = useCallback(async () => {
-    const isValid = validateFields([setId, setType, setHref]);
+    const isValid = validateFields([setType, setId, setHref]);
 
     if (!isValid || isNil(type.value)) {
       alert("데이터가 유효하지 않습니다.");
@@ -90,8 +90,28 @@ export const ContactFormEditView = (props: { contact: ContactShowRes | null }) =
     router.replace(Urls.contact["[pk]"].page.url({ pk: res.pk }));
   }, [contact, type, id, href]);
 
+  return (
+    <form onSubmit={preventDefaulted(() => onSubmit())}>
+      <SelectFieldView<ContactType>
+        field={type}
+        options={contactTypeValues}
+        onChange={(value) => setType.set(value)}
+        mapper={toContactType}
+      />
+      <TextFieldView field={id} onChange={(value) => setId.set(value)} icon={<ProfileIcon />} />
+      <TextFieldView field={href} onChange={(value) => setHref.set(value)} />
+
+      <ContactEditButtonView pk={contact?.pk} />
+    </form>
+  );
+};
+
+const ContactEditButtonView = (props: { pk?: number }) => {
+  const router = useRouter();
+  const pk = props.pk;
+
   const onDelete = useCallback(async () => {
-    if (isNil(contact)) {
+    if (isNil(pk)) {
       return;
     }
 
@@ -99,7 +119,7 @@ export const ContactFormEditView = (props: { contact: ContactShowRes | null }) =
       return;
     }
 
-    const res = await api.contactDelete({ pk: contact.pk });
+    const res = await api.contactDelete({ pk });
 
     if (isNil(res)) {
       return;
@@ -107,36 +127,25 @@ export const ContactFormEditView = (props: { contact: ContactShowRes | null }) =
 
     alert("삭제 되었습니다.");
     router.replace(Urls.contact.page.url({}));
-  }, [contact]);
+  }, [pk]);
 
   return (
-    <form onSubmit={preventDefaulted(() => onSubmit())}>
-      <SelectView<ContactType | null>
-        value={type.value}
-        options={["타입", ...contactTypeValues].map((item) => ({
-          label: item,
-          value: toContactType(item),
-        }))}
-        onChange={(value) => setType.set(value)}
-      />
-      <TextFieldView field={id} onChange={(value) => setId.set(value)} icon={<ProfileIcon />} />
-      <TextFieldView field={href} onChange={(value) => setHref.set(value)} />
-
-      <div className="flex justify-end gap-4.5">
+    <div className="flex justify-end gap-4.5">
+      {isNotNil(pk) && (
         <button
           type="button"
-          className="mr-3 flex justify-center rounded bg-danger px-6 py-2 font-medium text-gray hover:bg-opacity-90"
+          className="mr-2 flex justify-center rounded bg-danger px-6 py-2 font-medium text-gray hover:bg-opacity-90"
           onClick={() => onDelete()}
         >
           Delete
         </button>
-        <button
-          type="submit"
-          className="flex justify-center rounded bg-primary px-6 py-2 font-medium text-gray hover:bg-opacity-90"
-        >
-          Save
-        </button>
-      </div>
-    </form>
+      )}
+      <button
+        type="submit"
+        className="flex justify-center rounded bg-primary px-6 py-2 font-medium text-gray hover:bg-opacity-90"
+      >
+        Save
+      </button>
+    </div>
   );
 };

@@ -81,6 +81,7 @@ export const ContactPaginationView = (props: {
 
   return (
     <PaginationView
+      createLink={Urls.contact["[pk]"].page.url({ pk: "new" })}
       pagination={pagination}
       mapper={(item) => [
         ["ID", item.id],
