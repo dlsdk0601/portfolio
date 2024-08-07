@@ -1,7 +1,9 @@
 import React, { ReactNode } from "react";
 import { isNil } from "lodash";
+import Link from "next/link";
 import { Pagination } from "../type/definition";
 import { PageView } from "./PaginationPageView";
+import { isNotNil } from "../ex/utils";
 
 export type TableViewRowItem = [string | ReactNode, ReactNode];
 export type TableViewRow = TableViewRowItem[];
@@ -9,6 +11,7 @@ export type TableViewRow = TableViewRowItem[];
 export const PaginationView = <T extends any>(props: {
   pagination: Pagination<T> | null;
   mapper: (item: T) => TableViewRow;
+  createLink?: string;
 }) => {
   if (isNil(props.pagination)) {
     return <div className="h-[500px]" />;
@@ -17,9 +20,19 @@ export const PaginationView = <T extends any>(props: {
   if (props.pagination.total === 0) {
     return (
       <div className="rounded-sm px-5 pb-2.5 pt-6 dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
-          Total: {props.pagination.total}
-        </h4>
+        <div className="mb-6 flex items-center justify-between">
+          <h4 className="text-xl font-semibold text-black dark:text-white">
+            Total: {props.pagination.total}
+          </h4>
+          {isNotNil(props.createLink) && (
+            <Link
+              href={props.createLink}
+              className="block w-[100px] rounded border bg-success px-4 text-center font-medium text-white hover:opacity-80 dark:hover:opacity-80 sm:px-4 sm:py-3"
+            >
+              등록
+            </Link>
+          )}
+        </div>
         <div className="h-[350px] max-w-full overflow-x-auto">
           <p className="my-5 text-center">조회된 데이터가 없습니다.</p>
         </div>
@@ -29,9 +42,19 @@ export const PaginationView = <T extends any>(props: {
 
   return (
     <div className="rounded-sm px-5 pb-2.5 pt-6 dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-      <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
-        Total: {props.pagination.total}
-      </h4>
+      <div className="mb-6 flex items-center justify-between">
+        <h4 className="text-xl font-semibold text-black dark:text-white">
+          Total: {props.pagination.total}
+        </h4>
+        {isNotNil(props.createLink) && (
+          <Link
+            href={props.createLink}
+            className="block w-[100px] rounded border bg-success px-4 text-center font-medium text-white hover:opacity-80 dark:hover:opacity-80 sm:px-4 sm:py-3"
+          >
+            등록
+          </Link>
+        )}
+      </div>
       <div className="max-w-full overflow-x-auto">
         <TableView
           rows={props.pagination.rows.map((entry) => [
