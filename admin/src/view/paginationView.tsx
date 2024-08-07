@@ -44,6 +44,8 @@ export const PaginationView = <T extends any>(props: {
           pages={props.pagination.pages}
           prevPage={props.pagination.prevPage}
           nextPage={props.pagination.nextPage}
+          hasPrevPage={props.pagination.hasPrev}
+          hasNextPage={props.pagination.hasNext}
         />
       </div>
     </div>

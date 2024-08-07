@@ -191,42 +191,6 @@ export const NavProfileIcon = () => {
   );
 };
 
-export const PaginationLeftArrowIcon = () => {
-  return (
-    <svg
-      className="fill-current"
-      width="8"
-      height="16"
-      viewBox="0 0 8 16"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M7.17578 15.1156C7.00703 15.1156 6.83828 15.0593 6.72578 14.9187L0.369531 8.44995C0.116406 8.19683 0.116406 7.80308 0.369531 7.54995L6.72578 1.0812C6.97891 0.828076 7.37266 0.828076 7.62578 1.0812C7.87891 1.33433 7.87891 1.72808 7.62578 1.9812L1.71953 7.99995L7.65391 14.0187C7.90703 14.2718 7.90703 14.6656 7.65391 14.9187C7.48516 15.0312 7.34453 15.1156 7.17578 15.1156Z"
-        fill=""
-      />
-    </svg>
-  );
-};
-
-export const PaginationRightArrowIcon = () => {
-  return (
-    <svg
-      className="fill-current"
-      width="8"
-      height="16"
-      viewBox="0 0 8 16"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M0.819531 15.1156C0.650781 15.1156 0.510156 15.0593 0.369531 14.9468C0.116406 14.6937 0.116406 14.3 0.369531 14.0468L6.27578 7.99995L0.369531 1.9812C0.116406 1.72808 0.116406 1.33433 0.369531 1.0812C0.622656 0.828076 1.01641 0.828076 1.26953 1.0812L7.62578 7.54995C7.87891 7.80308 7.87891 8.19683 7.62578 8.44995L1.26953 14.9187C1.15703 15.0312 0.988281 15.1156 0.819531 15.1156Z"
-        fill=""
-      />
-    </svg>
-  );
-};
-
 export const GreenBadge = (props: { label: string }) => {
   return (
     <p className="inline-flex rounded-full bg-success bg-opacity-10 px-3 py-1 text-sm font-medium text-success">
@@ -248,28 +212,5 @@ export const YellowBadge = (props: { label: string }) => {
     <p className="inline-flex rounded-full bg-warning bg-opacity-10 px-3 py-1 text-sm font-medium text-warning">
       {props.label}
     </p>
-  );
-};
-
-export const BottomArrowIcon = () => {
-  return (
-    <span className="absolute right-4 top-1/2 z-10 -translate-y-1/2">
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <g opacity="0.8">
-          <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
-            fill="#637381"
-          />
-        </g>
-      </svg>
-    </span>
   );
 };

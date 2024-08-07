@@ -1,23 +1,28 @@
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
-import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import classNames from "classnames";
-import { PaginationLeftArrowIcon, PaginationRightArrowIcon } from "./icons";
 import { parseIntSafe } from "../ex/numberEx";
 
-export const PageView = (props: { pages: number[]; prevPage: number; nextPage: number }) => {
+export const PageView = (props: {
+  pages: number[];
+  prevPage: number;
+  nextPage: number;
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+}) => {
+  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const pageQuery = searchParams.get("page") ?? "1";
   const currentPage = parseIntSafe(pageQuery) ?? 1;
 
-  const setQuery = (page: number) => {
+  const onClick = (page: number) => {
     const query = new URLSearchParams(searchParams);
     query.set("page", page.toString());
 
-    return `${pathname}?${query.toString()}`;
+    router.push(`${pathname}?${query.toString()}`);
   };
 
   return (
@@ -25,18 +30,26 @@ export const PageView = (props: { pages: number[]; prevPage: number; nextPage: n
       <nav>
         <ul className="mx-auto flex flex-wrap items-center justify-center">
           <li>
-            <Link
-              href={setQuery(props.prevPage)}
-              className="flex h-9 w-9 items-center justify-center rounded-l-md border border-stroke hover:border-primary hover:bg-gray hover:text-primary dark:border-strokedark dark:hover:border-primary dark:hover:bg-graydark"
+            <button
+              type="button"
+              disabled={!props.hasPrevPage}
+              onClick={() => onClick(props.prevPage)}
+              className={classNames(
+                "flex h-9 w-9 items-center justify-center rounded-l-md border border-stroke dark:border-strokedark dark:hover:border-primary dark:hover:bg-graydark",
+                {
+                  "hover:border-primary hover:bg-gray hover:text-primary": props.hasPrevPage,
+                },
+              )}
             >
-              <PaginationLeftArrowIcon />
-            </Link>
+              <i className="mdi mdi-chevron-left text-2xl" />
+            </button>
           </li>
           {props.pages.map((page, index) => (
             // eslint-disable-next-line react/no-array-index-key
             <li key={`page-${page}-${index}`}>
-              <Link
-                href={setQuery(page)}
+              <button
+                type="button"
+                onClick={() => onClick(page)}
                 className={classNames(
                   "flex items-center justify-center border border-stroke border-l-transparent px-4 py-[5px] font-medium hover:border-primary hover:bg-gray hover:text-primary dark:border-strokedark dark:hover:border-primary dark:hover:bg-graydark",
                   {
@@ -45,17 +58,24 @@ export const PageView = (props: { pages: number[]; prevPage: number; nextPage: n
                 )}
               >
                 {page}
-              </Link>
+              </button>
             </li>
           ))}
 
           <li>
-            <Link
-              href={setQuery(props.nextPage)}
-              className="flex h-9 w-9 items-center justify-center rounded-r-md border border-stroke border-l-transparent hover:border-primary hover:bg-gray hover:text-primary dark:border-strokedark dark:hover:border-primary dark:hover:bg-graydark"
+            <button
+              type="button"
+              disabled={!props.hasNextPage}
+              onClick={() => onClick(props.nextPage)}
+              className={classNames(
+                "flex h-9 w-9 items-center justify-center rounded-r-md border border-stroke border-l-transparent dark:border-strokedark dark:hover:border-primary dark:hover:bg-graydark",
+                {
+                  "hover:border-primary hover:bg-gray hover:text-primary": props.hasNextPage,
+                },
+              )}
             >
-              <PaginationRightArrowIcon />
-            </Link>
+              <i className="mdi mdi-chevron-right text-2xl" />
+            </button>
           </li>
         </ul>
       </nav>
