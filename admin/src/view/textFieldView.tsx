@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { isNil } from "lodash";
 import { ValueField } from "../hooks/useValueField";
 import { k } from "../ex/korean-postposition";
-import { isNotBlank, isNotNil } from "../ex/utils";
+import { isBlank, isNotBlank, isNotNil } from "../ex/utils";
 
 const TextFieldView = (props: {
   field: ValueField<string>;
@@ -31,11 +31,12 @@ const TextFieldView = (props: {
         <input
           type={props.type ?? "text"}
           className={classNames(
-            "w-full rounded border border-stroke bg-gray py-3 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary",
+            "w-full rounded border bg-gray py-3 pr-4.5 text-black focus-visible:outline-none dark:bg-meta-4 dark:text-white dark:focus:border-primary",
             {
               "pl-11.5": isNotNil(props.icon),
               "pl-6": isNil(props.icon),
               "border-meta-1 focus:border-meta-1": isNotBlank(props.field.error),
+              "border-stroke focus:border-primary": isBlank(props.field.error),
             },
           )}
           name={props.field.name}
