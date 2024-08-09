@@ -81,7 +81,7 @@ def api_paginate(q: Select, page, map_: Callable[[T], PAGE_ROW_ITEM], per_page=1
         has_next=p.has_next,
         total=total,
         rows=[PageRow[PAGE_ROW_ITEM](no=index, item=item) for (index, item) in items_indexed]
-    ).dict(by_alias=True)
+    ).model_dump(by_alias=True)
 
 
 # https://github.com/sqlalchemy/sqlalchemy/issues/3482
