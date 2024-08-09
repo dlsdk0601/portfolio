@@ -10,6 +10,7 @@
     "watch": "nodemon --watch src/app -e tsx bin/generateUrl.ts"
   },
   "dependencies": {
+    "@uiw/react-md-editor": "^4.0.4",
     "axios": "^1.7.2",
     "classnames": "^2.5.1",
     "moment": "^2.30.1",
