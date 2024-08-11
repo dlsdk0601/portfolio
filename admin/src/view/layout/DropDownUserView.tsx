@@ -1,12 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import React, { useRef } from "react";
 import Link from "next/link";
 import classNames from "classnames";
 import { useClickOutside } from "../../hooks/useClickOutside";
 import { managerModel } from "../../store/managerModel";
 import { Urls } from "../../url/url.g";
-import { SettingIcon, SignOutIcon } from "../icons";
 
 const DropDownUserView = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -57,7 +56,7 @@ const DropDownUserView = () => {
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
               onClick={() => setIsOpen(false)}
             >
-              <SettingIcon />
+              <i className="mdi mdi-cog-outline text-2xl" />
               Account Settings
             </Link>
           </li>
@@ -67,7 +66,7 @@ const DropDownUserView = () => {
           className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
           onClick={() => manager.signOut()}
         >
-          <SignOutIcon />
+          <i className="mdi mdi-logout text-2xl" />
           Log Out
         </button>
       </div>

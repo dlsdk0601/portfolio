@@ -2,12 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ReactNode, useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { usePathname } from "next/navigation";
 import classNames from "classnames";
 import { Urls } from "../../url/url.g";
 import { layoutModel } from "../../store/layoutModel";
-import { NavProfileIcon } from "../icons";
 
 const LeftSidebarView = () => {
   const pathname = usePathname();
@@ -65,7 +64,7 @@ const LeftSidebarView = () => {
                     },
                   )}
                 >
-                  <NavProfileIcon />
+                  <i className="mdi mdi-account-outline text-lg" />
                   계정
                 </Link>
               </li>
