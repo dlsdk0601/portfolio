@@ -1,5 +1,4 @@
 export interface PageRow<T> {
-  /** No */
   no: number;
   item: T;
 }
