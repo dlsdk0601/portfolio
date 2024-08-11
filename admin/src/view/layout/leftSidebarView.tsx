@@ -79,9 +79,22 @@ const LeftSidebarView = () => {
                     },
                   )}
                 >
-                  {/* <NavProfileIcon /> */}
                   <i className="mdi mdi-contacts-outline text-lg" />
                   연락처
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={Urls.project.page.url()}
+                  className={classNames(
+                    "group flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium leading-none text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4",
+                    {
+                      "bg-graydark dark:bg-meta-4": pathname === Urls.project.page.pathname,
+                    },
+                  )}
+                >
+                  <i className="mdi mdi-file-document-multiple-outline text-lg" />
+                  프로젝트
                 </Link>
               </li>
 
