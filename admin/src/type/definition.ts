@@ -13,3 +13,5 @@ export interface Pagination<T> {
   total: number | null;
   rows: PageRow<T>[];
 }
+
+export type SearchParams = Record<string, string>;

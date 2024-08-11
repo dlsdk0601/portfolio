@@ -5,6 +5,7 @@ import {
 } from "../../../view/account/accountPaginationView";
 import { parseQuery } from "../../../ex/query";
 import { Urls } from "../../../url/url.g";
+import { SearchParams } from "../../../type/definition";
 
 export interface Query {
   page: number;
@@ -12,7 +13,7 @@ export interface Query {
   enable: boolean;
 }
 
-const Page = async (props: { searchParams: Record<string, string> }) => {
+const Page = async (props: { searchParams: SearchParams }) => {
   const query = parseQuery<Query>(props.searchParams);
 
   return (

@@ -5,6 +5,7 @@ import {
   ContactPaginationView,
 } from "../../../view/contact/contactPaginationView";
 import { toContactType } from "../../../api/schema.g";
+import { SearchParams } from "../../../type/definition";
 
 export interface Query {
   page: number;
@@ -12,7 +13,7 @@ export interface Query {
   type: string;
 }
 
-const Page = (props: { searchParams: Record<string, string> }) => {
+const Page = (props: { searchParams: SearchParams }) => {
   const query = parseQuery<Query>(props.searchParams);
 
   return (

@@ -1,5 +1,6 @@
 import moment from "moment/moment";
 import { isNil } from "lodash";
+import { SearchParams } from "../type/definition";
 
 export type cPk = number | "new";
 
@@ -19,7 +20,7 @@ const parseValue = (key: string, value: string) => {
   return value;
 };
 
-export const parseQuery = <T>(q: Record<string, string>): Partial<T> => {
+export const parseQuery = <T>(q: SearchParams): Partial<T> => {
   const query: Partial<T> = {};
 
   Object.entries(q).forEach(([key, v]) => {
