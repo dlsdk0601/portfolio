@@ -15,8 +15,6 @@ class ContactType(StringEnum):
 
 
 class Contact(Model):
-    __tablename__ = 'contact'
-
     pk: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     type: Mapped[ContactType] = mapped_column(Enum(ContactType), nullable=False, comment='연락처 타입')
     id: Mapped[str] = mapped_column(String(64), nullable=False, comment='매체 아이디')
@@ -25,3 +23,7 @@ class Contact(Model):
     create_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     update_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     delete_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    __table_args__ = (
+        {'comment': "연락처"}
+    )

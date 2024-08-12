@@ -86,7 +86,6 @@ class ContactEditRes(BaseModel):
 @app.api()
 def contact_edit(req: ContactEditReq) -> Res[ContactEditRes]:
     contact = Contact()
-    db.session.add(contact)
 
     if req.pk is not None:
         contact = db.get_or_404(Contact, req.pk)
@@ -98,6 +97,7 @@ def contact_edit(req: ContactEditReq) -> Res[ContactEditRes]:
     contact.id = req.id
     contact.href = req.href
 
+    db.session.add(contact)
     db.session.commit()
 
     return ok(ContactEditRes(pk=contact.pk))

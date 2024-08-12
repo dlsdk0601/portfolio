@@ -92,12 +92,12 @@ class ManagerEditRes(BaseModel):
 
 @app.api()
 def manager_edit(req: ManagerEditReq) -> Res[ManagerEditRes]:
-    manager = Manager(type=ManagerType.NORMAL)
-    db.session.add(manager)
+    manager = Manager()
 
     if req.pk is not None:
         manager = db.get_or_404(Manager, req.pk)
 
+    manager.type = ManagerType.NORMAL
     manager.id = req.id
     manager.name = req.name
     manager.email = req.email
@@ -105,6 +105,7 @@ def manager_edit(req: ManagerEditReq) -> Res[ManagerEditRes]:
     manager.job = req.job
     manager.enable = req.enable
 
+    db.session.add(manager)
     db.session.commit()
 
     return ok(ManagerEditRes(pk=manager.pk))
