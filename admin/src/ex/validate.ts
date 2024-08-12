@@ -4,13 +4,27 @@ import isUrl from "validator/lib/isURL";
 import { isBlank, isNotNil } from "./utils";
 import { SetValueField } from "../hooks/useValueField";
 
-export const vRequired = (value: any): string | undefined => {
+export type VALIDATE = (value: any) => string | undefined;
+
+export const vRequired: VALIDATE = (value) => {
   if (isBlank(value) || isNil(value)) {
     return "필수 입력사항입니다.";
   }
 };
 
-export const vEmail = (value: any): string | undefined => {
+export const vLength = (length: number): VALIDATE => {
+  return (value) => {
+    if (isBlank(value) || isNil(value)) {
+      return "필수 입력사항입니다.";
+    }
+
+    if (value.length > length) {
+      return `${length}자 이내여야 합니다.`;
+    }
+  };
+};
+
+export const vEmail: VALIDATE = (value) => {
   if (typeof value !== "string") {
     return "문자로 입력해주세요.";
   }
@@ -25,7 +39,7 @@ export const vEmail = (value: any): string | undefined => {
   }
 };
 
-export const vPhone = (value: any): string | undefined => {
+export const vPhone: VALIDATE = (value) => {
   if (typeof value !== "string") {
     return "문자로 입력해주세요.";
   }
@@ -46,7 +60,7 @@ export const vPhone = (value: any): string | undefined => {
   }
 };
 
-export const vUrl = (value: string): string | undefined => {
+export const vUrl: VALIDATE = (value) => {
   if (isNil(value) || isEmpty(value)) {
     return "url은 필수 입력사항입니다.";
   }
@@ -56,7 +70,7 @@ export const vUrl = (value: string): string | undefined => {
   }
 };
 
-export const vPassword = (value: any): string | undefined => {
+export const vPassword: VALIDATE = (value) => {
   if (typeof value !== "string") {
     return "문자로 입력해주세요.";
   }
@@ -67,7 +81,7 @@ export const vPassword = (value: any): string | undefined => {
   }
 };
 
-export const vBirthday = (value: any): string | undefined => {
+export const vBirthday: VALIDATE = (value) => {
   if (typeof value !== "string") {
     return "문자로 입력해주세요.";
   }
