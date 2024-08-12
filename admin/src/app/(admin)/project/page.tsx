@@ -1,6 +1,7 @@
-import { SearchParams } from "../../../type/definition";
-import { parseQuery } from "../../../ex/query";
-import { ProjectPaginationSearchView } from "../../../view/project/projectPaginationView";
+import {
+  ProjectPaginationSearchView,
+  ProjectPaginationView,
+} from "../../../view/project/projectPaginationView";
 
 export interface Query {
   page: number;
@@ -8,12 +9,11 @@ export interface Query {
   type: string;
 }
 
-const Page = (props: { searchParams: SearchParams }) => {
-  const query = parseQuery<Query>(props.searchParams);
-
+const Page = () => {
   return (
     <section className="data-table-common rounded-sm border border-stroke bg-white py-4 shadow-default dark:border-strokedark dark:bg-boxdark">
       <ProjectPaginationSearchView />
+      <ProjectPaginationView />
     </section>
   );
 };
