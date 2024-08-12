@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import TextFieldView from "../textFieldView";
 import { EmailIcon, ProfileIcon } from "../icons";
 import useValueField from "../../hooks/useValueField";
-import { validateFields, vEmail, vPassword, vPhone, vRequired } from "../../ex/validate";
+import { validateFields, vEmail, vLength, vPassword, vPhone, vRequired } from "../../ex/validate";
 import { Replace } from "../layout/layoutSelector";
 import { Urls } from "../../url/url.g";
 import { api } from "../../api/api";
@@ -57,12 +57,12 @@ export const AccountFormEditView = (props: {
   const router = useRouter();
 
   const manager = props.manager;
-  const [name, setName] = useValueField<string>("", "이름", vRequired);
-  const [phone, setPhone] = useValueField<string>("", "휴대폰 번호", vPhone);
-  const [email, setEmail] = useValueField<string>("", "이메일", vRequired, vEmail);
-  const [id, setId] = useValueField<string>("", "ID", vRequired);
-  const [password, setPassword] = useValueField<string>("", "PASSWORD", vPassword);
-  const [job, setJob] = useValueField<string>("", "직업", vRequired);
+  const [name, setName] = useValueField<string>("", "이름", vRequired, vLength(64));
+  const [phone, setPhone] = useValueField<string>("", "휴대폰 번호", vPhone, vLength(16));
+  const [email, setEmail] = useValueField<string>("", "이메일", vRequired, vEmail, vLength(128));
+  const [id, setId] = useValueField<string>("", "ID", vRequired, vLength(128));
+  const [password, setPassword] = useValueField<string>("", "PASSWORD", vPassword, vLength(16));
+  const [job, setJob] = useValueField<string>("", "직업", vRequired, vLength(32));
   const [enable, setEnable] = useValueField<boolean>(true, "상태");
 
   useEffect(() => {
@@ -127,10 +127,15 @@ export const AccountFormEditView = (props: {
           icon={<ProfileIcon />}
           col={2}
         />
-        <TextFieldView field={phone} onChange={(value) => setPhone.set(value)} col={2} />
+        <TextFieldView type="tel" field={phone} onChange={(value) => setPhone.set(value)} col={2} />
       </div>
 
-      <TextFieldView field={email} onChange={(value) => setEmail.set(value)} icon={<EmailIcon />} />
+      <TextFieldView
+        type="email"
+        field={email}
+        onChange={(value) => setEmail.set(value)}
+        icon={<EmailIcon />}
+      />
 
       <TextFieldView field={id} onChange={(value) => setId.set(value)} />
 
