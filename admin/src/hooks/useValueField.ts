@@ -19,11 +19,9 @@ export interface SetValueField<T> {
   validate: () => boolean;
 }
 
-const useValueField = <T>(
-  init: T,
-  name: string,
-  ...validators: Validator<T>[]
-): [ValueField<T>, SetValueField<T>] => {
+export type RETURN_TYPE<T> = [ValueField<T>, SetValueField<T>];
+
+const useValueField = <T>(init: T, name: string, ...validators: Validator<T>[]): RETURN_TYPE<T> => {
   const [state, setState] = useState<ValueField<T>>({
     value: init,
     error: "",
@@ -65,25 +63,37 @@ const useValueField = <T>(
 };
 
 // shortcut
-export const useStringField = (name: string, ...validators: Validator<string>[]) => {
+export const useStringField = (
+  name: string,
+  ...validators: Validator<string>[]
+): RETURN_TYPE<string> => {
   const [value, set] = useValueField<string>("", name, ...validators);
 
   return [value, set];
 };
 
-export const useIntField = (name: string, ...validators: Validator<number | null>[]) => {
+export const useIntField = (
+  name: string,
+  ...validators: Validator<number | null>[]
+): RETURN_TYPE<number | null> => {
   const [value, set] = useValueField<number | null>(null, name, ...validators);
 
   return [value, set];
 };
 
-export const useBooleanField = (name: string, ...validators: Validator<boolean | null>[]) => {
+export const useBooleanField = (
+  name: string,
+  ...validators: Validator<boolean | null>[]
+): RETURN_TYPE<boolean | null> => {
   const [value, set] = useValueField<boolean | null>(null, name, ...validators);
 
   return [value, set];
 };
 
-export const useTypeField = <T>(name: string, ...validators: Validator<T | null>[]) => {
+export const useTypeField = <T>(
+  name: string,
+  ...validators: Validator<T | null>[]
+): RETURN_TYPE<T | null> => {
   const [value, set] = useValueField<T | null>(null, name, ...validators);
 
   return [value, set];

@@ -2,9 +2,10 @@
 
 import classNames from "classnames";
 import { ValueField } from "../hooks/useValueField";
+import { isNotBlank, isNotNil } from "../ex/utils";
 
 export const CheckBoxView = (props: {
-  field: ValueField<boolean>;
+  field: ValueField<boolean | null>;
   onChange: (value: boolean) => void;
   label?: string;
   col?: 2 | 3;
@@ -25,20 +26,25 @@ export const CheckBoxView = (props: {
             id="toggle4"
             className="sr-only"
             type="checkbox"
-            checked={props.field.value}
+            checked={props.field.value ?? false}
             onChange={(e) => props.onChange(e.target.checked)}
           />
           <div className="block h-8 w-14 rounded-full bg-meta-9 dark:bg-[#5A616B]" />
-          <div
-            className={classNames(
-              "absolute left-1 top-1 h-6 w-6 rounded-full bg-white transition",
-              {
-                "!right-1 !translate-x-full !bg-primary dark:!bg-white": props.field.value,
-              },
-            )}
-          />
+          {isNotNil(props.field.value) && (
+            <div
+              className={classNames(
+                "absolute left-1 top-1 h-6 w-6 rounded-full bg-white transition",
+                {
+                  "!right-1 !translate-x-full !bg-primary dark:!bg-white": props.field.value,
+                },
+              )}
+            />
+          )}
         </div>
       </label>
+      {isNotBlank(props.field.error) && (
+        <p className="mt-1 text-xs italic text-meta-1">{props.field.error}</p>
+      )}
     </div>
   );
 };

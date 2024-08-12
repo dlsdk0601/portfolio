@@ -9,8 +9,8 @@ import { Urls } from "../../url/url.g";
 import { ContactShowRes, ContactType, contactTypeValues, toContactType } from "../../api/schema.g";
 import { ignorePromise, isNotNil, preventDefaulted } from "../../ex/utils";
 import { api } from "../../api/api";
-import useValueField from "../../hooks/useValueField";
-import { validateFields, vRequired } from "../../ex/validate";
+import { useStringField, useTypeField } from "../../hooks/useValueField";
+import { validateFields, vLength, vRequired, vUrl } from "../../ex/validate";
 import TextFieldView from "../textFieldView";
 import { ProfileIcon } from "../icons";
 import { SelectFieldView } from "../selectView";
@@ -53,9 +53,9 @@ export const ContactFormEditView = (props: { contact: ContactShowRes | null }) =
   const router = useRouter();
 
   const contact = props.contact;
-  const [type, setType] = useValueField<ContactType | null>(null, "타입", vRequired);
-  const [id, setId] = useValueField<string>("", "아이디", vRequired);
-  const [href, setHref] = useValueField<string>("", "링크", vRequired);
+  const [type, setType] = useTypeField<ContactType | null>("타입", vRequired);
+  const [id, setId] = useStringField("아이디", vRequired, vLength(64));
+  const [href, setHref] = useStringField("링크", vRequired, vUrl, vLength(256));
 
   useEffect(() => {
     if (isNil(contact)) {

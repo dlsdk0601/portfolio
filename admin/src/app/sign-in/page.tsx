@@ -4,8 +4,8 @@ import React, { FormEvent, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { isNil } from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
-import useValueField from "../../hooks/useValueField";
-import { vRequired } from "../../ex/validate";
+import { useStringField } from "../../hooks/useValueField";
+import { vPassword, vRequired } from "../../ex/validate";
 import { EmailIcon, LockIcon } from "../../view/icons";
 import { Urls } from "../../url/url.g";
 import { api } from "../../api/api";
@@ -16,8 +16,8 @@ const Page = () => {
   const router = useRouter();
   const query = useSearchParams();
   const [token, setToken] = managerModel((state) => [state.token, state.setToken]);
-  const [id, setId] = useValueField<string>("", "ID", vRequired);
-  const [password, setPassword] = useValueField<string>("", "PASSWORD", vRequired);
+  const [id, setId] = useStringField("ID", vRequired);
+  const [password, setPassword] = useStringField("PASSWORD", vRequired, vPassword);
 
   const onSubmit = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {

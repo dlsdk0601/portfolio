@@ -5,12 +5,12 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import TextFieldView from "../textFieldView";
 import { EmailIcon, ProfileIcon } from "../icons";
-import useValueField from "../../hooks/useValueField";
+import { useBooleanField, useStringField } from "../../hooks/useValueField";
 import { validateFields, vEmail, vLength, vPassword, vPhone, vRequired } from "../../ex/validate";
 import { Replace } from "../layout/layoutSelector";
 import { Urls } from "../../url/url.g";
 import { api } from "../../api/api";
-import { ignorePromise, isNotBlank, preventDefaulted } from "../../ex/utils";
+import { ignorePromise, preventDefaulted } from "../../ex/utils";
 import { ManagerShowRes } from "../../api/schema.g";
 import { CheckBoxView } from "../checkBoxView";
 import { cPk, isNewPk } from "../../ex/query";
@@ -57,13 +57,13 @@ export const AccountFormEditView = (props: {
   const router = useRouter();
 
   const manager = props.manager;
-  const [name, setName] = useValueField<string>("", "이름", vRequired, vLength(64));
-  const [phone, setPhone] = useValueField<string>("", "휴대폰 번호", vPhone, vLength(16));
-  const [email, setEmail] = useValueField<string>("", "이메일", vRequired, vEmail, vLength(128));
-  const [id, setId] = useValueField<string>("", "ID", vRequired, vLength(128));
-  const [password, setPassword] = useValueField<string>("", "PASSWORD", vPassword, vLength(16));
-  const [job, setJob] = useValueField<string>("", "직업", vRequired, vLength(32));
-  const [enable, setEnable] = useValueField<boolean>(true, "상태");
+  const [name, setName] = useStringField("이름", vRequired, vLength(64));
+  const [phone, setPhone] = useStringField("휴대폰 번호", vPhone, vLength(16));
+  const [email, setEmail] = useStringField("이메일", vRequired, vEmail, vLength(128));
+  const [id, setId] = useStringField("ID", vRequired, vLength(128));
+  const [password, setPassword] = useStringField("PASSWORD", vPassword, vLength(16));
+  const [job, setJob] = useStringField("직업", vRequired, vLength(32));
+  const [enable, setEnable] = useBooleanField("상태", vRequired);
 
   useEffect(() => {
     if (isNil(manager)) {
@@ -79,14 +79,14 @@ export const AccountFormEditView = (props: {
   }, [manager]);
 
   const onSubmit = useCallback(async () => {
-    const isValid = validateFields([setName, setPhone, setEmail, setId, setJob]);
+    const isValid = validateFields([setName, setPhone, setEmail, setId, setPassword, setJob]);
 
     if (!isValid) {
       alert("데이터가 유효하지 않습니다.");
       return;
     }
 
-    if (isNotBlank(password.value) && setPassword.validate()) {
+    if (setEnable.validate() || isNil(enable.value)) {
       alert("데이터가 유효하지 않습니다.");
       return;
     }
