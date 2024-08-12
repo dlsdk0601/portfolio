@@ -49,13 +49,6 @@ const useValueField = <T>(
   const validate = (): boolean => {
     let res = false;
 
-    // 숫자 타입은 1 이하를 잡는다.
-    if (typeof state.value === "number" && state.value < 1) {
-      onDefaultError();
-      res = true;
-      return res;
-    }
-
     for (const validator of validators) {
       const errorMessage = validator(state.value);
       if (isNotNil(errorMessage)) {
@@ -69,6 +62,31 @@ const useValueField = <T>(
   };
 
   return [state, { set: onChangeState, err: onError, validate }];
+};
+
+// shortcut
+export const useStringField = (name: string, ...validators: Validator<string>[]) => {
+  const [value, set] = useValueField<string>("", name, ...validators);
+
+  return [value, set];
+};
+
+export const useIntField = (name: string, ...validators: Validator<number | null>[]) => {
+  const [value, set] = useValueField<number | null>(null, name, ...validators);
+
+  return [value, set];
+};
+
+export const useBooleanField = (name: string, ...validators: Validator<boolean | null>[]) => {
+  const [value, set] = useValueField<boolean | null>(null, name, ...validators);
+
+  return [value, set];
+};
+
+export const useTypeField = <T>(name: string, ...validators: Validator<T | null>[]) => {
+  const [value, set] = useValueField<T | null>(null, name, ...validators);
+
+  return [value, set];
 };
 
 export default useValueField;
