@@ -138,9 +138,6 @@ def generate_markdown_faker(faker: Faker):
 
         markdown += f"\n{faker.paragraph()}\n\n"
 
-        if random.choice([True, False]):
-            markdown += f"> {faker.quote()}\n\n"
-
     markdown += f"**{faker.word().capitalize()}**: {faker.text()}\n\n"
 
     markdown += "| " + " | ".join(faker.words(nb=3)) + " |\n"
