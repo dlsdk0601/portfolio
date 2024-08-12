@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { isNil } from "lodash";
+import Link from "next/link";
 import {
   PaginationProjectListResItem,
   ProjectType,
@@ -17,6 +18,7 @@ import { PaginationView } from "../paginationView";
 import { d1 } from "../../ex/dateEx";
 import { parseIntSafe } from "../../ex/numberEx";
 import { api } from "../../api/api";
+import { projectTypeToLabel } from "../../api/enum";
 
 export const ProjectPaginationSearchView = () => {
   const router = useRouter();
@@ -30,7 +32,7 @@ export const ProjectPaginationSearchView = () => {
   }, []);
 
   const onSearch = useCallback(() => {
-    router.push(Urls.profile.page.url({ page: 1, search, type: type?.toString }));
+    router.push(Urls.project.page.url({ page: 1, search, type: type?.toString() }));
   }, [search, type]);
 
   return (
@@ -38,7 +40,7 @@ export const ProjectPaginationSearchView = () => {
       <SelectView<ProjectType | null>
         value={type}
         options={["타입", ...projectTypeValues].map((item) => ({
-          label: item,
+          label: projectTypeToLabel(toProjectType(item)),
           value: toProjectType(item),
         }))}
         onChange={(value) => setType(value)}
@@ -66,7 +68,7 @@ export const ProjectPaginationView = () => {
     const p = parseIntSafe(page ?? "1") ?? 1;
 
     ignorePromise(() => init(p, search, toProjectType(type) ?? null));
-  }, []);
+  }, [page, search, type]);
 
   const init = useCallback(async (page: number, search: string, type: ProjectType | null) => {
     const res = await api.projectList({
@@ -89,8 +91,17 @@ export const ProjectPaginationView = () => {
         ["타입", item.type === "COMPANY" ? "회사 프로젝트" : "토이 프로젝트"],
         ["프로젝트명", item.title],
         ["생성 일자", d1(item.createAt)],
+        [
+          "상세",
+          <Link
+            href={Urls.project["[pk]"].page.url({ pk: item.pk })}
+            className="inline-flex items-center justify-center rounded-md border border-primary px-7 py-4 text-center font-medium text-primary hover:opacity-60 lg:px-4 xl:px-4"
+          >
+            상세
+          </Link>,
+        ],
       ]}
-      createLink={Urls.profile.page.url()}
+      createLink={Urls.project["[pk]"].page.url({ pk: "new" })}
     />
   );
 };
