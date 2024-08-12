@@ -1,8 +1,10 @@
+import random
 from typing import Callable
 from uuid import UUID
 
 import requests
 from faker import Faker
+from sqlalchemy import func
 
 from ex.api import BaseModel
 from ex.faker_ex import faker_unique, faker_call
@@ -11,13 +13,15 @@ from was.model import db
 from was.model.asset import Asset
 from was.model.contact import Contact, ContactType
 from was.model.manager import Manager, ManagerType
+from was.model.project import Project, ProjectType
 
 
 def main() -> None:
     importers: list[Callable[[Faker], None]] = [
         _import_manager,
         _import_asset,
-        _import_contact
+        _import_contact,
+        _import_project,
     ]
 
     for importer in importers:
@@ -102,6 +106,51 @@ def _import_contact(faker: Faker) -> None:
 
     db.session.add_all(contacts)
     db.session.commit()
+
+
+def _import_project(faker: Faker) -> None:
+    def new_project():
+        project = Project(
+            type=ProjectType.COMPANY if faker.pybool(50) else ProjectType.PERSONAL,
+            title=faker.name(), description=faker.text(10),
+            website_url=faker.url(), github_url=faker.url() if faker.pybool(50) else '',
+            main_text=generate_markdown_faker(faker),
+            delete_at=func.now() if faker.pybool(50) else None
+        )
+
+        return project
+
+    projects = faker_call(faker, new_project, 40)
+    db.session.add_all(projects)
+    db.session.commit()
+
+
+def generate_markdown_faker(faker: Faker):
+    markdown = f"# {faker.catch_phrase()}\n\n"
+
+    markdown += f"## {faker.bs()}\n\n"
+
+    for _ in range(random.randint(2, 4)):
+        markdown += f"### {faker.sentence()}\n\n"
+
+        for _ in range(random.randint(1, 3)):
+            markdown += f"- {faker.text()}\n"
+
+        markdown += f"\n{faker.paragraph()}\n\n"
+
+        if random.choice([True, False]):
+            markdown += f"> {faker.quote()}\n\n"
+
+    markdown += f"**{faker.word().capitalize()}**: {faker.text()}\n\n"
+
+    markdown += "| " + " | ".join(faker.words(nb=3)) + " |\n"
+    markdown += "|" + " --- |" * 3 + "\n"
+    for _ in range(3):
+        markdown += "| " + " | ".join(faker.words(nb=3)) + " |\n"
+
+    markdown += f"\n[{faker.company()}]({faker.url()})\n"
+
+    return markdown
 
 
 if __name__ == '__main__':
