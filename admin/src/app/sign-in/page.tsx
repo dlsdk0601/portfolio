@@ -11,6 +11,7 @@ import { Urls } from "../../url/url.g";
 import { api } from "../../api/api";
 import { managerModel } from "../../store/managerModel";
 import TextFieldView from "../../view/textFieldView";
+import { config } from "../../config/config";
 
 const Page = () => {
   const router = useRouter();
@@ -18,6 +19,32 @@ const Page = () => {
   const [token, setToken] = managerModel((state) => [state.token, state.setToken]);
   const [id, setId] = useStringField("ID", vRequired);
   const [password, setPassword] = useStringField("PASSWORD", vRequired, vPassword);
+
+  // TODO :: 개발 끝나면 제거
+  let count = 0;
+  const quickSignIn = useCallback(async () => {
+    if (!config.isDev) {
+      return;
+    }
+
+    count++;
+    if (count < 5) {
+      return;
+    }
+
+    const res = await api.signIn({
+      id: "test",
+      password: "1234",
+    });
+
+    if (isNil(res)) {
+      return;
+    }
+
+    setToken(res.token, res.refreshToken);
+
+    router.replace(Urls.account.page.url());
+  }, []);
 
   const onSubmit = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
@@ -78,7 +105,7 @@ const Page = () => {
       </div>
 
       <div className="mt-6 text-center">
-        <p>
+        <p onClick={config.isDev ? quickSignIn : undefined}>
           Don’t have any account?{" "}
           <Link href="mailto:inajung7008@gmail.com" className="text-primary">
             Send to email
