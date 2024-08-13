@@ -31,7 +31,7 @@ const TextFieldView = (props: {
         <input
           type={props.type ?? "text"}
           className={classNames(
-            "w-full rounded border bg-gray py-3 pr-4.5 text-black focus-visible:outline-none dark:bg-meta-4 dark:text-white dark:focus:border-primary",
+            "w-full rounded border py-3 pr-4.5 text-black focus-visible:outline-none dark:bg-meta-4 dark:text-white dark:focus:border-primary",
             {
               "pl-11.5": isNotNil(props.icon),
               "pl-6": isNil(props.icon),
@@ -48,6 +48,45 @@ const TextFieldView = (props: {
       {isNotBlank(props.field.error) && (
         <p className="mt-1 text-xs italic text-meta-1">{props.field.error}</p>
       )}
+    </div>
+  );
+};
+
+export const ReadyOnlyView = (props: {
+  field: string;
+  label?: string;
+  placeholder?: string;
+  icon?: ReactNode;
+  col?: 2 | 3;
+}) => {
+  return (
+    <div
+      className={classNames("mb-5.5 w-full", {
+        "sm:w-1/2": props.col === 2,
+        "sm:w-1/3": props.col === 3,
+      })}
+    >
+      {isNotNil(props.label) && (
+        <label className="mb-2.5 block text-sm font-medium text-black dark:text-white">
+          {props.label}
+        </label>
+      )}
+      <div className="relative">
+        {props.icon}
+        <input
+          type="text"
+          className={classNames(
+            "w-full rounded border border-stroke bg-gray py-3 pr-4.5 text-black focus-visible:outline-none dark:bg-meta-4 dark:text-white dark:focus:border-primary",
+            {
+              "pl-11.5": isNotNil(props.icon),
+              "pl-6": isNil(props.icon),
+            },
+          )}
+          placeholder={props.placeholder ?? "자동 생성됩니다."}
+          value={props.field}
+          readOnly
+        />
+      </div>
     </div>
   );
 };
