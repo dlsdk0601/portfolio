@@ -25,18 +25,14 @@ export const ContactEditView = (props: { pk: cPk | null }) => {
   const [contact, setContact] = useState<ContactShowRes | null>(null);
 
   useEffect(() => {
-    if (isNil(pk)) {
+    if (isNewPk(pk)) {
       return;
     }
 
     ignorePromise(() => init(pk));
   }, [pk]);
 
-  const init = useCallback(async (p: cPk) => {
-    if (isNewPk(p)) {
-      return;
-    }
-
+  const init = useCallback(async (p: number) => {
     const res = await api.contactShow({ pk: p });
 
     if (isNil(res)) {
