@@ -31,10 +31,17 @@ const ErrorPage = (props: { error: Error; reset: () => void }) => {
       </span>
       <button
         type="button"
-        className="rounded-2xl border-2 border-zinc-400 px-8 py-4 text-zinc-400 duration-700 hover:border-zinc-200 hover:text-zinc-200"
+        className="mb-3 rounded-2xl border-2 border-zinc-400 px-8 py-4 text-zinc-400 duration-700 hover:border-zinc-200 hover:text-zinc-200"
         onClick={() => onClick()}
       >
         새로 고침
+      </button>
+      <button
+        type="button"
+        className="rounded-2xl border-2 border-zinc-400 p-4 text-zinc-400 duration-700 hover:border-zinc-200 hover:text-zinc-200"
+        onClick={() => router.push(Urls.page.url())}
+      >
+        HOME 으로 돌아가기
       </button>
     </div>
   );
