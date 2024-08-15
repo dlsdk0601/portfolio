@@ -32,7 +32,7 @@ const NavigationView = () => {
           "bg-zinc-900/500 border-zinc-800": !isIntersecting,
         })}
       >
-        <div className="flex-row-revers items center container mx-auto flex justify-between p-6">
+        <div className="items center container mx-auto flex flex-row-reverse justify-between p-6">
           <div className="flex justify-between gap-8">
             <Link
               href={Urls.project.page.url()}
