@@ -1,7 +1,8 @@
-import _ from "lodash";
+import _, { isNil } from "lodash";
 import { config } from "../config/config";
+import { isBlank } from "../ex/utils";
 
-export class PageUrl {
+export class PageUrl<T extends Record<string, any>> {
   readonly pathname: string;
 
   constructor(pathname: string) {
@@ -12,13 +13,35 @@ export class PageUrl {
     return config.baseUrl + this.pathname;
   }
 
-  url(query?: Record<string, string>) {
+  url(query?: T) {
+    let path = this.pathname;
+
     if (_.isNil(query)) {
-      return this.pathname;
+      return path;
     }
 
-    const q = new URLSearchParams(query);
-    return `${this.pathname}?${q.toString()}`;
+    const q: Record<string, string> = {};
+
+    Object.keys(query).forEach((item) => {
+      if (isNil(query[item])) {
+        return;
+      }
+
+      // query 값 중에 path에 있다면 거기에 처리 한다.
+      if (path.includes(item)) {
+        path = this.pathname.replace(`[${item}]`, `${query[item]}`);
+        return;
+      }
+
+      q[item] = `${query[item]}`;
+    });
+    const queryParams = new URLSearchParams(q);
+
+    if (isBlank(queryParams.toString())) {
+      return path;
+    }
+
+    return `${path}?${queryParams.toString()}`;
   }
 
   urlPk(query: { pk: number | "new" }) {

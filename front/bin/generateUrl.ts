@@ -1,11 +1,14 @@
 import path from "path";
 import * as fs from "fs";
+import { readFileSync } from "node:fs";
 import prettier from "prettier";
-import { isNotBlank, removeSuffix } from "../src/ex/utils";
+import { head } from "lodash";
+import { isBlank, removeSuffix } from "../src/ex/utils";
 
 type Page = {
   kind: "page";
   readonly name: string;
+  readonly query?: string;
 };
 
 type Dir = {
@@ -31,30 +34,40 @@ function parseSource(parentDir: string): Array<Page | Dir> {
       entry.name.endsWith(".tsx") &&
       !ignoreFiles.includes(removeSuffix(entry.name, ".tsx"))
     ) {
-      const name = entry.name.startsWith("page") ? "page" : entry.name;
+      const tsx = readFileSync(path.join(parentDir, entry.name), { encoding: "utf-8" })
+        .split("\n")
+        .filter((line) => !line.trim().startsWith("//"))
+        .join("\n");
+      const queries: RegExpMatchArray[] = Array.from(tsx.matchAll(/interface Query\s*{[^}]*}/g));
+
+      if (queries.length > 1) {
+        throw new Error(
+          `Query 가 두번 정의되었습니다. : file = ${path.join(parentDir, entry.name)}`,
+        );
+      }
+
+      const query = Array.from(head(queries) ?? [])[0];
+
       contents.push({
         kind: "page",
-        name: removeSuffix(name, ".tsx"),
+        name: removeSuffix(entry.name, ".tsx"),
+        query: query && query.replaceAll("interface Query", ""),
       });
       continue;
     }
 
     if (entry.isDirectory()) {
       const children = parseSource(path.join(parentDir, entry.name));
-      if (isNotBlank(children) && !entry.name.startsWith("(")) {
-        const name = entry.name === "[pk]" ? "pk" : entry.name;
-        contents.push({ kind: "dir", name, children });
+      if (isBlank(children)) {
+        continue;
       }
 
-      if (isNotBlank(children) && entry.name.startsWith("(")) {
-        (children as Dir[]).forEach((child) => {
-          const name = child.name === "[pk]" ? "pk" : child.name;
-          contents.push({
-            kind: "dir",
-            name,
-            children: child.children,
-          });
-        });
+      if (!entry.name.startsWith("(")) {
+        contents.push({ kind: "dir", name: entry.name, children });
+      }
+
+      if (entry.name.startsWith("(")) {
+        contents.push(...children);
       }
     }
   }
@@ -74,13 +87,16 @@ function generateSource(page: Page | Dir, parents: string[]): string[] {
       // OPT :: nested folder
       const pathname = `/${newParents.join("/")}`;
       const key = `"${page.name}"`;
-      lines.push(
-        `${key}: new PageUrl("${
-          pathname.endsWith("/") && pathname !== "/"
-            ? pathname.substring(0, pathname.length - 1)
-            : pathname
-        }"),`,
-      );
+      const endpoint =
+        pathname.endsWith("/") && pathname !== "/"
+          ? pathname.substring(0, pathname.length - 1)
+          : pathname;
+
+      if (page.query) {
+        lines.push(`${key}: new PageUrl<Partial<${page.query}>>("${endpoint}"),`);
+      } else {
+        lines.push(`${key}: new PageUrl("${endpoint}"),`);
+      }
       break;
     }
     case "dir":
