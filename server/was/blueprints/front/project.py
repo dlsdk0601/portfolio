@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 
 from ex.api import BaseModel, Res, ok, err
 from was.blueprints.front import app
@@ -14,13 +14,13 @@ class ProjectListResItem(BaseModel):
     pk: int
     title: str
     description: str
-    create_at: datetime
+    issue_at: date
 
     @classmethod
     def from_model(cls, project: Project) -> 'ProjectListResItem':
         return cls(
             pk=project.pk, title=project.title,
-            description=project.description, create_at=project.create_at
+            description=project.description, create_at=project.issue_at
         )
 
 

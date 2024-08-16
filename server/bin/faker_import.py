@@ -1,4 +1,5 @@
 import random
+from datetime import timedelta, datetime
 from typing import Callable
 from uuid import UUID
 
@@ -115,6 +116,7 @@ def _import_project(faker: Faker) -> None:
             title=faker.name(), description=faker.text(10),
             website_url=faker.url(), github_url=faker.url() if faker.pybool(50) else '',
             main_text=generate_markdown_faker(faker),
+            issue_at=faker.date_between(start_date=timedelta(days=-30), end_date=datetime.today()),
             delete_at=func.now() if faker.pybool(50) else None
         )
 

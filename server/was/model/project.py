@@ -1,7 +1,7 @@
-from datetime import datetime
+from datetime import datetime, date
 from enum import auto
 
-from sqlalchemy import String, Text, DateTime, func
+from sqlalchemy import String, Text, DateTime, func, Date
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -24,6 +24,7 @@ class Project(Model):
     website_url: Mapped[str] = mapped_column(String(128), nullable=False, comment='웹사이트 링크')
     github_url: Mapped[str] = mapped_column(String(128), nullable=False, comment='프로젝트 깃허브 링크')
     main_text: Mapped[str] = mapped_column(Text, nullable=False, comment='프로젝트 주요 설명 MD 형식')
+    issue_at: Mapped[date] = mapped_column(Date(), nullable=False, comment='배포 일자')
 
     create_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     update_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

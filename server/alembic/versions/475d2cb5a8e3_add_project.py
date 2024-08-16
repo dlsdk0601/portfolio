@@ -39,6 +39,7 @@ def upgrade() -> None:
                     sa.Column('website_url', sa.String(length=128), nullable=False, comment='웹사이트 링크'),
                     sa.Column('github_url', sa.String(length=128), nullable=False, comment='프로젝트 깃허브 링크'),
                     sa.Column('main_text', sa.Text(), nullable=False, comment='프로젝트 주요 설명 MD 형식'),
+                    sa.Column('issue_at', sa.Date(), nullable=False, comment='배포 일자'),
                     sa.Column('create_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
                     sa.Column('update_at', sa.DateTime(timezone=True), nullable=True),
                     sa.Column('delete_at', sa.DateTime(timezone=True), nullable=True),
