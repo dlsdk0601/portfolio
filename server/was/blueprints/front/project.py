@@ -20,7 +20,7 @@ class ProjectListResItem(BaseModel):
     def from_model(cls, project: Project) -> 'ProjectListResItem':
         return cls(
             pk=project.pk, title=project.title,
-            description=project.description, create_at=project.issue_at
+            description=project.description, issue_at=project.issue_at
         )
 
 
