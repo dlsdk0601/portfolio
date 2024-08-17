@@ -13,3 +13,13 @@ export async function projectList() {
 
   return res.projects;
 }
+
+export async function projectShow(pk: number) {
+  const res = await api.projectShow({ pk });
+
+  if (isNil(res)) {
+    return;
+  }
+
+  return res;
+}
