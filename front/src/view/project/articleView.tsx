@@ -6,7 +6,7 @@ import { isNil } from "lodash";
 import Link from "next/link";
 import { ProjectListResItem } from "../../api/schema.g";
 import { Urls } from "../../url/url.g";
-import { d2 } from "../../ex/dateEx";
+import { d4 } from "../../ex/dateEx";
 
 export const DefaultCardView = (props: PropsWithChildren) => {
   const mouseX = useSpring(0, { stiffness: 500, damping: 100 });
@@ -52,7 +52,7 @@ export const ArticleView = (props: { project: ProjectListResItem }) => {
       <article className="p-4 md:p-8">
         <div className="flex items-center justify-between gap-2">
           <span className="drop-shadow-orange text-xs text-zinc-200 duration-1000 group-hover:border-zinc-200 group-hover:text-white">
-            <time>{d2(props.project.issueAt)}</time>
+            <time>{d4(props.project.issueAt)}</time>
           </span>
         </div>
         <h2 className="z-20 font-display text-xl font-medium text-zinc-200 duration-1000 group-hover:text-white lg:text-3xl">
