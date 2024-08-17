@@ -4,9 +4,11 @@ import React, { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Urls } from "../../url/url.g";
 
 const NavigationView = () => {
+  const router = useRouter();
   const ref = useRef<HTMLElement>(null);
   const [isIntersecting, setIsIntersecting] = useState(true);
 
@@ -48,9 +50,12 @@ const NavigationView = () => {
             </Link>
           </div>
 
-          <Link href={Urls.page.url()} className="text-zinc-300 duration-200 hover:text-zinc-100">
+          <button
+            className="text-zinc-300 duration-200 hover:text-zinc-100"
+            onClick={() => router.back()}
+          >
             <ArrowLeft className="h-6 w-6" />
-          </Link>
+          </button>
         </div>
       </div>
     </header>
