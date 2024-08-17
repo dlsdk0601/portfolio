@@ -113,7 +113,7 @@ def _import_project(faker: Faker) -> None:
     def new_project():
         project = Project(
             type=ProjectType.COMPANY if faker.pybool(50) else ProjectType.PERSONAL,
-            title=faker.name(), description=faker.text(10),
+            title=faker.name(), description=faker.paragraph(),
             website_url=faker.url(), github_url=faker.url() if faker.pybool(50) else '',
             main_text=generate_markdown_faker(faker),
             issue_at=faker.date_between(start_date=timedelta(days=-30), end_date=datetime.today()),
