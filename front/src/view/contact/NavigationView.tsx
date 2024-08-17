@@ -51,6 +51,7 @@ const NavigationView = () => {
           </div>
 
           <button
+            type="button"
             className="text-zinc-300 duration-200 hover:text-zinc-100"
             onClick={() => router.back()}
           >
