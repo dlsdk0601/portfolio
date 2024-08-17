@@ -8,7 +8,7 @@ export async function projectList() {
   const res = await api.projectList({});
 
   if (isNil(res)) {
-    notFound();
+    return;
   }
 
   return res.projects;

@@ -1,4 +1,4 @@
-import { head, slice } from "lodash";
+import { head, isNil, slice } from "lodash";
 import { Suspense } from "react";
 import { CardArticleView } from "../../view/project/articleView";
 import { projectList } from "../../action/project";
@@ -28,6 +28,11 @@ const ProjectListPage = () => {
 
 const ProjectListView = async () => {
   const projects = await projectList();
+
+  if (isNil(projects)) {
+    return <></>;
+  }
+
   const headProject = head(projects);
   const topProjects = slice(projects, 1, 3);
   const subProjects = slice(projects, 3, projects.length);
