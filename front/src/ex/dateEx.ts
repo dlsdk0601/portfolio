@@ -44,6 +44,22 @@ export function d3(datetime: Date | string | Moment | null | undefined): string 
   return datetime.format("YYYY년 MM월 DD일");
 }
 
+export function d4(datetime: Date | string | Moment | null | undefined): string {
+  if (isNil(datetime)) {
+    return "";
+  }
+
+  if (isString(datetime)) {
+    return d4(moment(datetime));
+  }
+
+  if (isDate(datetime)) {
+    return d4(moment(datetime));
+  }
+
+  return datetime.format("MMM D, YYYY");
+}
+
 export function dt1(datetime: Date | string | Moment | null | undefined): string {
   if (isNil(datetime)) {
     return "";
