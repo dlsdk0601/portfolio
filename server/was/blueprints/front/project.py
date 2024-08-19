@@ -1,9 +1,11 @@
 from datetime import datetime, date
 
+from sqlalchemy import select, func
+
 from ex.api import BaseModel, Res, ok, err
 from was.blueprints.front import app
 from was.model import db
-from was.model.project import Project, ProjectType
+from was.model.project import Project, ProjectType, ProjectViewLog
 
 
 class ProjectListReq(BaseModel):
@@ -15,12 +17,14 @@ class ProjectListResItem(BaseModel):
     title: str
     description: str
     issue_at: date
+    view_count: int
 
     @classmethod
     def from_model(cls, project: Project) -> 'ProjectListResItem':
         return cls(
             pk=project.pk, title=project.title,
-            description=project.description, issue_at=project.issue_at
+            description=project.description, issue_at=project.issue_at,
+            view_count=project.view_count
         )
 
 
@@ -71,3 +75,24 @@ def project_show(req: ProjectShowReq) -> Res[ProjectShowRes]:
             main_text=project.main_text, create_at=project.create_at
         )
     )
+
+
+class ProjectViewReq(BaseModel):
+    pk: int
+
+
+class ProjectViewRes(BaseModel):
+    views: int
+
+
+@app.api(public=True)
+def project_view(req: ProjectViewReq) -> Res[ProjectViewRes]:
+    project_view_log = ProjectViewLog(project_pk=req.pk)
+    db.session.add(project_view_log)
+    db.session.commit()
+
+    views = db.session.execute(
+        select(func.count(ProjectViewLog.pk)).where(ProjectViewLog.project_pk == req.pk)
+    ).scalar_one()
+
+    return ok(ProjectViewRes(views=views))
