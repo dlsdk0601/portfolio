@@ -7,3 +7,9 @@
         -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
     }
 }
+
+@layer components {
+    .skeleton {
+        @apply animate-shimmer bg-gradient-custom bg-custom;
+    }
+}

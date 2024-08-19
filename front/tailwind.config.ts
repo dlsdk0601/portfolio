@@ -30,12 +30,17 @@ const config: Config = {
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(50% 50% at 50% 50%, var(--tw-gradient-stops))",
+        "gradient-custom": "linear-gradient(to right, #D9D9D9 0%, #EDEEF1 50%, #D9D9D9 100%)",
+      },
+      backgroundSize: {
+        custom: "300% 100%",
       },
       animation: {
         "fade-in": "fade-in 3s ease-in-out forwards",
         "title": "title 3s ease-out forwards",
         "fade-left": "fade-left 3s ease-in-out forwards",
         "fade-right": "fade-right 3s ease-in-out forwards",
+        "shimmer": "shimmer 1.5s infinite linear",
       },
       keyframes: {
         "fade-in": {
@@ -95,6 +100,10 @@ const config: Config = {
             "line-height": "120%",
             "opacity": "100%",
           },
+        },
+        "shimmer": {
+          "0%": { backgroundPosition: "200%" },
+          "100%": { backgroundPosition: "-200%" },
         },
       },
     },
