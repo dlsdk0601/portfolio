@@ -1,9 +1,10 @@
 "use client";
 
-import { MouseEvent, PropsWithChildren } from "react";
+import React, { MouseEvent, PropsWithChildren } from "react";
 import { motion, useMotionTemplate, useSpring } from "framer-motion";
 import { isNil } from "lodash";
 import Link from "next/link";
+import { Eye } from "lucide-react";
 import { ProjectListResItem } from "../../api/schema.g";
 import { Urls } from "../../url/url.g";
 import { d4 } from "../../ex/dateEx";
@@ -53,6 +54,10 @@ export const ArticleView = (props: { project: ProjectListResItem }) => {
         <div className="flex items-center justify-between gap-2">
           <span className="drop-shadow-orange text-xs text-zinc-200 duration-1000 group-hover:border-zinc-200 group-hover:text-white">
             <time>{d4(props.project.issueAt)}</time>
+          </span>
+          <span className="flex items-center gap-1 text-xs text-zinc-500">
+            <Eye className="h-4 w-4" />{" "}
+            {Intl.NumberFormat("en-US", { notation: "compact" }).format(props.project.viewCount)}
           </span>
         </div>
         <h2 className="z-20 font-display text-xl font-medium text-zinc-200 duration-1000 group-hover:text-white lg:text-3xl">
