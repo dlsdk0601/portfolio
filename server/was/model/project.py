@@ -1,9 +1,9 @@
 from datetime import datetime, date
 from enum import auto
 
-from sqlalchemy import String, Text, DateTime, func, Date
+from sqlalchemy import String, Text, DateTime, func, Date, ForeignKey
 from sqlalchemy.dialects import postgresql
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ex.py.enum_ex import StringEnum
 from was.model import Model
@@ -32,4 +32,16 @@ class Project(Model):
 
     __table_args__ = (
         {'comment': '프로젝트'}
+    )
+
+
+class ProjectViewLog(Model):
+    pk: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+
+    project_pk: Mapped[int] = mapped_column(ForeignKey(Project.pk), nullable=False, comment='프로젝트 - FK')
+    project: Mapped[Project] = relationship()
+    create_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    __table_args__ = (
+        {'comment': '프로젝트 view log'}
     )
