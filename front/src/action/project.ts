@@ -1,7 +1,6 @@
 "use server";
 
 import { isNil } from "lodash";
-import { notFound } from "next/navigation";
 import { api } from "../api/api";
 
 export async function projectList() {
@@ -22,4 +21,14 @@ export async function projectShow(pk: number) {
   }
 
   return res;
+}
+
+export async function projectView(pk: number) {
+  const res = await api.projectView({ pk });
+
+  if (isNil(res)) {
+    return;
+  }
+
+  return res.views;
 }
