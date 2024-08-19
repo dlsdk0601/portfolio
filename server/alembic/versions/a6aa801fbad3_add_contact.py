@@ -40,7 +40,8 @@ def upgrade() -> None:
                     sa.Column('create_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
                     sa.Column('update_at', sa.DateTime(timezone=True), nullable=True),
                     sa.Column('delete_at', sa.DateTime(timezone=True), nullable=True),
-                    sa.PrimaryKeyConstraint('pk')
+                    sa.PrimaryKeyConstraint('pk'),
+                    comment='연락처'
                     )
 
 
