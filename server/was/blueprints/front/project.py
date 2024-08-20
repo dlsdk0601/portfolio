@@ -1,5 +1,6 @@
 from datetime import datetime, date
 
+from flask import request
 from sqlalchemy import select, func
 
 from ex.api import BaseModel, Res, ok, err
@@ -87,9 +88,13 @@ class ProjectViewRes(BaseModel):
 
 @app.api(public=True)
 def project_view(req: ProjectViewReq) -> Res[ProjectViewRes]:
-    project_view_log = ProjectViewLog(project_pk=req.pk)
-    db.session.add(project_view_log)
-    db.session.commit()
+    remote_ip = request.remote_addr
+    project_view_log = db.session.query(ProjectViewLog).filter_by(remote_ip=remote_ip).one_or_none()
+
+    if not project_view_log:
+        project_view_log = ProjectViewLog(project_pk=req.pk, remote_ip=remote_ip)
+        db.session.add(project_view_log)
+        db.session.commit()
 
     views = db.session.execute(
         select(func.count(ProjectViewLog.pk)).where(ProjectViewLog.project_pk == req.pk)
