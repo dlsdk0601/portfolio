@@ -29,21 +29,19 @@ const ProjectShowSkeletonView = () => {
           <div className="mx-auto flex max-w-7xl flex-col items-center px-6 text-center lg:px-8">
             <div className="mx-auto max-w-2xl lg:mx-0">
               <div className="skeleton mx-auto mb-3 h-14 w-48 rounded bg-zinc-700" />
-              <div className="skeleton mx-auto mb-3 h-8 w-96 rounded bg-zinc-700" />
+              <div className="skeleton mx-auto mb-3 h-8 w-96 rounded bg-white" />
               <div className="skeleton mx-auto mb-3 h-8 w-96 rounded bg-zinc-700" />
             </div>
 
             <div className="mx-auto mt-10 max-w-2xl lg:mx-0 lg:max-w-none">
               <div className="grid grid-cols-1 gap-x-8 gap-y-6 text-base font-semibold leading-7 text-white sm:grid-cols-2 md:flex lg:gap-x-10">
-                <span>
-                  GitHub <span aria-hidden="true">&rarr;</span>
-                </span>
+                <div className="skeleton h-8 w-36" />
               </div>
             </div>
           </div>
         </div>
       </header>
-      <article className="skeleton prose prose-zinc prose-quoteless mx-auto my-12 h-96 bg-zinc-700" />
+      <article className="skeleton prose prose-zinc prose-quoteless mx-auto my-12 h-screen bg-zinc-700" />
     </>
   );
 };
