@@ -21,6 +21,7 @@ def upgrade() -> None:
     op.create_table('project_view_log',
                     sa.Column('pk', sa.Integer(), autoincrement=True, nullable=False),
                     sa.Column('project_pk', sa.Integer(), nullable=False, comment='프로젝트 - FK'),
+                    sa.Column('remote_ip', sa.String(length=64), nullable=False, comment='view IP'),
                     sa.Column('create_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
                     sa.ForeignKeyConstraint(['project_pk'], ['project.pk'], ),
                     sa.PrimaryKeyConstraint('pk'),

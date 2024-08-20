@@ -52,6 +52,8 @@ class ProjectViewLog(Model):
 
     project_pk: Mapped[int] = mapped_column(ForeignKey(Project.pk), nullable=False, comment='프로젝트 - FK')
     project: Mapped[Project] = relationship(back_populates='view_logs')
+
+    remote_ip: Mapped[str] = mapped_column(String(64), nullable=False, comment='view IP')
     create_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     __table_args__ = (
