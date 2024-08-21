@@ -90,6 +90,7 @@ export const ProjectPaginationView = () => {
       mapper={(item) => [
         ["타입", item.type === "COMPANY" ? "회사 프로젝트" : "토이 프로젝트"],
         ["프로젝트명", item.title],
+        ["배포 일자", d1(item.issueAt)],
         ["생성 일자", d1(item.createAt)],
         [
           "상세",

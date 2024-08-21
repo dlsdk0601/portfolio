@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 
 from sqlalchemy import select, func
 
@@ -19,13 +19,14 @@ class ProjectListResItem(BaseModel):
     pk: int
     type: ProjectType
     title: str
+    issue_at: date
     create_at: datetime
 
     @classmethod
     def from_model(cls, project: Project) -> 'ProjectListResItem':
         return cls(
-            pk=project.pk, type=project.type,
-            title=project.title, create_at=project.create_at
+            pk=project.pk, type=project.type, title=project.title,
+            issue_at=project.issue_at, create_at=project.create_at
         )
 
 
