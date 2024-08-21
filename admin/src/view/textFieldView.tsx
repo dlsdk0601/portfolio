@@ -91,4 +91,49 @@ export const ReadyOnlyView = (props: {
   );
 };
 
+export const TextAreaFieldView = (props: {
+  field: ValueField<string>;
+  onChange: (value: string) => void;
+  label?: string;
+  placeholder?: string;
+  icon?: ReactNode;
+  col?: 2 | 3;
+  rows?: number;
+}) => {
+  return (
+    <div
+      className={classNames("mb-5.5 w-full", {
+        "sm:w-1/2": props.col === 2,
+        "sm:w-1/3": props.col === 3,
+      })}
+    >
+      <label className="mb-2.5 block text-sm font-medium text-black dark:text-white">
+        {props.label ?? props.field.name}
+      </label>
+      <div className="relative">
+        {props.icon}
+        <textarea
+          rows={props.rows ?? 3}
+          className={classNames(
+            "w-full rounded border py-3 pr-4.5 text-black focus-visible:outline-none dark:bg-meta-4 dark:text-white dark:focus:border-primary",
+            {
+              "pl-11.5": isNotNil(props.icon),
+              "pl-6": isNil(props.icon),
+              "border-meta-1 focus:border-meta-1": isNotBlank(props.field.error),
+              "border-stroke focus:border-primary": isBlank(props.field.error),
+            },
+          )}
+          name={props.field.name}
+          placeholder={props.placeholder ?? `${k(props.field.name)} 입력해주세요.`}
+          value={props.field.value}
+          onChange={(e) => props.onChange(e.target.value)}
+        />
+      </div>
+      {isNotBlank(props.field.error) && (
+        <p className="mt-1 text-xs italic text-meta-1">{props.field.error}</p>
+      )}
+    </div>
+  );
+};
+
 export default TextFieldView;
