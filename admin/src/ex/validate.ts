@@ -140,8 +140,7 @@ export function validateFields(setFields: SetValueField<any>[]) {
     const isErr = field.validate();
 
     if (isErr) {
-      isValid = false;
-      break;
+      isValid = isValid && false;
     }
   }
 
