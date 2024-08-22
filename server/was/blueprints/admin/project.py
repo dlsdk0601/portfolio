@@ -64,6 +64,7 @@ class ProjectShowRes(BaseModel):
     website_url: str
     github_url: str
     main_text: str
+    issue_at: date
     create_at: datetime
     update_at: datetime | None
 
@@ -78,8 +79,8 @@ def project_show(req: ProjectShowReq) -> Res[ProjectShowRes]:
     return ok(
         ProjectShowRes(
             pk=project.pk, type=project.type, title=project.title, description=project.description,
-            website_url=project.website_url, github_url=project.github_url,
-            main_text=project.main_text, create_at=project.create_at, update_at=project.update_at
+            website_url=project.website_url, github_url=project.github_url, main_text=project.main_text,
+            issue_at=project.issue_at, create_at=project.create_at, update_at=project.update_at
         )
     )
 
@@ -92,6 +93,7 @@ class ProjectEditReq(BaseModel):
     website_url: str
     github_url: str
     main_text: str
+    issue_at: date
 
 
 class ProjectEditRes(BaseModel):
@@ -104,6 +106,7 @@ def project_edit(req: ProjectEditReq) -> Res[ProjectEditRes]:
 
     if req.pk is not None:
         project = db.get_or_404(Project, req.pk)
+        project.update_at = func.now()
 
     if project.delete_at is not None:
         return err('이미 삭제된 데이터 입니다.')
@@ -113,6 +116,7 @@ def project_edit(req: ProjectEditReq) -> Res[ProjectEditRes]:
     project.description = req.description
     project.website_url = req.website_url
     project.github_url = req.github_url
+    project.issue_at = req.issue_at
     project.main_text = req.main_text
 
     db.session.add(project)
