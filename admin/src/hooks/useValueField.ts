@@ -2,6 +2,7 @@
 
 import { isNil } from "lodash";
 import { useState } from "react";
+import { Moment } from "moment";
 import { isNotNil } from "../ex/utils";
 import { k } from "../ex/korean-postposition";
 
@@ -86,6 +87,15 @@ export const useBooleanField = (
   ...validators: Validator<boolean | null>[]
 ): RETURN_TYPE<boolean | null> => {
   const [value, set] = useValueField<boolean | null>(null, name, ...validators);
+
+  return [value, set];
+};
+
+export const useMomentField = (
+  name: string,
+  ...validators: Validator<Moment | null>[]
+): RETURN_TYPE<Moment | null> => {
+  const [value, set] = useValueField<Moment | null>(null, name, ...validators);
 
   return [value, set];
 };
