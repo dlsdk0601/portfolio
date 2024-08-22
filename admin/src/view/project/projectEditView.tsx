@@ -3,18 +3,20 @@
 import { isNil } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import moment from "moment";
 import { cPk, isNewPk } from "../../ex/query";
 import { Replace } from "../layout/layoutSelector";
 import { Urls } from "../../url/url.g";
 import { ProjectShowRes, ProjectType, projectTypeValues, toProjectType } from "../../api/schema.g";
-import { ignorePromise, isNotNil, preventDefaulted } from "../../ex/utils";
+import { ignorePromise, isNotBlank, isNotNil, preventDefaulted } from "../../ex/utils";
 import { api } from "../../api/api";
 import { SelectFieldView } from "../selectView";
-import TextFieldView, { ReadyOnlyView } from "../textFieldView";
-import { useStringField, useTypeField } from "../../hooks/useValueField";
-import { vLength, vRequired, vUrl } from "../../ex/validate";
+import TextFieldView, { ReadyOnlyView, TextAreaFieldView } from "../textFieldView";
+import { useMomentField, useStringField, useTypeField } from "../../hooks/useValueField";
+import { validateFields, vLength, vRequired, vUrl } from "../../ex/validate";
 import { d1 } from "../../ex/dateEx";
 import MdEditorView from "../mdEditorView";
+import DatePickerView from "../datePickerView";
 
 export const ProjectEditView = (props: { pk: cPk | null }) => {
   const pk = props.pk;
@@ -55,9 +57,10 @@ export const ProjectFormEditView = (props: { project: ProjectShowRes | null }) =
   const [description, setDescription] = useStringField("설명", vRequired);
   const [websiteUrl, setWebsiteUrl] = useStringField("웹사이트 주소", vUrl, vLength(128));
   const [githubUrl, setGithubUrl] = useStringField("깃허브 주소", vUrl, vLength(128));
-  const [mainText, setMainText] = useStringField("깃허브 주소", vLength(128));
-  const [createAt, setCreateAt] = useState("");
-  const [updateAt, setUpdateAt] = useState<string | null>(null);
+  const [mainText, setMainText] = useStringField("메인 설명", vRequired);
+  const [issueAt, setIssueAt] = useMomentField("배포 일자", vRequired);
+  const [createAt, setCreateAt] = useState<string>("");
+  const [updateAt, setUpdateAt] = useState<string>("");
 
   useEffect(() => {
     if (isNil(project)) {
@@ -70,22 +73,62 @@ export const ProjectFormEditView = (props: { project: ProjectShowRes | null }) =
     setWebsiteUrl.set(project.websiteUrl);
     setGithubUrl.set(project.githubUrl);
     setMainText.set(project.mainText);
-    setCreateAt(project.createAt);
-    setUpdateAt(project.updateAt);
+    setIssueAt.set(moment(project.issueAt));
+    setCreateAt(d1(project.createAt));
+
+    if (isNotNil(project.updateAt)) {
+      setUpdateAt(d1(project.updateAt));
+    }
   }, [project]);
 
-  const onSubmit = useCallback(() => {
-    console.log("dd");
-  }, []);
+  const onSubmit = useCallback(async () => {
+    const isValid = validateFields([
+      setType,
+      setTitle,
+      setDescription,
+      setWebsiteUrl,
+      setMainText,
+      setIssueAt,
+    ]);
+
+    if (!isValid || isNil(type.value) || isNil(issueAt.value)) {
+      alert("데이터가 유효하지 않습니다.");
+      return;
+    }
+
+    // githubUrl 은 필수가 아니라서 따로 처리 한다.
+    if (isNotBlank(githubUrl.value)) {
+      const isValidGithubUrl = setGithubUrl.validate();
+      if (isValidGithubUrl) {
+        alert("데이터가 유효하지 않습니다.");
+        return;
+      }
+    }
+
+    const res = await api.projectEdit({
+      pk: project?.pk ?? null,
+      type: type.value,
+      title: title.value,
+      description: description.value,
+      websiteUrl: websiteUrl.value,
+      githubUrl: githubUrl.value,
+      mainText: mainText.value,
+      issueAt: issueAt.value.toISOString(true),
+    });
+
+    if (isNil(res)) {
+      return;
+    }
+
+    alert("저장되었습니다.");
+    router.replace(Urls.project["[pk]"].page.url({ pk: res.pk }));
+  }, [project, type, title, description, websiteUrl, githubUrl, mainText, issueAt]);
 
   return (
     <form onSubmit={preventDefaulted(() => onSubmit())}>
       <div className="flex flex-col gap-5.5 sm:flex-row">
-        <ReadyOnlyView field={d1(createAt)} label="생성일자" />
-        <ReadyOnlyView
-          field={isNotNil(updateAt) ? d1(updateAt) : "수정 내역이 없습니다."}
-          label="수정일자"
-        />
+        <ReadyOnlyView placeholder="생성 내역이 없습니다." field={createAt} label="생성일자" />
+        <ReadyOnlyView placeholder="수정 내역이 없습니다." field={updateAt} label="수정일자" />
       </div>
       <SelectFieldView<ProjectType>
         field={type}
@@ -96,8 +139,10 @@ export const ProjectFormEditView = (props: { project: ProjectShowRes | null }) =
       <TextFieldView field={title} onChange={(value) => setTitle.set(value)} />
       <TextFieldView field={websiteUrl} onChange={(value) => setWebsiteUrl.set(value)} />
       <TextFieldView field={githubUrl} onChange={(value) => setGithubUrl.set(value)} />
+      <DatePickerView field={issueAt} onChange={(value) => setIssueAt.set(moment(value))} />
+      <TextAreaFieldView field={description} onChange={(value) => setDescription.set(value)} />
 
-      <MdEditorView field={description} onChange={(value) => setDescription.set(value)} />
+      <MdEditorView height={750} field={mainText} onChange={(value) => setMainText.set(value)} />
 
       <ProjectEditButtonView pk={project?.pk} />
     </form>
