@@ -39,7 +39,7 @@ def project_list(req: ProjectListReq) -> Res[ProjectListRes]:
     projects = (db.session
                 .query(Project)
                 .filter_by(delete_at=None)
-                .order_by(Project.create_at.desc())
+                .order_by(Project.issue_at.desc())
                 .all())
 
     return ok(ProjectListRes(
@@ -89,7 +89,7 @@ class ProjectViewRes(BaseModel):
 @app.api(public=True)
 def project_view(req: ProjectViewReq) -> Res[ProjectViewRes]:
     remote_ip = request.remote_addr
-    project_view_log = db.session.query(ProjectViewLog).filter_by(remote_ip=remote_ip).one_or_none()
+    project_view_log = db.session.query(ProjectViewLog).filter_by(project_pk=req.pk, remote_ip=remote_ip).one_or_none()
 
     if not project_view_log:
         project_view_log = ProjectViewLog(project_pk=req.pk, remote_ip=remote_ip)
