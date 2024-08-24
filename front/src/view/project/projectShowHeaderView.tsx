@@ -71,14 +71,18 @@ const ProjectShowHeaderView = (props: {
             <h1 className="font-display text-4xl font-bold tracking-tight text-white sm:text-6xl">
               {props.title}
             </h1>
-            <p className="mt-6 text-lg leading-8 text-zinc-300">{props.description}</p>
+            <p className="mt-6 whitespace-pre-line text-lg leading-8 text-zinc-300">
+              {props.description}
+            </p>
           </div>
 
           <div className="mx-auto mt-10 max-w-2xl lg:mx-0 lg:max-w-none">
             <div className="grid grid-cols-1 gap-x-8 gap-y-6 text-base font-semibold leading-7 text-white sm:grid-cols-2 md:flex lg:gap-x-10">
-              <Link target="_blank" href={props.githubSite}>
-                GitHub <span aria-hidden="true">&rarr;</span>
-              </Link>
+              {isNotBlank(props.githubSite) && (
+                <Link target="_blank" href={props.githubSite}>
+                  GitHub <span aria-hidden="true">&rarr;</span>
+                </Link>
+              )}
               {isNotBlank(props.websiteUrl) && (
                 <Link target="_blank" href={props.websiteUrl}>
                   Website <span aria-hidden="true">&rarr;</span>
