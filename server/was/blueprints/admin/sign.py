@@ -65,7 +65,7 @@ def refresh(_: RefreshTokenReq) -> Res[RefreshTokenRes]:
     token = create_jwt_token(pk=pk_or_err)
 
     log = ManagerAuthLog(
-        manager=manager, remote_ip=remote_ip
+        manager=manager, remote_ip=request.remote_addr
     )
 
     db.session.add(log)
