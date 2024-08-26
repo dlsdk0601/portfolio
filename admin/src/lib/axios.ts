@@ -4,6 +4,10 @@ import { config } from "../config/config";
 import { RefreshTokenRes, Res } from "../api/schema.g";
 import { managerModel } from "../store/managerModel";
 
+interface AxiosRequestConfig<T> extends InternalAxiosRequestConfig<T> {
+  withRefreshToken?: boolean;
+}
+
 export class AxiosBase {
   axiosInstance = axios.create({
     baseURL: config.baseUrl,
@@ -16,8 +20,6 @@ export class AxiosBase {
   }
 
   get getSession() {
-    // TODO :: sessionStorage 랑 managerModel.getState() 랑 비교해야함
-    // 새로고침 했을때 어떤게 api, zustand 중에 어떤게 먼저 실행되는지 보고 결정할 것.
     const session = sessionStorage.getItem(config.sessionStorageKey);
     if (isNil(session)) {
       return null;
@@ -50,7 +52,7 @@ export class AxiosBase {
     return `Bearer ${session.state.refreshToken}`;
   }
 
-  beforeRequest = async (axiosConfig: InternalAxiosRequestConfig<any>) => {
+  beforeRequest = async (axiosConfig: AxiosRequestConfig<any>) => {
     axiosConfig.headers = axiosConfig.headers ?? {};
 
     const session = this.getSession;
@@ -59,8 +61,12 @@ export class AxiosBase {
       return axiosConfig;
     }
 
-    if (!isNil(session.state.token)) {
+    if (!isNil(session.state.token) && !axiosConfig.withRefreshToken) {
       axiosConfig.headers["Authorization"] = this.authorization;
+    }
+
+    if (!isNil(session.state.token) && axiosConfig.withRefreshToken) {
+      axiosConfig.headers["Authorization"] = this.authorizationRefresh;
     }
 
     return axiosConfig;
@@ -80,7 +86,6 @@ export class AxiosBase {
     const config = res.config;
     config.headers.Authorization = this.authorization;
 
-    // TODO :: 재요청 하는지 확인
     return this.axiosInstance(config);
   };
 
@@ -93,10 +98,8 @@ export class AxiosBase {
       "/admin/api/refresh",
       {},
       {
-        headers: {
-          Authorization: this.authorizationRefresh,
-        },
-      },
+        withRefreshToken: true,
+      } as AxiosRequestConfig<any>,
     );
 
     if (isNil(res.data.data)) {
