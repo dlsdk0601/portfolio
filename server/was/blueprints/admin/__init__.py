@@ -94,7 +94,7 @@ def before_request() -> Response | None:
     require_access_token = True
     match ((request.endpoint or '').split('.', maxsplit=2)):
         case [_, endpoint]:
-            if endpoint in ['sign_in']:
+            if endpoint in ['sign_in', 'refresh']:
                 require_access_token = False
         case _:
             # 비 정상적인 상황, 무시하면 로그인 요청이 넘어 갈 것이다.
@@ -109,9 +109,6 @@ def before_request() -> Response | None:
 
     if isinstance(pk_or_err, int):
         manager = db.get_or_404(Manager, pk_or_err)
-
-    if manager is None:
-        return res_jsonify(Res(data=None, errors=[], status=ResStatus.INVALID_ACCESS_TOKEN, validation_errors=[]))
 
     if isinstance(pk_or_err, ResStatus):
         return res_jsonify(Res(data=None, errors=[], status=pk_or_err, validation_errors=[]))
