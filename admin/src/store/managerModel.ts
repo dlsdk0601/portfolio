@@ -49,7 +49,6 @@ export const managerModel = create<ManagerModelState & ManagerModelAction>()(
         const res = await api.profile({});
 
         if (isNil(res)) {
-          get().deInit();
           return;
         }
 
