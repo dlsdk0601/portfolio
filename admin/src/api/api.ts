@@ -39,11 +39,13 @@ class Handler implements ApiHandler {
         }
 
         if (confirm("사용자 정보가 만료되었습니다.\n재시작 하시겠습니까?")) {
+          managerModel.getState().deInit();
           window.location.replace(Urls["sign-in"].page.url());
         }
         return;
       }
       case "LOGIN_REQUIRED": {
+        managerModel.getState().deInit();
         alert("로그인 페이지로 이동합니다.");
         window.location.href = Urls["sign-in"].page.url();
         return;
