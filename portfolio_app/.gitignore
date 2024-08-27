@@ -41,3 +41,17 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# builder
+*.g.dart
+*.gen.dart
+*.freezed.dart
+
+# version checker
+/lib/src/version.dart
+
+# main_*.dart 개발용 실행 파일
+lib/main_*.dart
+
+.idea
+*.apk
