@@ -9,6 +9,8 @@ class Config {
   late Uri apiServer = Uri.parse('http://localhost:5001/api');
   Level loggerLevel = kDebugMode ? Level.debug : Level.warning;
   String appName = 'portfolio';
+
+  bool splashFadeIn = true;
 }
 
 final config = Config._();
