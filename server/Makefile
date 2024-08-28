@@ -28,8 +28,8 @@ code-gen:
 	venv/bin/python bin/generate_ts_schema.py front | venv/bin/python bin/tee.py ../front/src/api/schema.g.ts
 	venv/bin/python bin/generate_ts_api.py admin | venv/bin/python bin/tee.py ../admin/src/api/api.g.ts
 	venv/bin/python bin/generate_ts_api.py front | venv/bin/python bin/tee.py ../front/src/api/api.g.ts
-	#venv/bin/python bin/generate_ts_api.py front | venv/bin/python bin/tee.py ../front/src/lib/api.g.ts
-	#venv/bin/python bin/generate_ts_api.py application | venv/bin/python bin/tee.py ../application/src/lib/api.g.ts
+	venv/bin/python bin/generate_api_dart.py | (type dart > /dev/null && dart format || cat) | venv/bin/python bin/tee.py ../portfolio_app/lib/api/api.gen.dart
+	venv/bin/python bin/generate_api_dart_schema.py | (type dart > /dev/null && dart format || cat) | venv/bin/python bin/tee.py ../portfolio_app/lib/api/schema.gen.dart
 
 
 # 개발용 테스트 데이터 DB 생성
