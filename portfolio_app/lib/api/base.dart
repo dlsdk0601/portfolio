@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:portfolio_app/api/pagination.dart';
+import 'package:portfolio_app/api/schema.gen.dart';
 import 'package:portfolio_app/ex/string.dart';
 
 import '../ex/block.dart';
@@ -69,6 +70,7 @@ abstract class ApiBase {
             break;
           case ResStatus.LOGIN_REQUIRED:
           case ResStatus.INVALID_ACCESS_TOKEN:
+          case ResStatus.EXPIRED_TOKEN:
             // 로그인 기반 앱이 아니기 때문에 그냥 null 을 리턴 한다.
             return null;
           case ResStatus.NO_PERMISSION:
@@ -79,12 +81,12 @@ abstract class ApiBase {
             return null;
         }
 
-        if (res.erros.isNotEmpty) {
-          confirm(res.errors.josin("\n"));
+        if (res.errors.isNotEmpty) {
+          confirm(res.errors.join("\n"));
           return null;
         }
 
-        if (res.validationErros.isNotEmpty) {
+        if (res.validationErrors.isNotEmpty) {
           confirm(jsonEncode(json['validationErrors']));
           return null;
         }
