@@ -9,7 +9,7 @@ from more_itertools import flatten
 from pydantic.fields import FieldInfo
 from stringcase import camelcase
 
-from ex.api import BaseModel, ResStatus, Res
+from ex.api import BaseModel, ResStatus
 from ex.sqlalchemy_ex import Pagination, PageRow
 from was import application
 
@@ -39,7 +39,6 @@ def generate() -> None:
     api_schemas = list(flatten([i.req, i.res_data] for i in application.application.app.export_api_schema()))
     models: set[Type[BaseModel | Enum]] = get_flat_models_from_models(api_schemas)
     models.add(ResStatus)
-    models.add(Res)
 
     for model in sorted(models, key=lambda x: x.__name__):
         if issubclass(model, Enum):
