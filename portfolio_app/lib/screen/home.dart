@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:portfolio_app/view/layout.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'home.freezed.dart';
@@ -14,7 +15,9 @@ class HomeScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final homeModel = ref.watch(_homeProvider);
 
-    return Container(
+    return Layout(
+      title: "",
+      context: context,
       child: const Center(
         child: Text('홈'),
       ),
