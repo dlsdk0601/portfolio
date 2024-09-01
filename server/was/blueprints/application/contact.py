@@ -30,5 +30,5 @@ def contact_show(_: ContactShowReq) -> Res[ContactShowRes]:
     contacts = db.session.query(Contact).filter_by(delete_at=None).order_by(Contact.pk).all()
 
     return ok(ContactShowRes(
-        contacts=list(map(lambda x: ContactShowRes.from_model(x), contacts)),
+        contacts=list(map(lambda x: ContactShowResItem.from_model(x), contacts)),
     ))
