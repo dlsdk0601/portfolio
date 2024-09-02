@@ -1,39 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:portfolio_app/view/layout.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:go_router/go_router.dart';
+import 'package:portfolio_app/router.dart';
 
-part 'home.freezed.dart';
-part 'home.g.dart';
-
-class HomeScreen extends HookConsumerWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final homeModel = ref.watch(_homeProvider);
-
-    return Layout(
-      title: "",
-      context: context,
-      child: const Center(
-        child: Text('홈'),
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        children: [
+          const Text('홈'),
+          ElevatedButton(
+            onPressed: () => context.go(const ContactsRoute().location),
+            child: const Text("go contact"),
+          ),
+          const SizedBox(
+            height: 18.0,
+          ),
+          ElevatedButton(
+            onPressed: () => context.go(const ProjectListRoute().location),
+            child: const Text("go project"),
+          )
+        ],
       ),
     );
-  }
-}
-
-@freezed
-class _HomeModel with _$HomeModel {
-  const factory _HomeModel() = __HomeModel;
-}
-
-@riverpod
-class _Home extends _$Home {
-  @override
-  _HomeModel build() {
-    return const _HomeModel();
   }
 }
