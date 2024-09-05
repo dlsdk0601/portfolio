@@ -1,9 +1,9 @@
-from datetime import date
+from datetime import date, datetime
 
-from ex.api import BaseModel, Res, ok
+from ex.api import BaseModel, Res, ok, err
 from was.blueprints.application import app
 from was.model import db
-from was.model.project import Project
+from was.model.project import Project, ProjectType
 
 
 class ProjectListReq(BaseModel):
@@ -42,5 +42,36 @@ def project_list(req: ProjectListReq) -> Res[ProjectListRes]:
     return ok(
         ProjectListRes(
             projects=list(map(lambda x: ProjectListResItem.from_model(x), projects))
+        )
+    )
+
+
+class ProjectShowReq(BaseModel):
+    pk: int
+
+
+class ProjectShowRes(BaseModel):
+    pk: int
+    type: ProjectType
+    title: str
+    description: str
+    website_url: str
+    github_url: str
+    main_text: str
+    create_at: datetime
+
+
+@app.api(public=True)
+def project_show(req: ProjectShowReq) -> Res[ProjectShowRes]:
+    project = db.get_or_404(Project, req.pk)
+
+    if project.delete_at is not None:
+        return err('이미 삭제된 데이터입니다.')
+
+    return ok(
+        ProjectShowRes(
+            pk=project.pk, type=project.type, title=project.title, description=project.description,
+            website_url=project.website_url, github_url=project.github_url,
+            main_text=project.main_text, create_at=project.create_at
         )
     )
