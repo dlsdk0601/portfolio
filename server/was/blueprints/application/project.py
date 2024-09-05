@@ -1,9 +1,11 @@
 from datetime import date, datetime
 
+from flask import request
+
 from ex.api import BaseModel, Res, ok, err
 from was.blueprints.application import app
 from was.model import db
-from was.model.project import Project, ProjectType
+from was.model.project import Project, ProjectType, ProjectViewLog
 
 
 class ProjectListReq(BaseModel):
@@ -67,6 +69,17 @@ def project_show(req: ProjectShowReq) -> Res[ProjectShowRes]:
 
     if project.delete_at is not None:
         return err('이미 삭제된 데이터입니다.')
+
+    remote_ip = request.remote_addr
+    project_view_log = (db.session
+                        .query(ProjectViewLog)
+                        .filter_by(project_pk=req.pk, remote_ip=remote_ip)
+                        .one_or_none())
+
+    if not project_view_log:
+        project_view_log = ProjectViewLog(project_pk=req.pk, remote_ip=remote_ip)
+        db.session.add(project_view_log)
+        db.session.commit()
 
     return ok(
         ProjectShowRes(
