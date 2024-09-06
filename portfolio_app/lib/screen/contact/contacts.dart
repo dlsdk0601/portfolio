@@ -34,18 +34,21 @@ class ContactsScreen extends HookConsumerWidget {
       context: context,
       child: SafeArea(
         child: Column(
-          children: model.contacts
-              .map(
-                (e) => Row(
-                  children: [
-                    Text(e.pk.toString()),
-                    Text(e.id),
-                    Text(e.href),
-                    Text(e.type.toString()),
-                  ],
-                ),
-              )
-              .toList(),
+          children: [
+            ...model.contacts.map(
+              (e) => Column(
+                children: [
+                  Text(e.pk.toString()),
+                  Text(e.id),
+                  Text(e.href),
+                  Text(e.type.toString()),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 18.0,
+            ),
+          ],
         ),
       ),
     );
