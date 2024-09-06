@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:portfolio_app/color.dart';
 
-import '../gen/assets.gen.dart';
-
 class Layout extends StatelessWidget {
   const Layout({
     super.key,
@@ -38,7 +36,7 @@ class Layout extends StatelessWidget {
         ),
         leading: leading ??
             IconButton(
-              icon: Assets.logo.image(width: 30.0, height: 30.0),
+              icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 if (context.mounted && context.canPop()) {
                   context.pop();
