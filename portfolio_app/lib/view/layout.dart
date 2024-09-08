@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:portfolio_app/color.dart';
+import 'package:portfolio_app/view/particles_view.dart';
 
 class Layout extends StatelessWidget {
   const Layout({
@@ -46,7 +47,16 @@ class Layout extends StatelessWidget {
         actions: actions,
       ),
       backgroundColor: backgroundColor ?? c000000,
-      body: child,
+      body: Stack(
+        children: [
+          const Positioned.fill(
+            child: ParticlesView(
+              quantity: 100,
+            ),
+          ),
+          child,
+        ],
+      ),
     );
   }
 }
