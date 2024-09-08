@@ -13,19 +13,29 @@ class HomeScreen extends StatelessWidget {
       context: context,
       child: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('홈'),
-            ElevatedButton(
-              onPressed: () => context.go(const ContactsRoute().location),
-              child: const Text("go contact"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () => context.go(const ContactsRoute().location),
+                  child: const Text("Contact"),
+                ),
+                ElevatedButton(
+                  onPressed: () =>
+                      context.go(const ProjectListRoute().location),
+                  child: const Text("Project"),
+                )
+              ],
             ),
-            const SizedBox(
-              height: 18.0,
+            const Text(
+              "Portfolio",
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 13.0,
+              ),
             ),
-            ElevatedButton(
-              onPressed: () => context.go(const ProjectListRoute().location),
-              child: const Text("go project"),
-            )
           ],
         ),
       ),
