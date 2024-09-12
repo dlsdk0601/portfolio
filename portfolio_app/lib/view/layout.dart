@@ -47,17 +47,7 @@ class Layout extends StatelessWidget {
         actions: actions,
       ),
       backgroundColor: backgroundColor ?? c000000,
-      // TODO :: 메인 배경만 해당 되므로 수정
-      body: Stack(
-        children: [
-          const Positioned.fill(
-            child: ParticlesView(
-              quantity: 100,
-            ),
-          ),
-          child,
-        ],
-      ),
+      body: child,
     );
   }
 }
