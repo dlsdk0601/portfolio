@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:portfolio_app/color.dart';
 import 'package:portfolio_app/router.dart';
 import 'package:portfolio_app/view/layout.dart';
 
@@ -15,6 +16,7 @@ class HomeScreen extends StatelessWidget {
       context: context,
       child: Stack(
         children: [
+          // 배경 화면
           const Positioned.fill(
             child: ParticlesView(
               quantity: 100,
@@ -28,12 +30,18 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: () => context.go(const ContactsRoute().location),
-                    child: const Text("Contact"),
+                    child: const Text(
+                      "Contact",
+                      style: TextStyle(color: primaryColor),
+                    ),
                   ),
                   ElevatedButton(
                     onPressed: () =>
                         context.go(const ProjectListRoute().location),
-                    child: const Text("Project"),
+                    child: const Text(
+                      "Project",
+                      style: TextStyle(color: primaryColor),
+                    ),
                   )
                 ],
               ),
@@ -43,6 +51,13 @@ class HomeScreen extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                   fontSize: 13.0,
                 ),
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              const Text(
+                "I'm a FullStack developer who likes coding.",
+                style: TextStyle(color: primaryColor),
               ),
             ],
           ),
