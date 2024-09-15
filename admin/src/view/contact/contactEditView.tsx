@@ -71,6 +71,12 @@ export const ContactFormEditView = (props: { contact: ContactShowRes | null }) =
       return;
     }
 
+    if (href.value.startsWith("mailto")) {
+      alert("데이터가 유효하지 않습니다.");
+      setHref.err("mailto는 제거해야합니다.");
+      return;
+    }
+
     const res = await api.contactEdit({
       pk: isNil(contact) ? null : contact.pk,
       type: type.value,
