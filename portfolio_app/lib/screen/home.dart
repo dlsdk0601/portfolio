@@ -29,36 +29,42 @@ class HomeScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    onPressed: () => context.go(const ContactsRoute().location),
-                    child: const Text(
-                      "Contact",
-                      style: TextStyle(color: primaryColor),
-                    ),
-                  ),
-                  ElevatedButton(
                     onPressed: () =>
                         context.go(const ProjectListRoute().location),
                     child: const Text(
                       "Project",
-                      style: TextStyle(color: primaryColor),
+                      style: TextStyle(color: primaryColor, fontSize: 15.0),
                     ),
-                  )
+                  ),
+                  ElevatedButton(
+                    onPressed: () => context.go(const ContactsRoute().location),
+                    child: const Text(
+                      "Contact",
+                      style: TextStyle(color: primaryColor, fontSize: 15.0),
+                    ),
+                  ),
                 ],
+              ),
+              const SizedBox(
+                height: 64.0,
               ),
               const Text(
                 "Portfolio",
                 style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 13.0,
-                ),
+                    fontWeight: FontWeight.w700,
+                    fontSize: 36.0,
+                    color: cFFFFFF),
               ),
               const SizedBox(
-                height: 20.0,
+                height: 64.0,
               ),
               const Text(
                 "I'm a FullStack developer who likes coding.",
-                style: TextStyle(color: primaryColor),
+                style: TextStyle(color: primaryColor, fontSize: 14.0),
               ),
+              const SizedBox(
+                height: 100,
+              )
             ],
           ),
         ],
