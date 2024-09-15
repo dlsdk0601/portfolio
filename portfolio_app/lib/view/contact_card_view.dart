@@ -66,4 +66,31 @@ class ContactCardView extends StatelessWidget {
       ),
     );
   }
+
+  String toLabel(ContactType type) {
+    switch (type) {
+      case ContactType.EMAIL:
+        return "EMAIL";
+      case ContactType.GITHUB:
+        return "GITHUB";
+      case ContactType.INSTAGRAM:
+        return "INSTAGRAM";
+    }
+  }
+
+  Widget toIcon(ContactType type) {
+    switch (type) {
+      case ContactType.EMAIL:
+        return const Icon(
+          Icons.email_outlined,
+          color: primaryColor,
+          size: 24.0,
+        );
+      case ContactType.GITHUB:
+        // TODO :: github icon 추가되면 수정
+        return Image.asset(Assets.icon.instagramIcon.path);
+      case ContactType.INSTAGRAM:
+        return Image.asset(Assets.icon.instagramIcon.path);
+    }
+  }
 }
