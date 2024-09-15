@@ -101,7 +101,7 @@ def _import_contact(faker: Faker) -> None:
             type=ContactType.GITHUB, id='dlsdk0601', href='https://github.com/dlsdk0601'
         ),
         Contact(
-            type=ContactType.EMAIL, id='inajung7008@gmail.com', href='mailto:inajung7008@gmail.com'
+            type=ContactType.EMAIL, id='inajung7008@gmail.com', href='inajung7008@gmail.com'
         ),
     ]
 
