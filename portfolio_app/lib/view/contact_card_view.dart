@@ -3,6 +3,8 @@ import 'package:portfolio_app/api/schema.gen.dart';
 import 'package:portfolio_app/color.dart';
 import 'package:portfolio_app/ex/app.dart';
 
+import '../gen/assets.gen.dart';
+
 class ContactCardView extends StatelessWidget {
   final ContactShowResItem contact;
 
