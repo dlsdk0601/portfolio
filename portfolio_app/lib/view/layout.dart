@@ -9,7 +9,7 @@ class Layout extends StatelessWidget {
     required this.title,
     required this.child,
     required this.context,
-    this.leading,
+    this.hasLeading = false,
     this.actions,
     this.backgroundColor,
   });
@@ -17,7 +17,7 @@ class Layout extends StatelessWidget {
   final String title;
   final Widget child;
   final BuildContext context;
-  final Widget? leading;
+  final bool hasLeading;
   final List<Widget>? actions;
   final Color? backgroundColor;
 
@@ -35,15 +35,16 @@ class Layout extends StatelessWidget {
             fontSize: 20,
           ),
         ),
-        leading: leading ??
-            IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                if (context.mounted && context.canPop()) {
-                  context.pop();
-                }
-              },
-            ),
+        leading: hasLeading
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  if (context.mounted && context.canPop()) {
+                    context.pop();
+                  }
+                },
+              )
+            : null,
         actions: actions,
       ),
       backgroundColor: backgroundColor ?? c000000,

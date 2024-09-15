@@ -32,8 +32,10 @@ class _ParticlesViewState extends State<ParticlesView>
   }
 
   void _initialize() {
-    particles = List.generate(widget.quantity,
-        (_) => Particle.random(widget.minSize, widget.maxSize));
+    particles = List.generate(
+      widget.quantity,
+      (_) => Particle.random(widget.minSize, widget.maxSize),
+    );
   }
 
   @override
@@ -45,14 +47,15 @@ class _ParticlesViewState extends State<ParticlesView>
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-        animation: _controller,
-        builder: (context, child) {
-          _updateParticles();
-          return CustomPaint(
-            painter: ParticlePainter(particles),
-            size: Size.infinite,
-          );
-        });
+      animation: _controller,
+      builder: (context, child) {
+        _updateParticles();
+        return CustomPaint(
+          painter: ParticlePainter(particles),
+          size: Size.infinite,
+        );
+      },
+    );
   }
 
   void _updateParticles() {
