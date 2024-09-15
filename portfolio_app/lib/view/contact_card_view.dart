@@ -1,18 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:portfolio_app/api/schema.gen.dart';
 import 'package:portfolio_app/color.dart';
+import 'package:portfolio_app/ex/app.dart';
 
 class ContactCardView extends StatelessWidget {
   final ContactShowResItem contact;
-  final VoidCallback onTap;
 
-  const ContactCardView(
-      {super.key, required this.contact, required this.onTap});
+  const ContactCardView({
+    super.key,
+    required this.contact,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () async {
+        if (contact.type == ContactType.GITHUB) {
+          await openBrowser(contact.href, context);
+          return;
+        }
+
+        if (contact.type == ContactType.INSTAGRAM) {
+          await openBrowser(contact.href, context);
+          return;
+        }
+
+        // TODO :: 시뮬레이터에는 메일앱이 존재하지 않아 실행되지 않으니, 실기기로 테스트 해볼 것.
+        await mailTo(contact.href, context);
+      },
       child: Container(
         margin: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
@@ -33,18 +48,18 @@ class ContactCardView extends StatelessWidget {
                   border: Border.all(color: primaryColor),
                 ),
                 // TODO :: 아이콘 분기 처리
-                child: const Icon(
-                  Icons.abc,
-                  color: primaryColor,
-                  size: 24.0,
-                ),
+                child: toIcon(contact.type),
               ),
             ),
-            const SizedBox(
+            SizedBox(
+              width: 1,
               height: 16.0,
+              child: Container(
+                color: primaryColor,
+              ),
             ),
             Text(
-              contact.type.toString(),
+              toLabel(contact.type),
               style: const TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.w700,
