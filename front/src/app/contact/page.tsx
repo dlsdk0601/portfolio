@@ -14,7 +14,7 @@ const ContactPage = async () => {
       {res.contacts.map((social) => (
         <CardView key={`contact-social-${social.type}`}>
           <Link
-            href={social.href}
+            href={social.type === "EMAIL" ? `mailto:${social.href}` : social.href}
             target="_blank"
             className="group relative flex flex-col items-center gap-4 p-4 duration-700 md:gap-8 md:p-16 md:py-24 lg:pb-48"
           >
