@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:portfolio_app/ex/hook.dart';
+import 'package:portfolio_app/view/contact_card_view.dart';
 import 'package:portfolio_app/view/layout.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -32,16 +33,12 @@ class ContactsScreen extends HookConsumerWidget {
     return Layout(
       title: 'contacts',
       context: context,
-      child: Column(
+      child: ListView(
+        padding: const EdgeInsets.only(top: 50.0),
         children: [
           ...model.contacts.map(
-            (e) => Column(
-              children: [
-                Text(e.pk.toString()),
-                Text(e.id),
-                Text(e.href),
-                Text(e.type.toString()),
-              ],
+            (e) => ContactCardView(
+              contact: e,
             ),
           ),
           const SizedBox(
