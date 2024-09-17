@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:portfolio_app/ex/hook.dart';
+import 'package:portfolio_app/router.dart';
 import 'package:portfolio_app/view/contact_card_view.dart';
 import 'package:portfolio_app/view/layout.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -33,6 +35,15 @@ class ContactsScreen extends HookConsumerWidget {
     return Layout(
       title: 'contacts',
       context: context,
+      actions: [
+        ElevatedButton(
+          onPressed: () => context.go(const ProjectListRoute().location),
+          child: const Text(
+            "Project",
+            style: TextStyle(fontSize: 16.0),
+          ),
+        )
+      ],
       child: ListView(
         padding: const EdgeInsets.only(top: 50.0),
         children: [
