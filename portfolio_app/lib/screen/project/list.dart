@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:portfolio_app/api/schema.gen.dart';
+import 'package:portfolio_app/color.dart';
 import 'package:portfolio_app/ex/hook.dart';
+import 'package:portfolio_app/router.dart';
 import 'package:portfolio_app/view/layout.dart';
+import 'package:portfolio_app/view/project_cart_view.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../globals.dart';
@@ -32,20 +36,26 @@ class ProjectListScreen extends HookConsumerWidget {
     return Layout(
       title: 'projects',
       context: context,
-      child: SafeArea(
-        child: Column(
-          children: model.projects
-              .map(
-                (e) => Row(
-                  children: [
-                    Text(e.pk.toString()),
-                    Text(e.title),
-                    Text(e.description)
-                  ],
-                ),
-              )
-              .toList(),
-        ),
+      actions: [
+        ElevatedButton(
+          onPressed: () => context.go(const ContactsRoute().location),
+          child: const Text(
+            "Contact",
+            style: TextStyle(fontSize: 16.0),
+          ),
+        )
+      ],
+      child: ListView(
+        padding: const EdgeInsets.only(top: 30.0),
+        children: [
+          const _HeaderView(),
+          ...model.projects.map(
+            (e) => ProjectCardView(project: e),
+          ),
+          const SizedBox(
+            height: 18.0,
+          )
+        ],
       ),
     );
   }
@@ -82,4 +92,52 @@ class _Model with _$Model {
     required bool initialized,
     required List<ProjectListResItem> projects,
   }) = __Model;
+}
+
+class _HeaderView extends StatelessWidget {
+  const _HeaderView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(
+        left: 16.0,
+        right: 16.0,
+        bottom: 16.0,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Projects",
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 30.0,
+              color: cFFFFFF,
+            ),
+          ),
+          const SizedBox(
+            height: 16.0,
+          ),
+          const Text(
+            "Some of the projects are from work and some are on my own time.",
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 16.0,
+            ),
+          ),
+          const SizedBox(
+            height: 32.0,
+          ),
+          SizedBox(
+            height: 1.0,
+            width: MediaQuery.of(context).size.width,
+            child: Container(
+              color: primaryColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
