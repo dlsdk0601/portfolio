@@ -31,7 +31,7 @@ class Layout extends StatelessWidget {
           title,
           style: const TextStyle(
             fontWeight: FontWeight.w700,
-            fontSize: 20,
+            fontSize: 24,
           ),
         ),
         leading: hasLeading
