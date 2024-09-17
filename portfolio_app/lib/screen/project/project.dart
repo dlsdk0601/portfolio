@@ -52,7 +52,7 @@ class ProjectShowScreen extends HookConsumerWidget {
             Text(project.websiteUrl),
             Text(project.githubUrl),
             Text(project.mainText),
-            Text(project.createAt.dt),
+            Text(project.createAt.d2),
           ],
         ),
       ),
