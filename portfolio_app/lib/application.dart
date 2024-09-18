@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -47,6 +48,7 @@ class Application extends StatelessWidget {
       routerConfig: goRouter,
       themeMode: ThemeMode.dark,
       darkTheme: themeData,
+      builder: EasyLoading.init(),
     );
   }
 }
