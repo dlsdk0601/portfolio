@@ -30,7 +30,9 @@ class ProjectListScreen extends HookConsumerWidget {
     }, []);
 
     if (!model.initialized) {
-      return Container();
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
     }
 
     return Layout(
