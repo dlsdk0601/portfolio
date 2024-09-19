@@ -1,12 +1,12 @@
 from datetime import datetime, date
 from enum import auto
 
-from sqlalchemy import String, Text, DateTime, func, Date, ForeignKey, select
+from sqlalchemy import String, Text, DateTime, func, Date, ForeignKey
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ex.py.enum_ex import StringEnum
-from was.model import Model, db
+from was.model import Model
 
 
 class ProjectType(StringEnum):
@@ -33,14 +33,8 @@ class Project(Model):
 
     @property
     def view_count(self) -> int:
-        view_log_count = (db
-                          .session
-                          .execute(
-            select(func.count(ProjectViewLog.pk)).where(ProjectViewLog.project_pk == self.pk)
-        )
-                          .scalar_one())
-
-        return view_log_count
+        views = self.view_logs
+        return len(views)
 
     __table_args__ = (
         {'comment': '프로젝트'}
