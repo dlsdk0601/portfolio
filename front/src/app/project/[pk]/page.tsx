@@ -42,7 +42,7 @@ const ProjectShowView = async (props: { pk: number }) => {
         description={project.description}
         githubSite={project.githubUrl}
         websiteUrl={project.websiteUrl}
-        views={views}
+        views={project.viewCount}
       />
       <article className="prose prose-zinc prose-quoteless mx-auto px-4 py-12">
         <MdEditorViewer mainText={project.mainText} />
