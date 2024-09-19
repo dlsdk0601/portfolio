@@ -22,13 +22,3 @@ export async function projectShow(pk: number) {
 
   return res;
 }
-
-export async function projectView(pk: number) {
-  const res = await api.projectView({ pk });
-
-  if (isNil(res)) {
-    return;
-  }
-
-  return res.views;
-}

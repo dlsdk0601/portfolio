@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { SearchParams } from "../../../type/definitions";
 import { parseQuery } from "../../../ex/query";
-import { projectShow, projectView } from "../../../action/project";
+import { projectShow } from "../../../action/project";
 import ProjectShowHeaderView from "../../../view/project/projectShowHeaderView";
 import MdEditorViewer from "../../../view/project/MDEditorViewer";
 import ProjectShowSkeletonView from "../../../view/skeleton/projectShowSkeletonView";
@@ -29,10 +29,9 @@ const Page = async (props: { params: SearchParams }) => {
 };
 
 const ProjectShowView = async (props: { pk: number }) => {
-  const views = await projectView(props.pk);
   const project = await projectShow(props.pk);
 
-  if (isNil(project) || isNil(views)) {
+  if (isNil(project)) {
     return <></>;
   }
 

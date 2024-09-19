@@ -1,7 +1,6 @@
 from datetime import datetime, date
 
 from flask import request
-from sqlalchemy import select, func
 
 from ex.api import BaseModel, Res, ok, err
 from was.blueprints.front import app
@@ -60,6 +59,7 @@ class ProjectShowRes(BaseModel):
     github_url: str
     main_text: str
     create_at: datetime
+    view_count: int
 
 
 @app.api(public=True)
@@ -69,35 +69,21 @@ def project_show(req: ProjectShowReq) -> Res[ProjectShowRes]:
     if project.delete_at is not None:
         return err('이미 삭제된 데이터 입니다.')
 
+    remote_ip = request.remote_addr
+    project_view_log = (db.session
+                        .query(ProjectViewLog)
+                        .filter_by(project_pk=project.pk, remote_ip=remote_ip)
+                        .one_or_none())
+
+    if not project_view_log:
+        project_view_log = ProjectViewLog(project_pk=project.pk, remote_ip=remote_ip)
+        db.session.add(project_view_log)
+        db.session.commit()
+
     return ok(
         ProjectShowRes(
             pk=project.pk, type=project.type, title=project.title, description=project.description,
             website_url=project.website_url, github_url=project.github_url,
-            main_text=project.main_text, create_at=project.create_at
+            main_text=project.main_text, create_at=project.create_at, view_count=project.view_count
         )
     )
-
-
-class ProjectViewReq(BaseModel):
-    pk: int
-
-
-class ProjectViewRes(BaseModel):
-    views: int
-
-
-@app.api(public=True)
-def project_view(req: ProjectViewReq) -> Res[ProjectViewRes]:
-    remote_ip = request.remote_addr
-    project_view_log = db.session.query(ProjectViewLog).filter_by(project_pk=req.pk, remote_ip=remote_ip).one_or_none()
-
-    if not project_view_log:
-        project_view_log = ProjectViewLog(project_pk=req.pk, remote_ip=remote_ip)
-        db.session.add(project_view_log)
-        db.session.commit()
-
-    views = db.session.execute(
-        select(func.count(ProjectViewLog.pk)).where(ProjectViewLog.project_pk == req.pk)
-    ).scalar_one()
-
-    return ok(ProjectViewRes(views=views))
