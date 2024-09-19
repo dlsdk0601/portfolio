@@ -61,6 +61,7 @@ class ProjectShowRes(BaseModel):
     github_url: str
     main_text: str
     create_at: datetime
+    view_count: int
 
 
 @app.api(public=True)
@@ -85,6 +86,6 @@ def project_show(req: ProjectShowReq) -> Res[ProjectShowRes]:
         ProjectShowRes(
             pk=project.pk, type=project.type, title=project.title, description=project.description,
             website_url=project.website_url, github_url=project.github_url,
-            main_text=project.main_text, create_at=project.create_at
+            main_text=project.main_text, create_at=project.create_at, view_count=project.view_count
         )
     )
